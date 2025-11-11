@@ -23,6 +23,9 @@ pnpm-debug.log*
 .idea/
 .DS_Store
 
+# GitHub
+.github/doc
+
 # Misc
 *.log
 *.tmp
