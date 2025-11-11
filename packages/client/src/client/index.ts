@@ -47,8 +47,6 @@ export class Client extends EventProvider<ClientEvents> {
 
     this.id = options.id || this.id;
 
-    window.client = this;
-
     this.storage = new useStorage({
       id: this.id,
       data: {
@@ -58,6 +56,8 @@ export class Client extends EventProvider<ClientEvents> {
         emote: {},
       },
     });
+
+    window.client = this;
   }
 
   public actions: {
