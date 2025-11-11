@@ -2867,7 +2867,9 @@ export class Simulation {
 
               return acc;
             },
-            {} as Record<string, StreamElementsFieldValue>,
+            {
+              ...data,
+            } as Record<string, StreamElementsFieldValue>,
           );
 
         const load = await Simulation.generate.event.onWidgetLoad(fields, await Simulation.generate.session.get());
