@@ -7,23 +7,33 @@ import { Logger } from './utils/Logger.js';
 import './client/listener.js';
 
 export const Tixyel = {
-  Client: Client,
-  Simulation: Simulation,
+  Client,
+  Simulation,
   logger: new Logger(),
+} as const;
+
+type _Tixyel_ = {
+  Client: typeof Client;
+  Simulation: typeof Simulation;
+  logger: Logger;
 };
 
 declare global {
   interface Window {
-    Tixyel: typeof Tixyel;
-    client?: Client;
+    Tixyel: _Tixyel_;
+    client: Client;
   }
+
   interface WindowEventMap {
-    'onWidgetLoad': onWidgetLoadEvent;
-    'onSessionUpdate': onSessionUpdateEvent;
-    'onEventReceived': onEventReceivedEvent;
+    onWidgetLoad: onWidgetLoadEvent;
+    onSessionUpdate: onSessionUpdateEvent;
+    onEventReceived: onEventReceivedEvent;
   }
+
+  var Tixyel: _Tixyel_;
+  var client: Client;
 }
 
 if (typeof window !== 'undefined') {
-  (window as any).Tixyel = Tixyel;
+  window.Tixyel = Tixyel;
 }
