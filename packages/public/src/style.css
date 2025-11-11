@@ -1,0 +1,21 @@
+* {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #000;
+
+  width: 100dvw;
+  height: 100dvh;
+
+  overflow: hidden;
+
+  display: grid;
+  place-items: center;
+}
+
+main {
+}
