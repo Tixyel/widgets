@@ -1,0 +1,32 @@
+{
+  "name": "@tixyel/streamelements",
+  "type": "module",
+  "version": "1.0.0",
+  "private": false,
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.es.js",
+  "main": "./dist/index.umd.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "scripts": {
+    "build": "vite build && rollup -c rollup.config.js",
+    "dev": "concurrently \"vite build --watch\" \"rollup -c rollup.config.js --watch\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vite": "^7.1.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
