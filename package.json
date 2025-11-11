@@ -1,0 +1,28 @@
+{
+  "name": "tixyel",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "turbo": "^2.6.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "concurrently": "^9.2.1",
+    "prettier": "^3.6.2",
+    "rollup-plugin-dts": "^6.2.3",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "lint": "turbo run lint",
+    "watch": "turbo run build --watch",
+    "prettier": "prettier --write packages/",
+    "version": "changeset version && git add --all",
+    "release": "npm run build && changeset publish"
+  },
+  "packageManager": "npm@11.6.1"
+}
