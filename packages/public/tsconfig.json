@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "es2021",
+    "module": "umd",
+    "rootDir": "src",
+    "outDir": "dist",
+    "checkJs": false,
+    "allowJs": true,
+    "lib": ["ES2021", "DOM"],
+    "types": ["@tixyel/streamelements", "@types/jquery", "motion", "socket.io-client"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.js"]
+}
