@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Misc
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Turbo
+.turbo/
