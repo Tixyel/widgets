@@ -5,11 +5,15 @@ import { onSessionUpdateEvent } from './types/streamelements/events/onSessionUpd
 import { onWidgetLoadEvent } from './types/streamelements/events/onWidgetLoad.js';
 import { Logger } from './utils/Logger.js';
 import './client/listener.js';
+import { Button } from './actions/button.js';
+import { Command } from './actions/command.js';
 
 export const Tixyel = {
   Client,
   Simulation,
   logger: new Logger(),
+  Button,
+  Command,
 } as const;
 
 type _Tixyel_ = {
