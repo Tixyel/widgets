@@ -1,17 +1,44 @@
 {
   "name": "@tixyel/streamelements",
-  "type": "module",
   "version": "2.0.0",
+  "description": "TypeScript/JavaScript helper library for StreamElements custom widgets with type safety and local development support",
+  "keywords": [
+    "streamelements",
+    "twitch",
+    "youtube",
+    "widgets",
+    "streaming",
+    "overlay",
+    "typescript"
+  ],
+  "author": "Tixyel",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Tixyel/widgets#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tixyel/widgets.git",
+    "directory": "packages/client"
+  },
+  "bugs": {
+    "url": "https://github.com/Tixyel/widgets/issues"
+  },
+  "type": "module",
   "private": false,
-  "types": "./dist/index.d.ts",
-  "module": "./dist/index.es.js",
   "main": "./dist/index.umd.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.umd.js",
+  "jsdelivr": "./dist/index.umd.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js"
-    }
+      "require": "./dist/index.umd.js",
+      "default": "./dist/index.umd.js"
+    },
+    "./+esm": "./dist/index.es.js",
+    "./+es": "./dist/index.es.js",
+    "./+umd": "./dist/index.umd.js"
   },
   "files": [
     "dist",
@@ -25,6 +52,9 @@
   "dependencies": {},
   "devDependencies": {
     "vite": "^7.1.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "publishConfig": {
     "access": "public"
