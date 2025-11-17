@@ -25,3 +25,13 @@ let lastStore = localStorage.getItem('SE_API-STORE') || '';
 lastStore = lastStore ? JSON.parse(lastStore) : {};
 
 SE_API.store.list = lastStore;
+
+window.addEventListener('keydown', async (e) => {
+  var key = e.key;
+
+  if (key === 'm') {
+    const event = await Simulation.generate.event.onEventReceived('twitch', 'message');
+
+    window.dispatchEvent(new CustomEvent('onEventReceived', { detail: event }));
+  }
+});
