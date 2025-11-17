@@ -236,6 +236,6 @@ window.addEventListener('onEventReceived', ({ detail }) => {
       }
     }
 
-    // window.client.emit('event', received);
+    window.client.emit('event', received);
   }
 });
