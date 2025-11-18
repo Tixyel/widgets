@@ -6,6 +6,6 @@ export type StreamElements$KVStore = {
 type KVStore = {
   data: {
     key: `customWidget.${string}`;
-    value: string | number | boolean;
+    value: string | number | boolean | Record<string, any>;
   };
 };

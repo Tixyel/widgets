@@ -3,4 +3,6 @@ export type StreamElements$AlertService = {
   event: toggleSound;
 };
 
-type toggleSound = {};
+type toggleSound = {
+  muted: boolean;
+};
