@@ -2451,9 +2451,11 @@ export class Simulation {
               case 'mute':
               case 'unmute':
               case 'alertService:toggleSound': {
+                var muted = (options?.muted as boolean) ?? !client.details.overlay.muted;
+
                 const event: StreamElements$AlertService = {
                   listener: 'alertService:toggleSound',
-                  event: {},
+                  event: { muted },
                 };
 
                 return event;
