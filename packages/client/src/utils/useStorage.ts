@@ -4,12 +4,15 @@ import { PathValue } from './index.js';
 type UseStorageEvents<T> = {
   load: [T | null];
   save: [T];
+  update: [T];
 };
 
 type UseStorageOptions<T> = {
   id?: string;
   data: T;
 };
+
+export var _storages: Array<useStorage<any>> = [];
 
 export class useStorage<T extends object = Record<string, any>> extends EventProvider<UseStorageEvents<T>> {
   /**
@@ -37,11 +40,17 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
         this.loaded = true;
 
         this.emit('load', this.data);
+
+        if (JSON.stringify(this.data) !== JSON.stringify(save)) {
+          this.emit('update', this.data);
+        }
       })
       .catch(() => {
         this.loaded = true;
         this.emit('load', null);
       });
+
+    _storages.push(this);
   }
 
   /**
@@ -58,15 +67,39 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
     }
   }
 
+  /**
+   * Updates the storage data and emits an update event if the data has changed.
+   * @param data Data to update (defaults to current)
+   */
+  update(data: T = this.data): void {
+    if (this.loaded && JSON.stringify(this.data) !== JSON.stringify(data)) {
+      this.data = { ...this.data, ...data };
+
+      this.emit('update', this.data);
+    }
+  }
+
+  /**
+   * Adds a value to the storage at the specified path.
+   * @param path Path to add the value to
+   * @param value Value to add
+   */
   add<P extends string>(path: P, value: PathValue<T, P>): void {
     if (!this.loaded) return;
 
-    this.setByPath(this.data, path, value);
+    useStorage.setByPath(this.data, path, value);
 
     this.save(this.data);
   }
 
-  setByPath<P extends string>(obj: T, path: P, value: PathValue<T, P>): void {
+  /**
+   * Sets a value in the storage at the specified path.
+   * @param obj The object to set the value in
+   * @param path The path to set the value at
+   * @param value The value to set
+   * @returns The updated object
+   */
+  static setByPath<P extends string, T extends object>(obj: T, path: P, value: PathValue<T, P>): void {
     const keys = path.split('.');
     let current: any = obj;
 
@@ -79,6 +112,8 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
     }
 
     current[keys[keys.length - 1]] = value;
+
+    return current;
   }
 
   override on<K extends keyof UseStorageEvents<T>>(eventName: K, callback: (...args: UseStorageEvents<T>[K]) => void): this {

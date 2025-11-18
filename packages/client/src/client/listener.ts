@@ -2,6 +2,7 @@ import { Button } from '../actions/button.js';
 import { Command } from '../actions/command.js';
 import { Simulation } from '../simulation/index.js';
 import { ClientEvents, Provider } from '../types/client.js';
+import { _storages } from '../utils/useStorage.js';
 import { Client } from './index.js';
 
 window.addEventListener('load', () => {
@@ -117,6 +118,15 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
           case 'kvstore:update': {
             const event = data.event;
+
+            if (_storages.length) {
+              var storage = _storages.find((s) => s.id === event.data.key.replace('customWidget.', ''));
+
+              if (storage) {
+                storage.update(event.data.value);
+              }
+            }
+
             break;
           }
           case 'bot:counter': {
@@ -125,6 +135,9 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
           case 'alertService:toggleSound': {
             const event = data.event;
+
+            client.details.overlay.muted = Boolean(event.muted);
+
             break;
           }
         }
