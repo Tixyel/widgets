@@ -48,6 +48,8 @@ export class Command {
 
     // Register the command in the client actions
     window.client.actions.commands.push(this);
+
+    window.client.emit('action', this, 'created');
   }
 
   run(this: Client, args: string[], event: CommandEvent): void {}
@@ -146,6 +148,8 @@ export class Command {
 
         if (command && command instanceof Command) {
           command.parse(data.event.data.text, received);
+
+          window.client.emit('action', command, 'executed');
 
           Tixyel.logger.received(`Command executed: ${data.event.data.text} by ${data.event.data.nick || data.event.data.displayName}`, data);
 

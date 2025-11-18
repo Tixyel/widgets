@@ -9,7 +9,7 @@ import { Button } from '../actions/button.js';
 
 type ClientEvents = {
   load: [event: onWidgetLoad];
-  action: [action: any, type: 'created' | 'updated' | 'executed'];
+  action: [action: Button | Command, type: 'created' | 'executed'];
   session: [session: Session];
   event: [event: events];
 };

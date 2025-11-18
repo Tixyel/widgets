@@ -24,6 +24,8 @@ export class Button {
 
     // Register the button in the client actions
     window.client.actions.buttons.push(this);
+
+    window.client.emit('action', this, 'created');
   }
 
   parse(field: string, value: string | boolean | number): Button {
@@ -48,9 +50,14 @@ export class Button {
         );
 
         if (button && button instanceof Button) {
-          button.parse(field, value);
+          try {
+            button.parse(field, value);
+            window.client.emit('action', button, 'executed');
 
-          Tixyel.logger.received(`Button executed: ${field} with value: ${value}`);
+            Tixyel.logger.received(`Button executed: ${field} with value: ${value}`);
+          } catch (error) {
+            Tixyel.logger.error(`Error executing button "${field}": ${error instanceof Error ? error.message : error}`);
+          }
 
           return true;
         }
