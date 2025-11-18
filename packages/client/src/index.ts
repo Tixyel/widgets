@@ -8,6 +8,8 @@ import './client/listener.js';
 import { Button } from './actions/button.js';
 import { Command } from './actions/command.js';
 
+export * from './types/index.js';
+
 export const Tixyel = {
   Client,
   Simulation,

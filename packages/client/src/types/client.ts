@@ -26,14 +26,14 @@ export type ClientEvents =
       data: Facebook;
     };
 
-type Kick = Kick$Message;
+export type Kick = Kick$Message;
 
 type Kick$Message = {
   listener: 'message';
   event: {};
 };
 
-type Facebook = Facebook$Message;
+export type Facebook = Facebook$Message;
 
 type Facebook$Message = {
   listener: 'message';
