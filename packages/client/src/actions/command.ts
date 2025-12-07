@@ -8,7 +8,7 @@ interface CommandOptions {
   name: string;
   description?: string;
   arguments?: boolean;
-  run: () => void;
+  run: (this: Client, args: string[], event: CommandEvent) => void;
   test?: string;
   aliases?: string[];
   permissions?: string[];

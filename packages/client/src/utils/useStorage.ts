@@ -116,7 +116,7 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
     return current;
   }
 
-  override on<K extends keyof UseStorageEvents<T>>(eventName: K, callback: (...args: UseStorageEvents<T>[K]) => void): this {
+  override on<K extends keyof UseStorageEvents<T>>(eventName: K, callback: (this: useStorage<T>, ...args: UseStorageEvents<T>[K]) => void): this {
     if (eventName === 'load' && this.loaded) {
       callback.apply(this, [this.data]);
 

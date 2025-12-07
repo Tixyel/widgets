@@ -8,10 +8,10 @@ import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
 
 type ClientEvents = {
-  load: [this: Client, event: onWidgetLoad];
-  action: [this: Client, action: Button | Command, type: 'created' | 'executed'];
-  session: [this: Client, session: Session];
-  event: [this: Client, event: events];
+  load: [event: onWidgetLoad];
+  action: [action: Button | Command, type: 'created' | 'executed'];
+  session: [session: Session];
+  event: [event: events];
 };
 
 type ClientOptions = {
@@ -81,7 +81,7 @@ export class Client extends EventProvider<ClientEvents> {
     emote: 30,
   };
 
-  override on<K extends keyof ClientEvents>(eventName: K, callback: (...args: ClientEvents[K]) => void): this {
+  override on<K extends keyof ClientEvents>(eventName: K, callback: (this: Client, ...args: ClientEvents[K]) => void): this {
     if (eventName === 'load' && this.loaded) {
       callback.apply(this, [
         {
