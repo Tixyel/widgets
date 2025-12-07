@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.0.1
+
+### Patch Changes
+
+- 287ff7d: Fix: Include source maps in distribution
+
 ## 3.0.0
 
 ### Major Changes
