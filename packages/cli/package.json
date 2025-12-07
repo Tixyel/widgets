@@ -1,0 +1,62 @@
+{
+  "name": "@tixyel/cli",
+  "version": "1.0.0",
+  "description": "CLI tool for Tixyel widgets",
+  "keywords": [
+    "cli",
+    "widgets",
+    "typescript"
+  ],
+  "author": "Tixyel",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Tixyel/widgets#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tixyel/widgets.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/Tixyel/widgets/issues"
+  },
+  "type": "module",
+  "private": false,
+  "bin": {
+    "tixyel": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.9",
+    "@types/node": "^22.19.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@types/html-minifier-terser": "^7.0.2",
+    "autoprefixer": "^10.4.22",
+    "commander": "^14.0.2",
+    "cssnano": "^7.1.2",
+    "fast-glob": "^3.3.3",
+    "html-minifier": "^4.0.0",
+    "html-minifier-terser": "^7.2.0",
+    "inquirer": "^13.0.2",
+    "javascript-obfuscator": "^4.1.1",
+    "jsonc-parser": "^3.3.1",
+    "postcss": "^8.5.6",
+    "postcss-nested": "^7.0.2"
+  }
+}

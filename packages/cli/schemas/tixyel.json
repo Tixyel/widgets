@@ -1,0 +1,131 @@
+{
+  "fileMatch": ["*.tixyel"],
+  "schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Tixyel Widget Configuration",
+    "description": "Configuration file for Tixyel widgets (.tixyel)",
+    "type": "object",
+    "required": ["name"],
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Widget name",
+        "minLength": 1
+      },
+      "version": {
+        "type": "string",
+        "description": "Widget version (default: 1.0.0)",
+        "pattern": "^\\d+\\.\\d+\\.\\d+$",
+        "default": "1.0.0"
+      },
+      "description": {
+        "type": "string",
+        "description": "Widget description"
+      },
+      "entry": {
+        "type": "string",
+        "description": "Entry point directory (default: development)",
+        "default": "development"
+      },
+      "outDir": {
+        "type": "string",
+        "description": "Output directory (default: finished)",
+        "default": "finished"
+      },
+      "configPath": {
+        "type": "string",
+        "description": "Relative path to tixyel.config.ts from this file's directory (auto-calculated during generation)"
+      },
+      "build": {
+        "type": "object",
+        "description": "Additional build configuration",
+        "properties": {
+          "minify": {
+            "type": "boolean",
+            "description": "Minify output",
+            "default": false
+          },
+          "find": {
+            "type": "object",
+            "description": "File patterns to find and merge",
+            "properties": {
+              "html": {
+                "type": "array",
+                "description": "HTML files to find and merge",
+                "items": {
+                  "type": "string"
+                },
+                "examples": [["index.html"]]
+              },
+              "css": {
+                "type": "array",
+                "description": "CSS files to find and merge",
+                "items": {
+                  "type": "string"
+                },
+                "examples": [["style.css"]]
+              },
+              "script": {
+                "type": "array",
+                "description": "JavaScript files to find and merge",
+                "items": {
+                  "type": "string"
+                },
+                "examples": [["resources.js", "script.js"]]
+              },
+              "fields": {
+                "type": "array",
+                "description": "JSON fields files to find and merge",
+                "items": {
+                  "type": "string"
+                },
+                "examples": [["cf.json", "fields.json"]]
+              }
+            }
+          },
+          "finished": {
+            "type": "object",
+            "description": "Output file mapping",
+            "additionalProperties": {
+              "type": "string",
+              "enum": ["html", "css", "script", "fields"]
+            },
+            "examples": [
+              {
+                "HTML.html": "html",
+                "CSS.css": "css",
+                "SCRIPT.js": "script",
+                "FIELDS.json": "fields"
+              }
+            ]
+          }
+        }
+      },
+      "metadata": {
+        "type": "object",
+        "description": "Widget metadata",
+        "properties": {
+          "author": {
+            "type": "string",
+            "description": "Author name"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Widget tags",
+            "items": {
+              "type": "string"
+            },
+            "examples": [["stream", "alerts"]]
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform - currently only StreamElements is supported",
+            "enum": ["streamelements"],
+            "default": "streamelements"
+          }
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

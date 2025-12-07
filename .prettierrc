@@ -15,5 +15,15 @@
   "vueIndentScriptAndStyle": true,
   "endOfLine": "auto",
   "embeddedLanguageFormatting": "auto",
-  "singleAttributePerLine": false
+  "singleAttributePerLine": false,
+
+  "overrides": [
+    {
+      "files": "*.tixyel",
+      "options": {
+        "trailingComma": "none",
+        "parser": "jsonc"
+      }
+    }
+  ]
 }
