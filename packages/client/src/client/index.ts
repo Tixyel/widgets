@@ -8,10 +8,10 @@ import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
 
 type ClientEvents = {
-  load: [event: onWidgetLoad];
-  action: [action: Button | Command, type: 'created' | 'executed'];
-  session: [session: Session];
-  event: [event: events];
+  load: [this: Client, event: onWidgetLoad];
+  action: [this: Client, action: Button | Command, type: 'created' | 'executed'];
+  session: [this: Client, session: Session];
+  event: [this: Client, event: events];
 };
 
 type ClientOptions = {
