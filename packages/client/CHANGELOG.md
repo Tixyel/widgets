@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.1.0
+
+### Minor Changes
+
+- ae31d0d: fix: update callback signatures to include context in Command and useStorage classes
+
 ## 3.0.1
 
 ### Patch Changes
