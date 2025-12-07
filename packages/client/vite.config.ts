@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   build: {
     minify: true,
-    sourcemap: false,
+    sourcemap: true,
     lib: {
       entry: 'src/index.ts',
       name: '@tixyel/streamelements',
