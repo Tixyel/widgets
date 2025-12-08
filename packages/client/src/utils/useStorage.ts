@@ -3,7 +3,6 @@ import { PathValue } from './index.js';
 
 type UseStorageEvents<T> = {
   load: [T | null];
-  save: [T];
   update: [T];
 };
 
@@ -30,7 +29,9 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
     this.id = options.id || this.id;
     this.data = options.data ?? ({} as T);
 
-    if (!SE_API || !SE_API.store) throw new Error('SE_API.store is not available');
+    if (!SE_API || !SE_API.store) {
+      throw new Error('SE_API.store is not available');
+    }
 
     SE_API!.store
       .get<T>(this.id)
@@ -57,25 +58,25 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
    * Saves the current data to storage.
    * @param data Data to save (defaults to current)
    */
-  save(data: T = this.data): void {
+  private save(data: T = this.data): void {
     if (this.loaded) {
       this.data = data;
 
       SE_API!.store.set<T>(this.id, this.data);
 
-      this.emit('save', this.data);
+      this.emit('update', this.data);
     }
   }
 
   /**
-   * Updates the storage data and emits an update event if the data has changed.
+   * Updates the storage data and emits an update event
    * @param data Data to update (defaults to current)
    */
-  update(data: T = this.data): void {
+  public update(data: T = this.data): void {
     if (this.loaded && JSON.stringify(this.data) !== JSON.stringify(data)) {
       this.data = { ...this.data, ...data };
 
-      this.emit('update', this.data);
+      this.save(this.data);
     }
   }
 
@@ -84,12 +85,23 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
    * @param path Path to add the value to
    * @param value Value to add
    */
-  add<P extends string>(path: P, value: PathValue<T, P>): void {
+  public add<P extends string>(path: P, value: PathValue<T, P>): void {
     if (!this.loaded) return;
 
     useStorage.setByPath(this.data, path, value);
 
     this.save(this.data);
+  }
+
+  /**
+   * Clears all data from the storage.
+   */
+  public clear(): void {
+    if (this.loaded) {
+      this.data = {} as T;
+
+      this.save(this.data);
+    }
   }
 
   /**
@@ -116,7 +128,7 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
     return current;
   }
 
-  override on<K extends keyof UseStorageEvents<T>>(eventName: K, callback: (this: useStorage<T>, ...args: UseStorageEvents<T>[K]) => void): this {
+  public override on<K extends keyof UseStorageEvents<T>>(eventName: K, callback: (this: useStorage<T>, ...args: UseStorageEvents<T>[K]) => void): this {
     if (eventName === 'load' && this.loaded) {
       callback.apply(this, [this.data]);
 
