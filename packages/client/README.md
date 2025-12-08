@@ -34,6 +34,7 @@ Add the following to your HTML:
 - **Simulation**: Simulates events for local testing.
 - **Logger**: Utility for formatted logs.
 - **Button/Command**: Helpers for custom actions.
+- And much more!
 
 ## License
 

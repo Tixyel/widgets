@@ -10,7 +10,7 @@ import { findEmotesInText, replaceEmotesWithHTML } from './utils/Message.js';
 import { EventProvider } from './utils/EventProvider.js';
 import { useStorage } from './utils/useStorage.js';
 import { useQueue } from './utils/useQueue.js';
-import { SE_API } from './types/streamelements/index.js';
+import type { SE_API } from './types/streamelements/index.js';
 import './client/listener.js';
 
 export * from './types/index.js';
