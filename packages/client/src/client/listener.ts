@@ -1,6 +1,7 @@
 import { Button } from '../actions/button.js';
 import { Command } from '../actions/command.js';
 import { Simulation } from '../simulation/index.js';
+import { initializeLocalSEAPI } from '../streamelements/api.js';
 import { ClientEvents, Provider } from '../types/client.js';
 import { _storages } from '../utils/useStorage.js';
 import { Client } from './index.js';
@@ -8,6 +9,10 @@ import { Client } from './index.js';
 window.addEventListener('load', () => {
   if (window.client instanceof Client) {
     Simulation.start();
+
+    if (typeof SE_API === 'undefined' || !SE_API) {
+      SE_API = initializeLocalSEAPI();
+    }
   }
 });
 

@@ -1,4 +1,4 @@
-declare const SE_API: {
+export type SE_API = {
   responses: Record<string, any>;
   sendMessage: (message: string, data: object) => void;
   counters: {
