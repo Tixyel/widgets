@@ -2199,4 +2199,92 @@ export class Simulation {
         window.dispatchEvent(new CustomEvent('onWidgetLoad', { detail: load }));
       });
   }
+
+  static emulate = {
+    twitch: {
+      message(data: Record<string, string | number | boolean> = {}) {
+        Simulation.generate.event.onEventReceived('twitch', 'message', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+      follower(data: Record<string, string | number | boolean> = {}) {
+        Simulation.generate.event.onEventReceived('twitch', 'follower-latest', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+      raid(data: Record<string, string | number | boolean> = {}) {
+        Simulation.generate.event.onEventReceived('twitch', 'raid-latest', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+      cheer(data: Record<string, string | number | boolean> = {}) {
+        Simulation.generate.event.onEventReceived('twitch', 'cheer-latest', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+      subscriber(data: Record<string, string | number | boolean> & { subType?: 'default' | 'gift' | 'community' | 'spam' } = {}) {
+        Simulation.generate.event.onEventReceived('twitch', 'subscriber-latest', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+    },
+    streamelements: {
+      tip(data: Record<string, string | number | boolean> = {}) {
+        Simulation.generate.event.onEventReceived('streamelements', 'tip-latest', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+    },
+    youtube: {
+      message(data: Record<string, string | number | boolean> = {}) {
+        Simulation.generate.event.onEventReceived('youtube', 'message', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+      subscriber(data: Record<string, string | number | boolean> = {}) {
+        Simulation.generate.event.onEventReceived('youtube', 'subscriber-latest', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+      superchat(data: Record<string, string | number | boolean> = {}) {
+        Simulation.generate.event.onEventReceived('youtube', 'superchat-latest', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+      sponsor(data: Record<string, string | number | boolean> & { subType?: 'default' | 'gift' | 'community' | 'spam' } = {}) {
+        Simulation.generate.event.onEventReceived('youtube', 'sponsor-latest', data).then((event) => {
+          if (event) {
+            Simulation.emulate.send('onEventReceived', event);
+          }
+        });
+      },
+    },
+    kick: {},
+    facebook: {},
+
+    send<T extends 'onEventReceived' | 'onSessionUpdate' | 'onWidgetLoad'>(
+      listener: T,
+      event: T extends 'onEventReceived' ? onEventReceived : T extends 'onSessionUpdate' ? onSessionUpdate : onWidgetLoad,
+    ): void {
+      window.dispatchEvent(new CustomEvent(listener, { detail: event }));
+    },
+  };
 }
