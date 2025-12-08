@@ -20,8 +20,16 @@ type QueueItem<T> = { value: T } & QueueProps;
 
 type QueueProcessor<T> = (item: T, queue: useQueue<T>) => Promise<any>;
 
+type QueueDuration = number | boolean | undefined;
+
 interface QueueOptions<T> {
-  duration: number | boolean | undefined;
+  /**
+   * Duration between processing each item in milliseconds. Set to `0` or `false` for immediate processing.
+   */
+  duration: QueueDuration;
+  /**
+   * Function to process each item in the queue.
+   */
   processor: QueueProcessor<T>;
 }
 
@@ -30,14 +38,15 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
   priorityQueue: QueueItem<T>[] = [];
   history: QueueItem<T>[] = [];
 
-  timeouts: Array<ReturnType<typeof setTimeout>> = [];
+  private timeouts: Array<ReturnType<typeof setTimeout>> = [];
 
-  running: boolean = false;
-  duration: number | boolean | undefined = undefined;
+  public running: boolean = false;
 
-  loaded: boolean = false;
+  public duration: QueueDuration = undefined;
 
-  processor!: QueueProcessor<T>;
+  private loaded: boolean = false;
+
+  public processor!: QueueProcessor<T>;
 
   constructor(options: QueueOptions<T>) {
     if (!(window.client instanceof Client)) return;
@@ -54,7 +63,7 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
     });
   }
 
-  enqueue(value: T, options: Partial<QueueProps> = {}): this {
+  public enqueue(value: T, options: Partial<QueueProps> = {}): this {
     const item: QueueItem<T> = {
       isoDate: new Date().toISOString(),
       isLoop: options?.isLoop ?? false,
@@ -96,7 +105,9 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
 
     if (typeof this.duration === 'number' && this.duration > 0) {
       this.timeouts.push(setTimeout(() => this.run(), this.duration));
-    } else if (this.duration === 0 || this.duration === false) this.run();
+    } else if (this.duration === 0 || (this.duration !== -1 && this.duration !== false)) {
+      this.run();
+    }
   }
 
   private async next() {
@@ -124,7 +135,9 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
   }
 
   public resume() {
-    this.cancel();
+    if (this.running) {
+      this.cancel();
+    }
 
     if (this.hasItems()) this.run();
 
@@ -144,14 +157,28 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
   }
 
   public cancel() {
-    this.timeouts.forEach((timeout) => clearTimeout(timeout));
-    this.timeouts = [];
-    this.running = false;
+    if (this.running) {
+      this.timeouts.forEach((timeout) => clearTimeout(timeout));
+      this.timeouts = [];
+      this.running = false;
 
-    this.emit('cancel');
+      this.emit('cancel');
+    }
   }
 
   public hasItems(): boolean {
     return this.queue.length > 0 || this.priorityQueue.length > 0;
+  }
+
+  public override on<K extends keyof QueueEvents<T>>(eventName: K, callback: (this: useQueue<T>, ...args: QueueEvents<T>[K]) => void): this {
+    if (eventName === 'load' && this.loaded) {
+      callback.apply(this);
+
+      return this;
+    }
+
+    super.on(eventName, callback);
+
+    return this;
   }
 }
