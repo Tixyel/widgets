@@ -4,13 +4,14 @@ import { onEventReceivedEvent } from './types/streamelements/events/onEventRecei
 import { onSessionUpdateEvent } from './types/streamelements/events/onSessionUpdate.js';
 import { onWidgetLoadEvent } from './types/streamelements/events/onWidgetLoad.js';
 import { Logger } from './utils/Logger.js';
-import './client/listener.js';
 import { Button } from './actions/button.js';
 import { Command } from './actions/command.js';
 import { findEmotesInText, replaceEmotesWithHTML } from './utils/Message.js';
 import { EventProvider } from './utils/EventProvider.js';
 import { useStorage } from './utils/useStorage.js';
 import { useQueue } from './utils/useQueue.js';
+import { SE_API } from './types/streamelements/index.js';
+import './client/listener.js';
 
 export * from './types/index.js';
 
@@ -31,22 +32,7 @@ export const Tixyel = {
   },
 } as const;
 
-type _Tixyel_ = {
-  Client: typeof Client;
-  Simulation: typeof Simulation;
-  logger: Logger;
-  utils: {
-    findEmotesInText: typeof findEmotesInText;
-    replaceEmotesWithHTML: typeof replaceEmotesWithHTML;
-  };
-  modules: {
-    Button: typeof Button;
-    Command: typeof Command;
-    EventProvider: typeof EventProvider;
-    useStorage: typeof useStorage;
-    useQueue: typeof useQueue;
-  };
-};
+type _Tixyel_ = typeof Tixyel;
 
 declare global {
   interface Window {
@@ -62,6 +48,7 @@ declare global {
 
   var Tixyel: _Tixyel_;
   var client: Client;
+  var SE_API: SE_API;
 }
 
 if (typeof window !== 'undefined') {
