@@ -34,913 +34,21 @@ import type { YouTube$Superchat } from '../types/streamelements/events/youtube/s
 import type { Session$AnyConfig, Session$AvailableCategory, Session$AvailableData } from '../types/streamelements/session.generate.js';
 import type { Session } from '../types/streamelements/session.js';
 import { BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
+import { names, messages, avatars, emotes, badges, tts, items, tiers } from './data/index.js';
 
 type Modifier = (value: string, param: string | null | undefined, values: { amount?: number; count?: number }) => string;
 
 export class Simulation {
   static data = {
-    names: ['Local', 'Tixyel', 'Urie_s2', 'itzzcatt', 'BeniArts', 'Cupidiko', 'shy_madeit'] as string[],
-    messages: [
-      'Hello everyone!',
-      'PogChamp',
-      'This stream is amazing!',
-      'catJAM catJAM catJAM',
-      'LUL that was funny',
-      'GG!',
-      'First time here, loving it!',
-      'DinoDance',
-      'Can we get some hype in chat?',
-      'TransgenderPride PansexualPride NonbinaryPride',
-      'POGGERS',
-      'I just followed! PogChamp',
-      'Great gameplay btw',
-      'LUL LUL LUL',
-      'This is so wholesome AngelThump',
-      'catJAM vibing',
-      'haHAA',
-      'Wait what just happened? D:',
-      'GlitchCat GlitchCat',
-      'Best stream on Twitch right now!',
-      'DarkMode gang where you at?',
-      'PogChamp PogChamp PogChamp PogChamp',
-      'Anyone else eating? DoritosChip',
-      'I love this community!',
-      'TheIlluminati confirmed',
-      'bUrself be yourself!',
-      'CookieTime nom nom',
-      'imGlitch technical difficulties',
-      'This music is fire catJAM',
-      'bttvNice',
-      'LesbianPride GayPride BisexualPride',
-      'SSSsss Minecraft time',
-      'PopNemo',
-      'Going to bed, good night everyone!',
-      'Just got here, what did I miss?',
-      ':tf: trollface',
-      'ariW wave',
-      'BroBalt nice one',
-      'AsexualPride IntersexPride GenderFluidPride',
-      'This chat is moving so fast!',
-      'CandianRage',
-      'PunchTrees PunchTrees',
-      'CiGrip',
-      'ConcernDoge hmm',
-      'CruW salute',
-      'cvHazmat stay safe',
-      'DuckerZ quack',
-      'BloodTrail hunting time',
-      'CatBag kitty!',
-      'c! poggers',
-    ] as string[],
-    tiers: ['1000', '2000', '3000', 'prime'] as string[],
-    avatars: [
-      'https://static-cdn.jtvnw.net/user-default-pictures-uv/13e5fa74-defa-11e9-809c-784f43822e80-profile_image-300x300.png',
-      'https://static-cdn.jtvnw.net/user-default-pictures-uv/dbdc9198-def8-11e9-8681-784f43822e80-profile_image-300x300.png',
-      'https://static-cdn.jtvnw.net/user-default-pictures-uv/998f01ae-def8-11e9-b95c-784f43822e80-profile_image-300x300.png',
-      'https://static-cdn.jtvnw.net/user-default-pictures-uv/de130ab0-def7-11e9-b668-784f43822e80-profile_image-300x300.png',
-      'https://static-cdn.jtvnw.net/user-default-pictures-uv/ebe4cd89-b4f4-4cd9-adac-2f30151b4209-profile_image-300x300.png',
-      'https://static-cdn.jtvnw.net/user-default-pictures-uv/215b7342-def9-11e9-9a66-784f43822e80-profile_image-300x300.png',
-      'https://static-cdn.jtvnw.net/user-default-pictures-uv/ead5c8b2-a4c9-4724-b1dd-9f00b46cbd3d-profile_image-300x300.png',
-    ] as string[],
-    items: [] as any[],
-    emotes: [
-      {
-        'type': 'twitch',
-        'name': 'DinoDance',
-        'id': 'emotesv2_dcd06b30a5c24f6eb871e8f5edbd44f7',
-        'gif': true,
-        'animated': true,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_dcd06b30a5c24f6eb871e8f5edbd44f7/animated/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_dcd06b30a5c24f6eb871e8f5edbd44f7/animated/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_dcd06b30a5c24f6eb871e8f5edbd44f7/animated/dark/3.0',
-        },
-        'start': 46,
-        'end': 55,
-      },
-      {
-        'type': 'twitch',
-        'name': 'PopNemo',
-        'id': 'emotesv2_5d523adb8bbb4786821cd7091e47da21',
-        'gif': true,
-        'animated': true,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_5d523adb8bbb4786821cd7091e47da21/animated/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_5d523adb8bbb4786821cd7091e47da21/animated/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_5d523adb8bbb4786821cd7091e47da21/animated/dark/3.0',
-        },
-        'start': 56,
-        'end': 63,
-      },
-      {
-        'type': 'twitch',
-        'name': 'TransgenderPride',
-        'id': '307827377',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827377/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827377/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827377/default/dark/3.0',
-        },
-        'start': 0,
-        'end': 15,
-      },
-      {
-        'type': 'twitch',
-        'name': 'PansexualPride',
-        'id': '307827370',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827370/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827370/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827370/default/dark/3.0',
-        },
-        'start': 17,
-        'end': 30,
-      },
-      {
-        'type': 'twitch',
-        'name': 'NonbinaryPride',
-        'id': '307827356',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827356/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827356/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827356/default/dark/3.0',
-        },
-        'start': 32,
-        'end': 45,
-      },
-      {
-        'type': 'twitch',
-        'name': 'LesbianPride',
-        'id': '307827340',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827340/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827340/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827340/default/dark/3.0',
-        },
-        'start': 47,
-        'end': 58,
-      },
-      {
-        'type': 'twitch',
-        'name': 'IntersexPride',
-        'id': '307827332',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827332/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827332/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827332/default/dark/3.0',
-        },
-        'start': 60,
-        'end': 72,
-      },
-      {
-        'type': 'twitch',
-        'name': 'GenderFluidPride',
-        'id': '307827326',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827326/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827326/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827326/default/dark/3.0',
-        },
-        'start': 74,
-        'end': 89,
-      },
-      {
-        'type': 'twitch',
-        'name': 'GayPride',
-        'id': '307827321',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827321/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827321/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827321/default/dark/3.0',
-        },
-        'start': 91,
-        'end': 98,
-      },
-      {
-        'type': 'twitch',
-        'name': 'BisexualPride',
-        'id': '307827313',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827313/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827313/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827313/default/dark/3.0',
-        },
-        'start': 100,
-        'end': 112,
-      },
-      {
-        'type': 'twitch',
-        'name': 'AsexualPride',
-        'id': '307827267',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/307827267/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/307827267/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/307827267/default/dark/3.0',
-        },
-        'start': 114,
-        'end': 125,
-      },
-      {
-        'type': 'twitch',
-        'name': 'PogChamp',
-        'id': '305954156',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/305954156/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/305954156/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/305954156/default/dark/3.0',
-        },
-        'start': 127,
-        'end': 134,
-      },
-      {
-        'type': 'twitch',
-        'name': 'GlitchCat',
-        'id': '304486301',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/304486301/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/304486301/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/304486301/default/dark/3.0',
-        },
-        'start': 136,
-        'end': 144,
-      },
-      {
-        'type': 'twitch',
-        'name': 'DarkMode',
-        'id': '461298',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/461298/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/461298/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/461298/default/dark/3.0',
-        },
-        'start': 146,
-        'end': 153,
-      },
-      {
-        'type': 'twitch',
-        'name': 'LUL',
-        'id': '425618',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/425618/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/425618/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/425618/default/dark/3.0',
-        },
-        'start': 155,
-        'end': 157,
-      },
-      {
-        'type': 'twitch',
-        'name': 'TheIlluminati',
-        'id': '145315',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/145315/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/145315/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/145315/default/dark/3.0',
-        },
-        'start': 159,
-        'end': 171,
-      },
-      {
-        'type': 'twitch',
-        'name': 'imGlitch',
-        'id': '112290',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0',
-        },
-        'start': 173,
-        'end': 180,
-      },
-      {
-        'type': 'twitch',
-        'name': 'DoritosChip',
-        'id': '102242',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/102242/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/102242/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/102242/default/dark/3.0',
-        },
-        'start': 182,
-        'end': 192,
-      },
-      {
-        'type': 'twitch',
-        'name': 'SSSsss',
-        'id': '46',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/46/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/46/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/46/default/dark/3.0',
-        },
-        'start': 194,
-        'end': 199,
-      },
-      {
-        'type': 'twitch',
-        'name': 'PunchTrees',
-        'id': '47',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/47/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/47/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/47/default/dark/3.0',
-        },
-        'start': 201,
-        'end': 210,
-      },
-      {
-        'type': 'twitch',
-        'name': 'BloodTrail',
-        'id': '69',
-        'gif': false,
-        'urls': {
-          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/69/default/dark/1.0',
-          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/69/default/dark/2.0',
-          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/69/default/dark/3.0',
-        },
-        'start': 223,
-        'end': 232,
-      },
-      {
-        'type': '7tv',
-        'name': 'CookieTime',
-        'id': '635b0184ea9ce7391cbf77d6',
-        'gif': true,
-        'animated': true,
-        'urls': {
-          '1': 'https://cdn.7tv.app/emote/635b0184ea9ce7391cbf77d6/1x.webp',
-          '2': 'https://cdn.7tv.app/emote/635b0184ea9ce7391cbf77d6/2x.webp',
-          '3': 'https://cdn.7tv.app/emote/635b0184ea9ce7391cbf77d6/3x.webp',
-          '4': 'https://cdn.7tv.app/emote/635b0184ea9ce7391cbf77d6/4x.webp',
-        },
-        'start': 0,
-        'end': 10,
-        'coords': {
-          'x': 0,
-          'y': 0,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'catJAM',
-        'id': '5f1b0186cf6d2144653d2970',
-        'gif': true,
-        'animated': true,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/5f1b0186cf6d2144653d2970/1x',
-          '2': 'https://cdn.betterttv.net/emote/5f1b0186cf6d2144653d2970/2x',
-          '4': 'https://cdn.betterttv.net/emote/5f1b0186cf6d2144653d2970/3x',
-        },
-        'start': 0,
-        'end': 6,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': ':tf:',
-        'id': '54fa8f1401e468494b85b537',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/54fa8f1401e468494b85b537/1x',
-          '2': 'https://cdn.betterttv.net/emote/54fa8f1401e468494b85b537/2x',
-          '4': 'https://cdn.betterttv.net/emote/54fa8f1401e468494b85b537/3x',
-        },
-        'start': 7,
-        'end': 11,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'AngelThump',
-        'id': '566ca1a365dbbdab32ec055b',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/566ca1a365dbbdab32ec055b/1x',
-          '2': 'https://cdn.betterttv.net/emote/566ca1a365dbbdab32ec055b/2x',
-          '4': 'https://cdn.betterttv.net/emote/566ca1a365dbbdab32ec055b/3x',
-        },
-        'start': 12,
-        'end': 22,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 334,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'ariW',
-        'id': '56fa09f18eff3b595e93ac26',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/56fa09f18eff3b595e93ac26/1x',
-          '2': 'https://cdn.betterttv.net/emote/56fa09f18eff3b595e93ac26/2x',
-          '4': 'https://cdn.betterttv.net/emote/56fa09f18eff3b595e93ac26/3x',
-        },
-        'start': 23,
-        'end': 27,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'BroBalt',
-        'id': '54fbf00a01abde735115de5c',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/54fbf00a01abde735115de5c/1x',
-          '2': 'https://cdn.betterttv.net/emote/54fbf00a01abde735115de5c/2x',
-          '4': 'https://cdn.betterttv.net/emote/54fbf00a01abde735115de5c/3x',
-        },
-        'start': 28,
-        'end': 35,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 184,
-          'height': 120,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'bttvNice',
-        'id': '54fab7d2633595ca4c713abf',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/54fab7d2633595ca4c713abf/1x',
-          '2': 'https://cdn.betterttv.net/emote/54fab7d2633595ca4c713abf/2x',
-          '4': 'https://cdn.betterttv.net/emote/54fab7d2633595ca4c713abf/3x',
-        },
-        'start': 36,
-        'end': 44,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 168,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'bUrself',
-        'id': '566c9f3b65dbbdab32ec052e',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/566c9f3b65dbbdab32ec052e/1x',
-          '2': 'https://cdn.betterttv.net/emote/566c9f3b65dbbdab32ec052e/2x',
-          '4': 'https://cdn.betterttv.net/emote/566c9f3b65dbbdab32ec052e/3x',
-        },
-        'start': 45,
-        'end': 52,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'c!',
-        'id': '6468f7acaee1f7f47567708e',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/6468f7acaee1f7f47567708e/1x',
-          '2': 'https://cdn.betterttv.net/emote/6468f7acaee1f7f47567708e/2x',
-          '4': 'https://cdn.betterttv.net/emote/6468f7acaee1f7f47567708e/3x',
-        },
-        'start': 53,
-        'end': 55,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'CandianRage',
-        'id': '54fbf09c01abde735115de61',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/54fbf09c01abde735115de61/1x',
-          '2': 'https://cdn.betterttv.net/emote/54fbf09c01abde735115de61/2x',
-          '4': 'https://cdn.betterttv.net/emote/54fbf09c01abde735115de61/3x',
-        },
-        'start': 56,
-        'end': 67,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'CiGrip',
-        'id': '54fa8fce01e468494b85b53c',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/54fa8fce01e468494b85b53c/1x',
-          '2': 'https://cdn.betterttv.net/emote/54fa8fce01e468494b85b53c/2x',
-          '4': 'https://cdn.betterttv.net/emote/54fa8fce01e468494b85b53c/3x',
-        },
-        'start': 68,
-        'end': 74,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'ConcernDoge',
-        'id': '566c9f6365dbbdab32ec0532',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/566c9f6365dbbdab32ec0532/1x',
-          '2': 'https://cdn.betterttv.net/emote/566c9f6365dbbdab32ec0532/2x',
-          '4': 'https://cdn.betterttv.net/emote/566c9f6365dbbdab32ec0532/3x',
-        },
-        'start': 75,
-        'end': 86,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 101,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'CruW',
-        'id': '55471c2789d53f2d12781713',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/55471c2789d53f2d12781713/1x',
-          '2': 'https://cdn.betterttv.net/emote/55471c2789d53f2d12781713/2x',
-          '4': 'https://cdn.betterttv.net/emote/55471c2789d53f2d12781713/3x',
-        },
-        'start': 87,
-        'end': 91,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'cvHazmat',
-        'id': '5e76d338d6581c3724c0f0b2',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/5e76d338d6581c3724c0f0b2/1x',
-          '2': 'https://cdn.betterttv.net/emote/5e76d338d6581c3724c0f0b2/2x',
-          '4': 'https://cdn.betterttv.net/emote/5e76d338d6581c3724c0f0b2/3x',
-        },
-        'start': 92,
-        'end': 100,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'D:',
-        'id': '55028cd2135896936880fdd7',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/55028cd2135896936880fdd7/1x',
-          '2': 'https://cdn.betterttv.net/emote/55028cd2135896936880fdd7/2x',
-          '4': 'https://cdn.betterttv.net/emote/55028cd2135896936880fdd7/3x',
-        },
-        'start': 101,
-        'end': 103,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'haHAA',
-        'id': '555981336ba1901877765555',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/555981336ba1901877765555/1x',
-          '2': 'https://cdn.betterttv.net/emote/555981336ba1901877765555/2x',
-          '4': 'https://cdn.betterttv.net/emote/555981336ba1901877765555/3x',
-        },
-        'start': 104,
-        'end': 109,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'LuL',
-        'id': '567b00c61ddbe1786688a633',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/567b00c61ddbe1786688a633/1x',
-          '2': 'https://cdn.betterttv.net/emote/567b00c61ddbe1786688a633/2x',
-          '4': 'https://cdn.betterttv.net/emote/567b00c61ddbe1786688a633/3x',
-        },
-        'start': 110,
-        'end': 113,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 112,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'bttv',
-        'name': 'DuckerZ',
-        'id': '573d38b50ffbf6cc5cc38dc9',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.betterttv.net/emote/573d38b50ffbf6cc5cc38dc9/1x',
-          '2': 'https://cdn.betterttv.net/emote/573d38b50ffbf6cc5cc38dc9/2x',
-          '4': 'https://cdn.betterttv.net/emote/573d38b50ffbf6cc5cc38dc9/3x',
-        },
-        'start': 114,
-        'end': 121,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 149,
-          'height': 112,
-        },
-      },
-      {
-        'type': 'ffz',
-        'name': 'CatBag',
-        'id': '25927',
-        'gif': false,
-        'animated': false,
-        'urls': {
-          '1': 'https://cdn.frankerfacez.com/emote/25927/1',
-          '2': 'https://cdn.frankerfacez.com/emote/25927/2',
-          '4': 'https://cdn.frankerfacez.com/emote/25927/4',
-        },
-        'start': 122,
-        'end': 128,
-        'coords': {
-          'x': 0,
-          'y': 0,
-          'width': 143,
-          'height': 128,
-        },
-      },
-    ] as Array<TwitchEmote | BttvEmote | SeventvEmote>,
-    badges: {
-      '100 bits': {
-        type: '100 bits',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/09d93036-e7ce-431c-9a9e-7044297133f2/3',
-        description: '100 bits badge',
-      },
-      'no audio': {
-        type: 'no audio',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/aef2cd08-f29b-45a1-8c12-d44d7fd5e6f0/3',
-        description: 'Individuals with unreliable or no sound can select this badge',
-      },
-      'no video': {
-        type: 'no video',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/199a0dba-58f3-494e-a7fc-1fa0a1001fb8/3',
-        description: 'Individuals with unreliable or no video can select this badge',
-      },
-      'bot': {
-        type: 'bot',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/df9095f6-a8a0-4cc2-bb33-d908c0adffb8/3',
-        description: 'Twitch bot',
-      },
-      'twitch staff': {
-        type: 'twitch staff',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/d97c37bd-a6f5-4c38-8f57-4e4bef88af34/3',
-        description: 'Twitch Staff',
-      },
-      'admins': {
-        type: 'admins',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/9ef7e029-4cdf-4d4d-a0d5-e2b3fb2583fe/3',
-        description: 'Admins',
-      },
-      'artist': {
-        type: 'artist',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/4300a897-03dc-4e83-8c0e-c332fee7057f/3',
-        description: 'Artist',
-      },
-      'game developer': {
-        type: 'game developer',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/85856a4a-eb7d-4e26-a43e-d204a977ade4/3',
-        description: 'Game Developer',
-      },
-      'prime': {
-        type: 'prime',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/a1dd5073-19c3-4911-8cb4-c464a7bc1510/3',
-        description: 'Prime',
-      },
-      'turbo': {
-        type: 'turbo',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/bd444ec6-8f34-4bf9-91f4-af1e3428d80f/3',
-        description: 'Turbo',
-      },
-      'subscriber': {
-        type: 'subscriber',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-8513-2ff4adfae661/3',
-        description: 'Subscriber',
-      },
-      'broadcaster': {
-        type: 'broadcaster',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3',
-        description: 'Broadcaster',
-      },
-      'verified': {
-        type: 'verified',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/d12a2e27-16f6-41d0-ab77-b780518f00a3/3',
-        description: 'Verified',
-      },
-      'moderator': {
-        type: 'moderator',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/3267646d-33f0-4b17-b3df-f923a41db1d0/3',
-        description: 'Moderator',
-      },
-      'vip': {
-        type: 'vip',
-        version: '1',
-        url: 'https://static-cdn.jtvnw.net/badges/v1/b817aba4-fad8-49e2-b88a-7cc744dfa6ec/3',
-        description: 'VIP',
-      },
-    } as Record<TwitchBadgesKeys, TwitchBadge>,
+    names: names,
+    messages: messages,
+    tiers: tiers,
+    avatars: avatars,
+    items: items,
+    emotes: emotes,
+    badges: badges,
     pronouns: Alejo$Pronouns,
-    tts: [
-      'Filiz',
-      'Astrid',
-      'Tatyana',
-      'Maxim',
-      'Carmen',
-      'Ines',
-      'Cristiano',
-      'Vitoria',
-      'Ricardo',
-      'Maja',
-      'Jan',
-      'Jacek',
-      'Ewa',
-      'Ruben',
-      'Lotte',
-      'Liv',
-      'Seoyeon',
-      'Takumi',
-      'Mizuki',
-      'Giorgio',
-      'Carla',
-      'Bianca',
-      'Karl',
-      'Dora',
-      'Mathieu',
-      'Celine',
-      'Chantal',
-      'Penelope',
-      'Miguel',
-      'Mia',
-      'Enrique',
-      'Conchita',
-      'Geraint',
-      'Salli',
-      'Matthew',
-      'Kimberly',
-      'Kendra',
-      'Justin',
-      'Joey',
-      'Joanna',
-      'Ivy',
-      'Raveena',
-      'Aditi',
-      'Emma',
-      'Brian',
-      'Amy',
-      'Russell',
-      'Nicole',
-      'Vicki',
-      'Marlene',
-      'Hans',
-      'Naja',
-      'Mads',
-      'Gwyneth',
-      'Zhiyu',
-      'Tracy',
-      'Danny',
-      'Huihui',
-      'Yaoyao',
-      'Kangkang',
-      'HanHan',
-      'Zhiwei',
-      'Asaf',
-      'An',
-      'Stefanos',
-      'Filip',
-      'Ivan',
-      'Heidi',
-      'Herena',
-      'Kalpana',
-      'Hemant',
-      'Matej',
-      'Andika',
-      'Rizwan',
-      'Lado',
-      'Valluvar',
-      'Linda',
-      'Heather',
-      'Sean',
-      'Michael',
-      'Karsten',
-      'Guillaume',
-      'Pattara',
-      'Jakub',
-      'Szabolcs',
-      'Hoda',
-      'Naayf',
-    ] as string[],
+    tts: tts,
   };
 
   static color = {
@@ -1387,7 +495,7 @@ export class Simulation {
       return result;
     },
 
-    array<T>(arr: T[]): [T, number] {
+    array<T>(arr: T[]): [value: T, index: number] {
       const index = this.number(0, arr.length - 1);
 
       return [arr[index], index];
@@ -1470,10 +578,23 @@ export class Simulation {
      */
     compose(
       template: string,
-      values: Record<string, any>,
-      options: { method?: 'loop' | 'index'; modifiers?: Record<string, Modifier> } = { method: 'index', modifiers: {} },
+      values: Record<string, any> = {},
+      options: {
+        method?: 'loop' | 'index';
+        html?: boolean;
+        modifiers?: Record<string, Modifier>;
+        aliases?: Record<string, string[]>;
+      } = {
+        method: 'index',
+        html: false,
+        modifiers: {},
+        aliases: {},
+      },
     ): string {
       const { mergeSpanStyles } = Simulation.element;
+
+      values.skip = '<br/>';
+      values.newline = '<br/>';
 
       const flatten: Record<string, string> = Object.entries(Simulation.object.flatten(values)).reduce(
         (acc, [k, v]) => {
@@ -1499,9 +620,6 @@ export class Simulation {
           acc['currency'] = acc.currency || window.client?.details.currency.symbol || '$';
           acc['currencyCode'] = acc.currencyCode || window.client?.details.currency.code || 'USD';
 
-          acc['skip'] = '<br/>';
-          acc['newline'] = '<br/>';
-
           return acc;
         },
         {} as Record<string, string>,
@@ -1514,16 +632,7 @@ export class Simulation {
 
       var amount = parseFloat(flatten?.amount ?? flatten?.count ?? 0);
 
-      const MODIFIERS: Record<string, Modifier> = {
-        BT1: (value) => (amount > 1 ? value : ''),
-        BT0: (value) => (amount > 0 ? value : ''),
-        ST1: (value) => (amount < 1 ? value : ''),
-        ST0: (value) => (amount < 0 ? value : ''),
-        UPC: (value) => value.toUpperCase(),
-        LOW: (value) => value.toLowerCase(),
-        REV: (value) => value.split('').reverse().join(''),
-        CAP: (value) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase(),
-        FALLBACK: (value, param) => (value.length ? value : (param ?? value)),
+      const HTML_MODIFIERS: Record<string, Modifier> = {
         COLOR: (value, param) => mergeSpanStyles(param && !!Simulation.color.validate(param) ? `color: ${param}` : '', value),
         WEIGHT: (value, param) => mergeSpanStyles(param && !isNaN(parseInt(param)) ? `font-weight: ${param}` : '', value),
         BOLD: (value) => mergeSpanStyles('font-weight: bold', value),
@@ -1538,6 +647,23 @@ export class Simulation {
         SMALL: (value) => mergeSpanStyles('font-size: smaller', value),
         SHADOW: (value, param) => mergeSpanStyles(`text-shadow: ${param}`, value),
         SIZE: (value, param) => mergeSpanStyles(param ? `font-size: ${param}` : '', value),
+      };
+
+      const STRING_MODIFIERS: Record<string, Modifier> = {
+        BT1: (value) => (amount > 1 ? value : ''),
+        BT0: (value) => (amount > 0 ? value : ''),
+        ST1: (value) => (amount < 1 ? value : ''),
+        ST0: (value) => (amount < 0 ? value : ''),
+        UPC: (value) => value.toUpperCase(),
+        LOW: (value) => value.toLowerCase(),
+        REV: (value) => value.split('').reverse().join(''),
+        CAP: (value) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase(),
+        FALLBACK: (value, param) => (value.length ? value : (param ?? value)),
+      };
+
+      const MODIFIERS: Record<string, Modifier> = {
+        ...STRING_MODIFIERS,
+        ...(options?.html ? HTML_MODIFIERS : {}),
         ...(options.modifiers ?? {}),
       };
 
@@ -1562,6 +688,7 @@ export class Simulation {
         SMALL: ['SMALLER', 'SM'],
         SHADOW: ['SHADOW', 'SHD'],
         FALLBACK: ['FALLBACK', 'FB'],
+        ...(options.aliases ?? {}),
       };
 
       function applyModifier(value: string, name: string, param: string | null | undefined): string {
@@ -1677,6 +804,148 @@ export class Simulation {
       } else {
         return `<span style="${outerStyle}">${innerHTML}</span>`;
       }
+    },
+
+    /**
+     * Scales an HTML element to fit within its parent element based on specified minimum and maximum scale factors.
+     * @param element - The HTML element to be scaled.
+     * @param min - Minimum scale factor (default is 0).
+     * @param max - Maximum scale factor (default is 1).
+     * @param options - Optional settings for scaling.
+     * @returns - An object containing the new width, height, and scale factor, or void if not applied.
+     * @example
+     * ```javascript
+     * const element = document.getElementById('myElement');
+     * Simulation.element.scale(element, 0.5, 1, { return: false });
+     * ```
+     */
+    scale(
+      element: HTMLElement,
+      min: number = 0,
+      max: number = 1,
+      options?: { return: boolean; parent: HTMLElement; base: 'width' | 'height' },
+    ): { width: number; height: number; scale: number } | void {
+      const { return: returnOnly = false, parent: customParent, base } = options || {};
+
+      const parent = customParent || element.parentElement || document.body;
+
+      if (!parent) {
+        Tixyel.logger.warn('No parent element found for scaling');
+        return;
+      }
+
+      const parentRect = parent.getBoundingClientRect();
+      const elementWidth = element.offsetWidth;
+      const elementHeight = element.offsetHeight;
+
+      if (elementWidth === 0 || elementHeight === 0) {
+        Tixyel.logger.warn('Element has zero width or height, cannot scale');
+        return;
+      }
+
+      // Calculate scales for both dimensions
+      const scaleX = (parentRect.width * max) / elementWidth;
+      const scaleY = (parentRect.height * max) / elementHeight;
+
+      // Determine final scale based on base option or use smaller scale
+      let finalScale = base === 'width' ? scaleX : base === 'height' ? scaleY : Math.min(scaleX, scaleY);
+
+      // Apply minimum constraint if needed
+      if (min > 0) {
+        const minScaleX = (parentRect.width * min) / elementWidth;
+        const minScaleY = (parentRect.height * min) / elementHeight;
+        const minScale = Math.max(minScaleX, minScaleY);
+
+        finalScale = Math.max(minScale, finalScale);
+      }
+
+      const result = {
+        width: elementWidth * finalScale,
+        height: elementHeight * finalScale,
+        scale: finalScale,
+      };
+
+      if (returnOnly) {
+        return result;
+      }
+
+      element.style.transform = `scale(${finalScale})`;
+      element.style.transformOrigin = 'center center';
+
+      return result;
+    },
+
+    /**
+     * Splits the text content of an HTML string into individual characters wrapped in span elements with a data-index attribute.
+     * @param htmlString - The input HTML string to be processed.
+     * @param startIndex - The starting index for the data-index attribute (default is 0).
+     * @returns - A new HTML string with each character wrapped in a span element.
+     * @example
+     * ```javascript
+     * const result = Simulation.element.splitTextToChars("<p>Hello</p>", 0);
+     * console.log(result);
+     * // Output: '<p><span class="char" data-index="0">H</span><span class="char" data-index="1">e</span><span class="char" data-index="2">l</span><span class="char" data-index="3">l</span><span class="char" data-index="4">o</span></p>'
+     * ```
+     */
+    splitTextToChars(htmlString: string, startIndex: number = 0): string {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, 'text/html');
+
+      let charIndex = startIndex;
+
+      function processNode(node: Node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent;
+
+          const chars = text?.split('').map((char) => {
+            const span = document.createElement('span');
+
+            span.className = 'char';
+            span.dataset.index = String(charIndex++);
+
+            span.textContent = char;
+
+            charIndex++;
+
+            return span.outerHTML;
+          });
+
+          const wrapper = document.createElement('span');
+
+          wrapper.innerHTML = chars?.join('') ?? '';
+
+          return wrapper;
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const clone = node.cloneNode(false);
+
+          node.childNodes.forEach((child) => {
+            const processed = processNode(child);
+
+            if (processed instanceof Node) {
+              Array.from(processed.childNodes).forEach((childNode) => {
+                clone.appendChild(childNode);
+              });
+            }
+          });
+
+          return clone;
+        }
+
+        return node.cloneNode(true);
+      }
+
+      const body = doc.body;
+      const processed = document.createElement('div');
+
+      body.childNodes.forEach((node) => {
+        const result = processNode(node);
+
+        if (result instanceof Node) {
+          processed.appendChild(result);
+        }
+      });
+
+      return processed.innerHTML;
     },
   };
 
