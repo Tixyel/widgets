@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.0.2
+
+### Patch Changes
+
+- c53e78b: Fix esbuild package issue
+
 ## 2.0.1
 
 ### Patch Changes
