@@ -67,6 +67,10 @@ new Client({
         onRemove() {},
       });
     }
+
+    if (event.provider === 'youtube' && event.data.listener === 'message') {
+      logger.warn('YouTube message event received, but not implemented yet.');
+    }
   })
   .on('action', (action, type) => {
     action;
