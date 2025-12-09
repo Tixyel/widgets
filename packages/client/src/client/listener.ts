@@ -1,18 +1,13 @@
 import { Button } from '../actions/button.js';
 import { Command } from '../actions/command.js';
 import { Simulation } from '../simulation/index.js';
-import { initializeLocalSEAPI } from '../streamelements/api.js';
 import { ClientEvents, Provider } from '../types/client.js';
 import { _storages } from '../utils/useStorage.js';
-import { Client } from './index.js';
+import { Client, ClientStorageOptions } from './index.js';
 
 window.addEventListener('load', () => {
   if (window.client instanceof Client) {
     Simulation.start();
-
-    if (typeof SE_API === 'undefined' || !SE_API) {
-      SE_API = initializeLocalSEAPI();
-    }
   }
 });
 
@@ -55,12 +50,45 @@ window.addEventListener('onWidgetLoad', async (data) => {
 
     client.loaded = true;
 
-    client.storage.on('load', () => {
-      client.storage.add(`avatar.${detail.channel.providerId.toLowerCase()}`, {
-        value: detail.channel.avatar,
-        timestamp: Date.now(),
-        expire: Date.now() + client.cache.avatar * 60 * 60 * 1000,
-      });
+    client.storage.on('load', (data) => {
+      if (data) {
+        const clearExpired = <T extends Record<string, ClientStorageOptions<string>>>(data: T) => {
+          const now = Date.now();
+          const cleanedData: any = {};
+
+          for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+              const entry = data[key];
+
+              if (entry.expire && entry.expire > now) {
+                cleanedData[key] = entry;
+              }
+            }
+          }
+
+          return cleanedData as T;
+        };
+
+        const users = clearExpired(data['user'] || {});
+        const avatars = clearExpired(data['avatar'] || {});
+        const pronouns = clearExpired(data['pronoun'] || {});
+        const emotes = clearExpired(data['emote'] || {});
+
+        client.storage.update({
+          user: users,
+          avatar: avatars,
+          pronoun: pronouns,
+          emote: emotes,
+        });
+      }
+
+      if (detail.channel.providerId.length) {
+        client.storage.add(`avatar.${detail.channel.providerId.toLowerCase()}`, {
+          value: detail.channel.avatar,
+          timestamp: Date.now(),
+          expire: Date.now() + client.cache.avatar * 60 * 60 * 1000,
+        });
+      }
     });
   }
 });

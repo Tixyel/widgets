@@ -1,3 +1,5 @@
+import { USE_SE_API } from '../index.js';
+import { SE_API } from '../types/streamelements/index.js';
 import { EventProvider } from './EventProvider.js';
 import { PathValue } from './index.js';
 
@@ -29,29 +31,39 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
     this.id = options.id || this.id;
     this.data = options.data ?? ({} as T);
 
-    if (!SE_API || !SE_API.store) {
-      throw new Error('SE_API.store is not available');
-    }
-
-    SE_API!.store
-      .get<T>(this.id)
-      .then((save) => {
-        this.data = save ?? this.data;
-
-        this.loaded = true;
-
-        this.emit('load', this.data);
-
-        if (JSON.stringify(this.data) !== JSON.stringify(save)) {
-          this.emit('update', this.data);
-        }
-      })
-      .catch(() => {
-        this.loaded = true;
-        this.emit('load', null);
-      });
-
     _storages.push(this);
+
+    this.start();
+  }
+
+  SE_API: SE_API | null = null;
+
+  private start() {
+    USE_SE_API?.then((se) => {
+      this.SE_API = se;
+
+      se!.store
+        .get<T>(this.id)
+        .then((save) => {
+          this.data = save ?? this.data;
+
+          this.loaded = true;
+
+          this.emit('load', this.data);
+
+          if (JSON.stringify(this.data) !== JSON.stringify(save)) {
+            this.emit('update', this.data);
+          }
+        })
+        .catch(() => {
+          this.loaded = true;
+          this.emit('load', null);
+        });
+    });
+
+    // if (!USE_SE_API || !USE_SE_API.store) {
+    //   throw new Error('SE_API.store is not available');
+    // }
   }
 
   /**
@@ -59,10 +71,10 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
    * @param data Data to save (defaults to current)
    */
   private save(data: T = this.data): void {
-    if (this.loaded) {
+    if (this.loaded && this.SE_API) {
       this.data = data;
 
-      SE_API!.store.set<T>(this.id, this.data);
+      this.SE_API.store.set<T>(this.id, this.data);
 
       this.emit('update', this.data);
     }

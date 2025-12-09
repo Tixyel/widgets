@@ -37,7 +37,7 @@ const LOCAL_SE_API: SE_API & { store: { list: Record<string, any> } } = {
   },
 };
 
-export function initializeLocalSEAPI() {
+export async function initializeLocalSEAPI() {
   let lastStore = localStorage.getItem('SE_API-STORE') ?? '';
 
   let result = lastStore ? JSON.parse(lastStore) : {};

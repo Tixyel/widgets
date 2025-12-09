@@ -10,8 +10,9 @@ import { findEmotesInText, replaceEmotesWithHTML } from './utils/Message.js';
 import { EventProvider } from './utils/EventProvider.js';
 import { useStorage } from './utils/useStorage.js';
 import { useQueue } from './utils/useQueue.js';
-import type { SE_API } from './types/streamelements/index.js';
+import type { SE_API as SE_API_TYPE } from './types/streamelements/index.js';
 import './client/listener.js';
+import { initializeLocalSEAPI } from './streamelements/api.js';
 
 export * from './types/index.js';
 
@@ -34,6 +35,8 @@ export const Tixyel = {
 
 type _Tixyel_ = typeof Tixyel;
 
+export const USE_SE_API: Promise<SE_API_TYPE> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
+
 declare global {
   interface Window {
     Tixyel: _Tixyel_;
@@ -46,9 +49,11 @@ declare global {
     onEventReceived: onEventReceivedEvent;
   }
 
-  var Tixyel: _Tixyel_;
+  const Tixyel: _Tixyel_;
   var client: Client;
-  var SE_API: SE_API;
+
+  const SE_API: SE_API_TYPE;
+  const USE_SE_API: Promise<SE_API_TYPE>;
 }
 
 if (typeof window !== 'undefined') {

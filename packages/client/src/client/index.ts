@@ -18,7 +18,7 @@ type ClientOptions = {
   id?: string;
 };
 
-type ClientStorageOptions<T> = {
+export type ClientStorageOptions<T> = {
   value: T;
   timestamp: number;
   expire: number;
