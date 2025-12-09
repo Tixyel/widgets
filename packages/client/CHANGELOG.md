@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.2.0
+
+### Minor Changes
+
+- 2b6289e: Improve useStorage class with better types; Improve useQueue with better types; Add LOCAL SE_API for local development; Moved simulation data
+
 ## 3.1.0
 
 ### Minor Changes
