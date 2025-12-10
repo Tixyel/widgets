@@ -191,6 +191,9 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
           case 'message': {
             const event = data.event;
+
+            Command.execute({ provider: 'twitch', data: data });
+
             break;
           }
           case 'follower-latest': {
