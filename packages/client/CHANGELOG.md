@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.4.0
+
+### Minor Changes
+
+- 50f543c: Update button and command execution logic
+
 ## 3.3.0
 
 ### Minor Changes
