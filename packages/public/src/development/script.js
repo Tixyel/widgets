@@ -1,4 +1,4 @@
-const { logger, Client, Simulation } = Tixyel;
+const { logger, Client, Simulation } = window.Tixyel;
 var main = document.querySelector('main');
 
 const settings = {
