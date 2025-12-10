@@ -1,0 +1,16 @@
+{
+  "name": "01 - Widget",
+  "version": "0.0.0",
+  "description": "",
+  "config": "../tixyel.config.ts",
+  "metadata": {
+    "author": "Your Name",
+    "clientId": "your-client-id",
+    "tags": []
+  },
+  "dirs": {
+    "entry": "development",
+    "output": "finished",
+    "compacted": "widgetIO"
+  }
+}

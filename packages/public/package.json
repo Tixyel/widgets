@@ -3,6 +3,9 @@
   "type": "commonjs",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "build": "tixyel build"
+  },
   "dependencies": {},
   "devDependencies": {
     "@tixyel/streamelements": "*",
