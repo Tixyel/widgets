@@ -4,8 +4,10 @@ import { ScaffoldItem, WorkspaceConfig } from './workspace';
 import JavaScriptObfuscator from 'javascript-obfuscator';
 import { dirname, join, relative, resolve } from 'path';
 import { readFile as readFilePromise } from 'fs/promises';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { mkdir, writeFile } from 'fs/promises';
 import autoprefixer from 'autoprefixer';
+import { isValidElement } from 'react';
 import { parse } from 'jsonc-parser';
 import nested from 'postcss-nested';
 import FastGlob from 'fast-glob';
@@ -62,6 +64,18 @@ export async function createWidget(path: string, metadata: WorkspaceConfig['meta
 
     let created = { files: 0, folders: 0 };
 
+    async function serializeScaffoldContent(content: ScaffoldItem['content']): Promise<string> {
+      if (content === undefined || content === null) return '';
+      if (typeof content === 'string') return content;
+
+      if (isValidElement(content)) {
+        return renderToStaticMarkup(content);
+      }
+
+      // Fallback to string conversion for unexpected types
+      return String(content ?? '');
+    }
+
     async function processScaffoldItem(item: ScaffoldItem, basePath: string) {
       const fullPath = resolve(basePath, item.name);
 
@@ -77,8 +91,8 @@ export async function createWidget(path: string, metadata: WorkspaceConfig['meta
           }
         }
       } else if (item.type === 'file') {
-        // Write file
-        await writeFile(fullPath, item.content || '', 'utf-8');
+        const content = await serializeScaffoldContent(item.content);
+        await writeFile(fullPath, content, 'utf-8');
         created.files++;
       }
     }

@@ -3,15 +3,16 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import type { ObfuscatorOptions } from 'javascript-obfuscator';
 import type autoprefixer from 'autoprefixer';
 import type cssnanoPlugin from 'cssnano';
+import { extname, resolve } from 'path';
 import { transform } from 'esbuild';
-import { resolve } from 'path';
+import type { JSX } from 'react';
 
 export type ScaffoldItem = ScaffoldFile | ScaffoldFolder;
 
 export interface ScaffoldFile {
   name: string;
   type: 'file';
-  content: string;
+  content: string | JSX.Element;
 }
 
 export interface ScaffoldFolder {
@@ -239,16 +240,56 @@ export function defineWorkspaceConfig<const Find extends BuildFindMap>(config: W
   return config;
 }
 
+export async function resolveConfig(path: string): Promise<WorkspaceConfig> {
+  const configTs = resolve(path, 'tixyel.config.ts');
+  const configTsx = resolve(path, 'tixyel.config.tsx');
+  const configJs = resolve(path, 'tixyel.config.js');
+  const configJsx = resolve(path, 'tixyel.config.jsx');
+  const configMjs = resolve(path, 'tixyel.config.mjs');
+
+  let config: WorkspaceConfig | undefined;
+
+  try {
+    // Trying .mjs first (already ES module)
+    if (existsSync(configMjs)) {
+      const module = await import(`file://${configMjs}`);
+      config = module.default || module.config;
+    }
+
+    // Trying .js/.jsx (if package.json has type: module)
+    else if (existsSync(configJs)) {
+      const module = await import(`file://${configJs}`);
+      config = module.default || module.config;
+    } else if (existsSync(configJsx)) {
+      config = await loadTsConfig(configJsx, path);
+    }
+
+    // Trying .ts/.tsx file (compile on-the-fly)
+    else if (existsSync(configTs)) {
+      config = await loadTsConfig(configTs, path);
+    } else if (existsSync(configTsx)) {
+      config = await loadTsConfig(configTsx, path);
+    }
+  } catch (error) {
+    console.warn(`⚠️  Failed to load tixyel.config: ${error}`);
+    throw error;
+  }
+
+  return merge(config);
+}
+
 export async function findWorkspaceRoot(startPath: string = process.cwd()): Promise<string | null> {
   let currentPath = resolve(startPath);
 
   // Limit search to 10 levels up to avoid infinite loops
   for (let i = 0; i < 10; i++) {
     const configTs = resolve(currentPath, 'tixyel.config.ts');
+    const configTsx = resolve(currentPath, 'tixyel.config.tsx');
     const configJs = resolve(currentPath, 'tixyel.config.js');
+    const configJsx = resolve(currentPath, 'tixyel.config.jsx');
     const configPathMjs = resolve(currentPath, 'tixyel.config.mjs');
 
-    if (existsSync(configTs) || existsSync(configJs) || existsSync(configPathMjs)) {
+    if (existsSync(configTs) || existsSync(configTsx) || existsSync(configJs) || existsSync(configJsx) || existsSync(configPathMjs)) {
       return currentPath;
     }
 
@@ -278,10 +319,14 @@ async function loadTsConfig(path: string, root: string) {
   const temp = resolve(root, '.tixyel.config.temp.mjs');
   const tsContent = readFileSync(path, 'utf-8');
 
+  const extension = extname(path).toLowerCase();
+  const loader = extension === '.tsx' ? 'tsx' : extension === '.jsx' ? 'jsx' : 'ts';
+
   const { code } = await transform(tsContent, {
-    loader: 'ts',
+    loader,
     format: 'esm',
     target: 'es2022',
+    ...(loader === 'tsx' || loader === 'jsx' ? { jsx: 'automatic' as const } : {}),
   });
 
   writeFileSync(temp, code, 'utf-8');
@@ -298,33 +343,7 @@ async function loadTsConfig(path: string, root: string) {
 }
 
 export async function loadWorkspace(path: string) {
-  const configPathTs = resolve(path, 'tixyel.config.ts');
-  const configPathJs = resolve(path, 'tixyel.config.js');
-  const configPathMjs = resolve(path, 'tixyel.config.mjs');
-
-  let config: WorkspaceConfig | undefined;
-
-  try {
-    // Trying .mjs first (already ES module)
-    if (existsSync(configPathMjs)) {
-      const module = await import(`file://${configPathMjs}`);
-      config = module.default || module.config;
-    }
-    // Trying .js (if package.json has type: module)
-    else if (existsSync(configPathJs)) {
-      const module = await import(`file://${configPathJs}`);
-      config = module.default || module.config;
-    }
-    // Trying .ts file (compile on-the-fly)
-    else if (existsSync(configPathTs)) {
-      config = await loadTsConfig(configPathTs, path);
-    }
-  } catch (error) {
-    console.warn(`⚠️  Failed to load tixyel.config: ${error}`);
-    throw error;
-  }
-
-  return merge(config);
+  return resolveConfig(path);
 }
 
 function merge(config: WorkspaceConfig | undefined) {
