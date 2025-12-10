@@ -45,16 +45,19 @@ export class Button {
       if (!(window.client instanceof Client)) return false;
 
       if (window.client.actions.buttons.length) {
-        const button = window.client.actions.buttons.find((b) =>
-          typeof b.field === 'string' ? b.field === field : typeof b.field === 'function' ? b.field(field, value) : false,
-        );
+        const button = window.client.actions.buttons.find((b) => {
+          if (typeof b.field === 'string') return b.field === field;
+          if (typeof b.field === 'function') return b.field(field, value);
+
+          return false;
+        });
 
         if (button && button instanceof Button) {
           try {
             button.parse(field, value);
             window.client.emit('action', button, 'executed');
 
-            Tixyel.logger.received(`Button executed: ${field} with value: ${value}`);
+            Tixyel.logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ''}`);
           } catch (error) {
             Tixyel.logger.error(`Error executing button "${field}": ${error instanceof Error ? error.message : error}`);
           }
