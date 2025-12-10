@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.3.0
+
+### Minor Changes
+
+- 4444f8f: Move USE_SE_API to Tixyel export
+
 ## 3.2.0
 
 ### Minor Changes
