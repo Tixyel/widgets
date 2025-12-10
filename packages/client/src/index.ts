@@ -16,6 +16,8 @@ import { initializeLocalSEAPI } from './streamelements/api.js';
 
 export * from './types/index.js';
 
+export const USE_SE_API: Promise<SE_API_TYPE> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
+
 export const Tixyel = {
   Client,
   Simulation,
@@ -31,11 +33,10 @@ export const Tixyel = {
     useStorage,
     useQueue,
   },
+  USE_SE_API,
 } as const;
 
 type _Tixyel_ = typeof Tixyel;
-
-export const USE_SE_API: Promise<SE_API_TYPE> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
 
 declare global {
   interface Window {
@@ -53,7 +54,6 @@ declare global {
   var client: Client;
 
   const SE_API: SE_API_TYPE;
-  const USE_SE_API: Promise<SE_API_TYPE>;
 }
 
 if (typeof window !== 'undefined') {
