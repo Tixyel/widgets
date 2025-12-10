@@ -134,7 +134,9 @@ program
   .option('-d --depth <number>', 'Maximum search depth for widgets', '3')
   .option('-p --parallel', 'Build widgets in parallel')
   .option('-v --verbose', 'Show verbose output')
-  .action(async (options: { depth?: string; parallel?: boolean; verbose?: boolean } = {}) => {
+  .option('-w --widgets <names>', 'Widget names or paths to build (comma-separated, or * for all)')
+  .option('--bump <type>', 'Version bump type (none, patch, minor, major)')
+  .action(async (options: { depth?: string; parallel?: boolean; verbose?: boolean; widgets?: string; bump?: string } = {}) => {
     try {
       // Validate if the workspace is initialized
       const validWorkspacePath = await validateWorkspace();
@@ -151,35 +153,57 @@ program
       // Find all widgets on the workspace
       const widgets = await findWidgets(rootPath, maxDepth, workspaceConfig.search?.ignore || []);
 
-      const choices = widgets.map((widget) => ({
-        name: `${widget.config.name} (${widget.relativePath})`,
-        value: widget.path,
-        checked: false,
-      }));
-
       let selectedPaths: string[] = [];
 
       if (widgets.length === 0) {
         console.log('❌ No widgets found with .tixyel configuration files.');
         return;
-      } else if (widgets.length === 1) {
-        selectedPaths = [choices[0].value];
-        console.log(`🔒 Only one widget found, auto-selected: ${choices[0].name}\n`);
+      }
+
+      // Handle --widgets option
+      if (options.widgets) {
+        if (options.widgets === '*') {
+          // Select all widgets
+          selectedPaths = widgets.map((w) => w.path);
+          console.log(`✅ Auto-selected all ${widgets.length} widget(s)\n`);
+        } else {
+          // Parse comma-separated widget names or paths
+          const widgetSelectors = options.widgets.split(',').map((s) => s.trim());
+          selectedPaths = widgets.filter((w) => widgetSelectors.some((sel) => w.config.name === sel || w.path.includes(sel))).map((w) => w.path);
+
+          if (selectedPaths.length === 0) {
+            console.log(`❌ No widgets matched the provided names/paths: ${options.widgets}`);
+            return;
+          }
+          console.log(`✅ Selected ${selectedPaths.length} widget(s)\n`);
+        }
       } else {
-        console.log(`✅ Found ${widgets.length} widget(s)\n`);
+        // Interactive mode
+        const choices = widgets.map((widget) => ({
+          name: `${widget.config.name} (${widget.relativePath})`,
+          value: widget.path,
+          checked: false,
+        }));
 
-        const answers = await inquirer.prompt([
-          {
-            type: 'checkbox',
-            name: 'selectedWidgets',
-            message: 'Select widgets to build:',
-            choices,
-            pageSize: 10,
-            loop: false,
-          },
-        ]);
+        if (widgets.length === 1) {
+          selectedPaths = [choices[0].value];
+          console.log(`🔒 Only one widget found, auto-selected: ${choices[0].name}\n`);
+        } else {
+          console.log(`✅ Found ${widgets.length} widget(s)\n`);
 
-        selectedPaths = answers.selectedWidgets as string[];
+          const answers = await inquirer.prompt([
+            {
+              type: 'checkbox',
+              name: 'selectedWidgets',
+              message: 'Select widgets to build:',
+              choices,
+              pageSize: 10,
+              loop: false,
+            },
+          ]);
+
+          selectedPaths = answers.selectedWidgets as string[];
+        }
       }
 
       if (selectedPaths.length === 0) {
@@ -187,24 +211,38 @@ program
         return;
       }
 
-      const versionAnswers = await inquirer.prompt([
-        {
-          type: 'select',
-          name: 'versionBump',
-          message: 'Select version bump type:',
-          choices: [
-            { name: 'No version bump', value: 'none' },
-            { name: 'Patch (x.x.1)', value: 'patch' },
-            { name: 'Minor (x.1.x)', value: 'minor' },
-            { name: 'Major (1.x.x)', value: 'major' },
-          ],
-          default: 'none',
-          loop: false,
-          pageSize: 4,
-        },
-      ]);
+      // Handle version bump
+      let versionBump: 'none' | 'patch' | 'minor' | 'major' = 'none';
 
-      const versionBump = versionAnswers.versionBump as 'none' | 'patch' | 'minor' | 'major';
+      if (options.bump) {
+        const validBumps = ['none', 'patch', 'minor', 'major'];
+        if (!validBumps.includes(options.bump)) {
+          console.log(`❌ Invalid version bump type: ${options.bump}. Valid options: ${validBumps.join(', ')}`);
+          return;
+        }
+        versionBump = options.bump as 'none' | 'patch' | 'minor' | 'major';
+        console.log(`📌 Version bump: ${versionBump}\n`);
+      } else {
+        // Interactive mode
+        const versionAnswers = await inquirer.prompt([
+          {
+            type: 'select',
+            name: 'versionBump',
+            message: 'Select version bump type:',
+            choices: [
+              { name: 'No version bump', value: 'none' },
+              { name: 'Patch (x.x.1)', value: 'patch' },
+              { name: 'Minor (x.1.x)', value: 'minor' },
+              { name: 'Major (1.x.x)', value: 'major' },
+            ],
+            default: 'none',
+            loop: false,
+            pageSize: 4,
+          },
+        ]);
+
+        versionBump = versionAnswers.versionBump as 'none' | 'patch' | 'minor' | 'major';
+      }
 
       // Resolve parallel option (CLI option overrides config)
       const buildInParallel = options.parallel ?? workspaceConfig.build?.parallel ?? false;
