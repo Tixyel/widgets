@@ -279,3 +279,4 @@ program
 program.parse();
 
 export * from './workspace.js';
+export * from './widget.js';

@@ -54,7 +54,6 @@
     "cssnano": "^7.1.2",
     "esbuild": "^0.25.12",
     "fast-glob": "^3.3.3",
-    "html-minifier": "^4.0.0",
     "html-minifier-terser": "^7.2.0",
     "inquirer": "^13.0.2",
     "javascript-obfuscator": "^4.1.1",
