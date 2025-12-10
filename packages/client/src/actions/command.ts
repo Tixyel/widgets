@@ -67,7 +67,10 @@ export class Command {
       return false;
     }
 
-    if (Array.isArray(this.permissions) && this.permissions.some((p) => roles.map((r) => r.toLowerCase()).includes(p.toLowerCase()))) {
+    if (
+      Array.isArray(this.permissions) &&
+      this.permissions.some((p) => nickname.toLowerCase() === p.toLowerCase() || roles.map((r) => r.toLowerCase()).includes(p.toLowerCase()))
+    ) {
       return true;
     }
 
@@ -144,7 +147,12 @@ export class Command {
 
     try {
       if (window.client.actions.commands.length && window.client.actions.commands.some((c) => data.event.data.text.startsWith(c.prefix))) {
-        const command = window.client.actions.commands.find((c) => data.event.data.text.replace(c.prefix, '').split(' ')[0] === c.name);
+        const command = window.client.actions.commands.find((c) => {
+          var nameAndAliases = [c.name, ...(c.aliases ?? [])];
+          var commandMatch = data.event.data.text.replace(c.prefix, '').split(' ')[0];
+
+          return nameAndAliases.includes(commandMatch);
+        });
 
         if (command && command instanceof Command) {
           command.parse(data.event.data.text, received);
