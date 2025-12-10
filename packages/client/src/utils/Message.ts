@@ -42,7 +42,7 @@ export function replaceEmotesWithHTML(text: string, emotes: Emote[]): string {
   emotes.forEach((emote) => {
     result += text.substring(index, emote.start);
 
-    const imgUrl = emote.urls['4'] || emote.urls['2'] || emote.urls['1'];
+    const imgUrl = emote.urls['4'] || ((emote.urls as any)['3'] as string) || emote.urls['2'] || emote.urls['1'];
 
     result += `<img src="${imgUrl}" alt="${emote.name}" class="emote" style="width: auto; height: 1em; vertical-align: middle;" />`;
 
