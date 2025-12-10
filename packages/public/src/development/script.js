@@ -1,4 +1,4 @@
-const { logger, Client, Simulation } = window.Tixyel;
+const { logger, Client, Simulation, utils, modules } = window.Tixyel;
 var main = document.querySelector('main');
 
 const settings = {
@@ -34,6 +34,8 @@ new Client({
     if (event.provider === 'twitch' && event.data.listener === 'message') {
       const _event = event.data.event;
       var role = _event.data.tags.badges.split(',')[0]?.replace('/1', '') ?? 'default';
+
+      // var text = utils
 
       var message = generate.message(_event.data.displayName, _event.renderedText, role);
 

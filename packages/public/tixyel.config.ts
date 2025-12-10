@@ -1,7 +1,5 @@
 import { defineWorkspaceConfig } from '@tixyel/cli';
 
-import { readFileSync } from 'fs';
-
 export default defineWorkspaceConfig({
   search: {
     maxDepth: 3,

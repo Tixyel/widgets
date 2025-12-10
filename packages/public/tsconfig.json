@@ -1,11 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "lib": ["ES2021", "DOM"],
-    "allowJs": true,
-    "outDir": "./dist"
+    "skipLibCheck": true,
+    "noEmit": true,
+    "module": "nodenext"
   },
-  "include": ["./src/**/*.ts", "./src/**/*.js", "tixyel.config.ts"],
-  "exclude": ["node_modules"],
-  "typeAcquisition": { "enable": true }
+  "include": ["**/tixyel.config.ts"],
+  "exclude": ["finished"]
 }
