@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "turbo": "^2.6.0"
+    "turbo": "^2.6.3"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
