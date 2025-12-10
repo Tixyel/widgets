@@ -1,7 +1,0 @@
-{
-  "testField": {
-    "type": "text",
-    "label": "Test field",
-    "value": "Hello, world!"
-  }
-}
