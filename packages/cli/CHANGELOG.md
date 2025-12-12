@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.1.0
+
+### Minor Changes
+
+- e3e8060: update javascript-obfuscator version to a specific version and refactor imports in index.ts
+
 ## 2.0.2
 
 ### Patch Changes
