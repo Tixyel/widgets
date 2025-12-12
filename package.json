@@ -1,5 +1,6 @@
 {
   "name": "tixyel",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -25,6 +26,5 @@
     "version": "changeset version && git add --all",
     "release": "npm run build && changeset publish"
   },
-  "packageManager": "npm@11.6.1",
-  "version": ""
+  "packageManager": "npm@11.6.1"
 }

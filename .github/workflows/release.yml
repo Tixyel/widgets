@@ -6,6 +6,7 @@ on:
       - main
 
 permissions:
+  id-token: write
   contents: write
   pull-requests: write
 
@@ -14,21 +15,29 @@ jobs:
     if: github.repository == 'Tixyel/widgets'
     runs-on: ubuntu-latest
     steps:
+      # Checkout the repository
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org/'
 
+      # Update npm to the latest version
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      # Install root dependencies
       - name: Install dependencies (root)
         run: npm ci
         working-directory: ${{ github.workspace }}
 
+      # Create Release Pull Request or Publish to npm
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
