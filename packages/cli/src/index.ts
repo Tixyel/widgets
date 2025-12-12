@@ -1,13 +1,9 @@
 #!/usr/bin/env node
 
-import { build, createWidget, findWidgets, getNextWidgetNumber } from './widget.js';
-import { loadWorkspace, validateWorkspace } from './workspace.js';
-import { workspace_config } from './templates/workspace.js';
 import { Command as Commander } from 'commander';
 import { basename, join, resolve } from 'path';
 import { writeFile } from 'fs/promises';
 import { createRequire } from 'module';
-import inquirer from 'inquirer';
 
 const program = new Commander();
 
@@ -19,6 +15,7 @@ program
       try {
         const require = createRequire(import.meta.url);
         const { version } = require('../package.json');
+
         return version ?? 'dev';
       } catch {
         return process.env.TIXYEL_VERSION ?? 'dev';
@@ -31,6 +28,8 @@ program
   .aliases(['initialize', 'i', 'setup', 'start'])
   .description('Initialize a new widget workspace.')
   .action(async () => {
+    const { workspace_config } = await import('./templates/workspace.js');
+
     const root = process.cwd();
     const config = resolve(root, 'tixyel.config.ts');
 
@@ -58,6 +57,9 @@ program
   .description('Generate a new widget.')
   .action(async (path?: string, name?: string, description?: string, tags?: string) => {
     try {
+      const { validateWorkspace, loadWorkspace } = await import('./workspace.js');
+      const { createWidget, getNextWidgetNumber } = await import('./widget.js');
+
       // Validate if the workspace is initialized
       const validWorkspacePath = await validateWorkspace();
 
@@ -95,6 +97,8 @@ program
           const nextNum = await getNextWidgetNumber(resolvedPath);
           const defaultName = `${nextNum} - Widget`;
 
+          const inquirer = (await import('inquirer')).default;
+
           const answers = await inquirer.prompt([
             {
               type: 'input',
@@ -112,7 +116,7 @@ program
         await createWidget(
           widgetPath,
           {
-            name: finalWidgetName,
+            name: finalWidgetName.replace(/^\d+\s*-\s*/, ''),
             description,
             tags: tags ? tags.split(',').map((t) => t.trim()) : undefined,
           },
@@ -138,6 +142,12 @@ program
   .option('--bump <type>', 'Version bump type (none, patch, minor, major)')
   .action(async (options: { depth?: string; parallel?: boolean; verbose?: boolean; widgets?: string; bump?: string } = {}) => {
     try {
+      const { validateWorkspace, loadWorkspace } = await import('./workspace.js');
+      const { build, findWidgets } = await import('./widget.js');
+
+      let inquirer: typeof import('inquirer').default | null = null;
+      const getInquirer = async () => (inquirer ??= (await import('inquirer')).default);
+
       // Validate if the workspace is initialized
       const validWorkspacePath = await validateWorkspace();
 
@@ -191,7 +201,9 @@ program
         } else {
           console.log(`✅ Found ${widgets.length} widget(s)\n`);
 
-          const answers = await inquirer.prompt([
+          const inquirerInstance = await getInquirer();
+
+          const answers = await inquirerInstance.prompt([
             {
               type: 'checkbox',
               name: 'selectedWidgets',
@@ -224,7 +236,9 @@ program
         console.log(`📌 Version bump: ${versionBump}\n`);
       } else {
         // Interactive mode
-        const versionAnswers = await inquirer.prompt([
+        const inquirerInstance = await getInquirer();
+
+        const versionAnswers = await inquirerInstance.prompt([
           {
             type: 'select',
             name: 'versionBump',
