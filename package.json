@@ -26,5 +26,8 @@
     "version": "changeset version && git add --all",
     "release": "npm run build && changeset publish --provenance"
   },
-  "packageManager": "npm@11.6.1"
+  "packageManager": "npm@11.6.1",
+  "publishConfig": {
+    "provenance": true
+  }
 }
