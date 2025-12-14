@@ -5,37 +5,35 @@ on:
     branches:
       - main
 
-permissions:
-  id-token: write
-  contents: write
-  attestations: write
-  pull-requests: write
-
 jobs:
   release:
     if: github.repository == 'Tixyel/widgets'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      attestations: write
+      pull-requests: write
     steps:
       # Checkout the repository
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       # Setup Node.js environment
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Update npm for OIDC trusted publishing
         run: |
-          # npm trusted publishing requires npm >= 11.5.1
-          # Node.js 22.x ships with npm 10.x, so we need to update
-          echo "Current npm version: $(npm --version)"
+          echo "Current npm version: $(npm -v)"
           npm install -g npm@latest
-          echo "Updated npm version: $(npm --version)"
+          echo "Updated npm version: $(npm -v)"
 
       # Install root dependencies
       - name: Install dependencies (root)

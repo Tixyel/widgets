@@ -24,7 +24,7 @@
     "watch": "turbo run build --watch",
     "prettier": "prettier --write packages/",
     "version": "changeset version && git add --all",
-    "release": "npm run build && changeset publish"
+    "release": "npm run build && changeset publish --provenance"
   },
   "packageManager": "npm@11.6.1"
 }
