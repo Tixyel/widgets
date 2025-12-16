@@ -1,83 +1,250 @@
-import { Tixyel } from '../index.js';
-import { Alejo$Pronouns } from '../types/alejo/pronouns.js';
-import type { TwitchBadge, TwitchBadgesKeys } from '../types/badge.js';
 import type { Provider } from '../types/client.js';
-import type { BttvEmote, SeventvEmote, TwitchEmote } from '../types/emote.js';
-import type {
+import { Alejo$Pronouns } from '../types/alejo/pronouns.js';
+import {
   FieldSettings,
   NormalizedFieldSettings,
   StreamElementsField,
   StreamElementsFieldTypes,
   StreamElementsFieldValue,
 } from '../types/streamelements/customfields.js';
-import type { StreamElements$AlertService } from '../types/streamelements/events/integrated/alertService.js';
-import type { StreamElements$BotCounter } from '../types/streamelements/events/integrated/botCounter.js';
-import type { StreamElements$EventSkip } from '../types/streamelements/events/integrated/eventSkip.js';
-import type { StreamElements } from '../types/streamelements/events/integrated/index.js';
-import type { StreamElements$KVStore } from '../types/streamelements/events/integrated/kvstore.js';
-import type { StreamElements$Tip } from '../types/streamelements/events/integrated/tip.js';
-import type { onEventReceived } from '../types/streamelements/events/onEventReceived.js';
-import type { onSessionUpdate } from '../types/streamelements/events/onSessionUpdate.js';
-import type { onWidgetLoad } from '../types/streamelements/events/onWidgetLoad.js';
-import type { Twitch$Cheer } from '../types/streamelements/events/twitch/cheer.js';
-import type { Twitch$Follower } from '../types/streamelements/events/twitch/follower.js';
-import type { Twitch } from '../types/streamelements/events/twitch/index.js';
-import type { Twitch$DeleteMessage, Twitch$DeleteMessages } from '../types/streamelements/events/twitch/message.delete.js';
-import type { Twitch$Message } from '../types/streamelements/events/twitch/message.js';
-import type { Twitch$Raid } from '../types/streamelements/events/twitch/raid.js';
-import type { Subscriber$community, Subscriber$gift, Subscriber$spam, Twitch$Subscriber } from '../types/streamelements/events/twitch/subscriber.js';
-import type { Youtube } from '../types/streamelements/events/youtube/index.js';
-import type { Youtube$Message } from '../types/streamelements/events/youtube/message.js';
-import type { Sponsor$community, Sponsor$gift, Sponsor$spam, Youtube$Sponsor } from '../types/streamelements/events/youtube/sponsor.js';
-import type { YouTube$Subscriber } from '../types/streamelements/events/youtube/subscriber.js';
-import type { YouTube$Superchat } from '../types/streamelements/events/youtube/superchat.js';
-import type { Session$AnyConfig, Session$AvailableCategory, Session$AvailableData } from '../types/streamelements/session.generate.js';
-import type { Session } from '../types/streamelements/session.js';
-import { BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
+import { onEventReceived } from '../types/streamelements/events/onEventReceived.js';
+import { onSessionUpdate } from '../types/streamelements/events/onSessionUpdate.js';
+import { onWidgetLoad } from '../types/streamelements/events/onWidgetLoad.js';
+import { Youtube$Message } from '../types/streamelements/events/youtube/message.js';
+import { YouTube$Subscriber } from '../types/streamelements/events/youtube/subscriber.js';
+import { YouTube$Superchat } from '../types/streamelements/events/youtube/superchat.js';
+import { Session$AnyConfig, Session$AvailableCategory, Session$AvailableData } from '../types/streamelements/session.generate.js';
+import { Session } from '../types/streamelements/session.js';
 import { names, messages, avatars, emotes, badges, tts, items, tiers } from './data/index.js';
+import {
+  StreamElements,
+  Twitch,
+  Twitch$Cheer,
+  Twitch$DeleteMessage,
+  Twitch$DeleteMessages,
+  Twitch$Follower,
+  Twitch$Message,
+  Twitch$Raid,
+  Youtube,
+} from '../types/index.js';
+import { BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
+import { Subscriber$community, Subscriber$gift, Subscriber$spam, Twitch$Subscriber } from '../types/streamelements/events/twitch/subscriber.js';
+import { StreamElements$Tip } from '../types/streamelements/events/integrated/tip.js';
+import { StreamElements$KVStore } from '../types/streamelements/events/integrated/kvstore.js';
+import { StreamElements$BotCounter } from '../types/streamelements/events/integrated/botCounter.js';
+import { StreamElements$AlertService } from '../types/streamelements/events/integrated/alertService.js';
+import { StreamElements$EventSkip } from '../types/streamelements/events/integrated/eventSkip.js';
+import { Sponsor$community, Sponsor$gift, Sponsor$spam, Youtube$Sponsor } from '../types/streamelements/events/youtube/sponsor.js';
 
-type Modifier = (value: string, param: string | null | undefined, values: { amount?: number; count?: number }) => string;
-
-export class Simulation {
-  static data = {
-    names: names,
-    messages: messages,
-    tiers: tiers,
-    avatars: avatars,
-    items: items,
-    emotes: emotes,
-    badges: badges,
+export namespace Simulation {
+  export const data = {
+    names,
+    messages,
+    tiers,
+    avatars,
+    emotes,
+    badges,
+    items,
+    tts,
     pronouns: Alejo$Pronouns,
-    tts: tts,
+    css_color_names: [
+      'aliceblue',
+      'antiquewhite',
+      'aqua',
+      'aquamarine',
+      'azure',
+      'beige',
+      'bisque',
+      'black',
+      'blanchedalmond',
+      'blue',
+      'blueviolet',
+      'brown',
+      'burlywood',
+      'cadetblue',
+      'chartreuse',
+      'chocolate',
+      'coral',
+      'cornflowerblue',
+      'cornsilk',
+      'crimson',
+      'cyan',
+      'darkblue',
+      'darkcyan',
+      'darkgoldenrod',
+      'darkgray',
+      'darkgreen',
+      'darkgrey',
+      'darkkhaki',
+      'darkmagenta',
+      'darkolivegreen',
+      'darkorange',
+      'darkorchid',
+      'darkred',
+      'darksalmon',
+      'darkseagreen',
+      'darkslateblue',
+      'darkslategray',
+      'darkslategrey',
+      'darkturquoise',
+      'darkviolet',
+      'deeppink',
+      'deepskyblue',
+      'dimgray',
+      'dimgrey',
+      'dodgerblue',
+      'firebrick',
+      'floralwhite',
+      'forestgreen',
+      'fuchsia',
+      'gainsboro',
+      'ghostwhite',
+      'gold',
+      'goldenrod',
+      'gray',
+      'green',
+      'greenyellow',
+      'grey',
+      'honeydew',
+      'hotpink',
+      'indianred',
+      'indigo',
+      'ivory',
+      'khaki',
+      'lavender',
+      'lavenderblush',
+      'lawngreen',
+      'lemonchiffon',
+      'lightblue',
+      'lightcoral',
+      'lightcyan',
+      'lightgoldenrodyellow',
+      'lightgray',
+      'lightgreen',
+      'lightgrey',
+      'lightpink',
+      'lightsalmon',
+      'lightseagreen',
+      'lightskyblue',
+      'lightslategray',
+      'lightslategrey',
+      'lightsteelblue',
+      'lightyellow',
+      'lime',
+      'limegreen',
+      'linen',
+      'magenta',
+      'maroon',
+      'mediumaquamarine',
+      'mediumblue',
+      'mediumorchid',
+      'mediumpurple',
+      'mediumseagreen',
+      'mediumslateblue',
+      'mediumspringgreen',
+      'mediumturquoise',
+      'mediumvioletred',
+      'midnightblue',
+      'mintcream',
+      'mistyrose',
+      'moccasin',
+      'navajowhite',
+      'navy',
+      'oldlace',
+      'olive',
+      'olivedrab',
+      'orange',
+      'orangered',
+      'orchid',
+      'palegoldenrod',
+      'palegreen',
+      'paleturquoise',
+      'palevioletred',
+      'papayawhip',
+      'peachpuff',
+      'peru',
+      'pink',
+      'plum',
+      'powderblue',
+      'purple',
+      'rebeccapurple',
+      'red',
+      'rosybrown',
+      'royalblue',
+      'saddlebrown',
+      'salmon',
+      'sandybrown',
+      'seagreen',
+      'seashell',
+      'sienna',
+      'silver',
+      'skyblue',
+      'slateblue',
+      'slategray',
+      'slategrey',
+      'snow',
+      'springgreen',
+      'steelblue',
+      'tan',
+      'teal',
+      'thistle',
+      'tomato',
+      'turquoise',
+      'violet',
+      'wheat',
+      'white',
+      'whitesmoke',
+      'yellow',
+      'yellowgreen',
+      'transparent',
+    ],
   };
 
-  static color = {
-    opacity(opacity: number = 100, color: string) {
-      color = color.length > 7 ? color.substring(0, 6) : color;
+  export const color = {
+    /**
+     * Generate opacity hex value
+     * @param opacity - Opacity value from 0 to 100
+     * @param color - Hex color code
+     * @returns - Hex color code with opacity
+     */
+    opacity(opacity: number = 100, color: string = '') {
+      color = color.length > 7 ? color?.substring(0, 6) : color;
       opacity = opacity > 1 ? opacity / 100 : opacity;
 
       let result = Math.round(Math.min(Math.max(opacity, 0), 1) * 255)
         .toString(16)
-        .toLowerCase();
-
-      result = result.padStart(2, '0');
+        .toLowerCase()
+        .padStart(2, '0');
 
       return color + result;
     },
 
-    getOpacity(hex: string) {
-      if (!hex.startsWith('#') || hex.length <= 7) return { opacity: 100, hex };
+    /**
+     * Extract color and opacity from hex code
+     * @param hex - Hex color code
+     * @returns - Object with color and opacity
+     */
+    extract(hex: string) {
+      if (!hex.startsWith('#') || hex.length <= 7) {
+        return {
+          color: hex,
+          opacity: 100,
+        };
+      }
 
-      var ohex = hex.slice(-2);
-      var decimal = parseInt(ohex, 16) / 255;
+      var color = hex.slice(-2);
+      var decimal = parseInt(color, 16) / 255;
       var percentage = Math.round(decimal * 100);
       var color = hex.length > 7 ? hex.slice(0, 7) : hex;
 
-      return { opacity: percentage, color: color };
+      return {
+        color: color,
+        opacity: percentage,
+      };
     },
 
-    validate(str: string): 'hex' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name' | false {
-      if (typeof str !== 'string' || !str.length) return false;
+    validate(str: string) {
+      if (typeof str !== 'string' || !String(str).trim().length) return false;
 
       const s = str.trim();
 
@@ -106,159 +273,7 @@ export class Simulation {
         return 'hsla';
       }
 
-      if (
-        [
-          'aliceblue',
-          'antiquewhite',
-          'aqua',
-          'aquamarine',
-          'azure',
-          'beige',
-          'bisque',
-          'black',
-          'blanchedalmond',
-          'blue',
-          'blueviolet',
-          'brown',
-          'burlywood',
-          'cadetblue',
-          'chartreuse',
-          'chocolate',
-          'coral',
-          'cornflowerblue',
-          'cornsilk',
-          'crimson',
-          'cyan',
-          'darkblue',
-          'darkcyan',
-          'darkgoldenrod',
-          'darkgray',
-          'darkgreen',
-          'darkgrey',
-          'darkkhaki',
-          'darkmagenta',
-          'darkolivegreen',
-          'darkorange',
-          'darkorchid',
-          'darkred',
-          'darksalmon',
-          'darkseagreen',
-          'darkslateblue',
-          'darkslategray',
-          'darkslategrey',
-          'darkturquoise',
-          'darkviolet',
-          'deeppink',
-          'deepskyblue',
-          'dimgray',
-          'dimgrey',
-          'dodgerblue',
-          'firebrick',
-          'floralwhite',
-          'forestgreen',
-          'fuchsia',
-          'gainsboro',
-          'ghostwhite',
-          'gold',
-          'goldenrod',
-          'gray',
-          'green',
-          'greenyellow',
-          'grey',
-          'honeydew',
-          'hotpink',
-          'indianred',
-          'indigo',
-          'ivory',
-          'khaki',
-          'lavender',
-          'lavenderblush',
-          'lawngreen',
-          'lemonchiffon',
-          'lightblue',
-          'lightcoral',
-          'lightcyan',
-          'lightgoldenrodyellow',
-          'lightgray',
-          'lightgreen',
-          'lightgrey',
-          'lightpink',
-          'lightsalmon',
-          'lightseagreen',
-          'lightskyblue',
-          'lightslategray',
-          'lightslategrey',
-          'lightsteelblue',
-          'lightyellow',
-          'lime',
-          'limegreen',
-          'linen',
-          'magenta',
-          'maroon',
-          'mediumaquamarine',
-          'mediumblue',
-          'mediumorchid',
-          'mediumpurple',
-          'mediumseagreen',
-          'mediumslateblue',
-          'mediumspringgreen',
-          'mediumturquoise',
-          'mediumvioletred',
-          'midnightblue',
-          'mintcream',
-          'mistyrose',
-          'moccasin',
-          'navajowhite',
-          'navy',
-          'oldlace',
-          'olive',
-          'olivedrab',
-          'orange',
-          'orangered',
-          'orchid',
-          'palegoldenrod',
-          'palegreen',
-          'paleturquoise',
-          'palevioletred',
-          'papayawhip',
-          'peachpuff',
-          'peru',
-          'pink',
-          'plum',
-          'powderblue',
-          'purple',
-          'rebeccapurple',
-          'red',
-          'rosybrown',
-          'royalblue',
-          'saddlebrown',
-          'salmon',
-          'sandybrown',
-          'seagreen',
-          'seashell',
-          'sienna',
-          'silver',
-          'skyblue',
-          'slateblue',
-          'slategray',
-          'slategrey',
-          'snow',
-          'springgreen',
-          'steelblue',
-          'tan',
-          'teal',
-          'thistle',
-          'tomato',
-          'turquoise',
-          'violet',
-          'wheat',
-          'white',
-          'whitesmoke',
-          'yellow',
-          'yellowgreen',
-          'transparent',
-        ].includes(s.toLowerCase())
-      ) {
+      if (data.css_color_names.includes(s.toLowerCase())) {
         return 'css-color-name';
       }
 
@@ -266,8 +281,21 @@ export class Simulation {
     },
   };
 
-  static rand = {
-    color(type: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name' = 'hex'): string {
+  export const rand = {
+    /**
+     * Generate random color
+     * @param type - Color format
+     * @returns - Random color in specified format
+     * @example
+     * ```javascript
+     * const hexColor = Simulation.rand.color('hex');
+     * console.log(hexColor); // e.g. #3e92cc
+     *
+     * const rgbColor = Simulation.rand.color('rgb');
+     * console.log(rgbColor); // e.g. rgb(62, 146, 204)
+     * ```
+     */
+    color(type: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name' = 'hex') {
       switch (type) {
         default:
         case 'hex': {
@@ -317,163 +345,28 @@ export class Simulation {
           return `hsla(${h}, ${s}%, ${l}%, ${a})`;
         }
         case 'css-color-name': {
-          var names = [
-            'aliceblue',
-            'antiquewhite',
-            'aqua',
-            'aquamarine',
-            'azure',
-            'beige',
-            'bisque',
-            'black',
-            'blanchedalmond',
-            'blue',
-            'blueviolet',
-            'brown',
-            'burlywood',
-            'cadetblue',
-            'chartreuse',
-            'chocolate',
-            'coral',
-            'cornflowerblue',
-            'cornsilk',
-            'crimson',
-            'cyan',
-            'darkblue',
-            'darkcyan',
-            'darkgoldenrod',
-            'darkgray',
-            'darkgreen',
-            'darkgrey',
-            'darkkhaki',
-            'darkmagenta',
-            'darkolivegreen',
-            'darkorange',
-            'darkorchid',
-            'darkred',
-            'darksalmon',
-            'darkseagreen',
-            'darkslateblue',
-            'darkslategray',
-            'darkslategrey',
-            'darkturquoise',
-            'darkviolet',
-            'deeppink',
-            'deepskyblue',
-            'dimgray',
-            'dimgrey',
-            'dodgerblue',
-            'firebrick',
-            'floralwhite',
-            'forestgreen',
-            'fuchsia',
-            'gainsboro',
-            'ghostwhite',
-            'gold',
-            'goldenrod',
-            'gray',
-            'green',
-            'greenyellow',
-            'grey',
-            'honeydew',
-            'hotpink',
-            'indianred',
-            'indigo',
-            'ivory',
-            'khaki',
-            'lavender',
-            'lavenderblush',
-            'lawngreen',
-            'lemonchiffon',
-            'lightblue',
-            'lightcoral',
-            'lightcyan',
-            'lightgoldenrodyellow',
-            'lightgray',
-            'lightgreen',
-            'lightgrey',
-            'lightpink',
-            'lightsalmon',
-            'lightseagreen',
-            'lightskyblue',
-            'lightslategray',
-            'lightslategrey',
-            'lightsteelblue',
-            'lightyellow',
-            'lime',
-            'limegreen',
-            'linen',
-            'magenta',
-            'maroon',
-            'mediumaquamarine',
-            'mediumblue',
-            'mediumorchid',
-            'mediumpurple',
-            'mediumseagreen',
-            'mediumslateblue',
-            'mediumspringgreen',
-            'mediumturquoise',
-            'mediumvioletred',
-            'midnightblue',
-            'mintcream',
-            'mistyrose',
-            'moccasin',
-            'navajowhite',
-            'navy',
-            'oldlace',
-            'olive',
-            'olivedrab',
-            'orange',
-            'orangered',
-            'orchid',
-            'palegoldenrod',
-            'palegreen',
-            'paleturquoise',
-            'palevioletred',
-            'papayawhip',
-            'peachpuff',
-            'peru',
-            'pink',
-            'plum',
-            'powderblue',
-            'purple',
-            'rebeccapurple',
-            'red',
-            'rosybrown',
-            'royalblue',
-            'saddlebrown',
-            'salmon',
-            'sandybrown',
-            'seagreen',
-            'seashell',
-            'sienna',
-            'silver',
-            'skyblue',
-            'slateblue',
-            'slategray',
-            'slategrey',
-            'snow',
-            'springgreen',
-            'steelblue',
-            'tan',
-            'teal',
-            'thistle',
-            'tomato',
-            'turquoise',
-            'violet',
-            'wheat',
-            'white',
-            'whitesmoke',
-            'yellow',
-            'yellowgreen',
-            'transparent',
-          ];
+          var names = data.css_color_names;
 
           return this.array(names)[0];
         }
       }
     },
 
+    /**
+     * Generate random number
+     * @param min - Minimum value
+     * @param max - Maximum value
+     * @param float - Number of decimal places (0 for integer)
+     * @returns - Random number
+     * @example
+     * ```javascript
+     * const intNumber = Simulation.rand.number(1, 10);
+     * console.log(intNumber); // e.g. 7
+     *
+     * const floatNumber = Simulation.rand.number(1, 10, 2);
+     * console.log(floatNumber); // e.g. 3.14
+     * ```
+     */
     number(min: number, max: number, float: number = 0): number {
       if (min > max) [min, max] = [max, min];
 
@@ -481,10 +374,31 @@ export class Simulation {
       return float ? Number(rand.toFixed(float)) : Math.round(rand);
     },
 
+    /**
+     * Generate random boolean
+     * @param threshold - Threshold between 0 and 1
+     * @returns - Random boolean
+     * @example
+     * ```javascript
+     * const boolValue = Simulation.rand.boolean(0.7);
+     * console.log(boolValue); // e.g. true (70% chance)
+     * ```
+     */
     boolean(threshold: number = 0.5): boolean {
       return Math.random() > threshold;
     },
 
+    /**
+     * Generate random string
+     * @param length - Length of the string
+     * @param chars - Characters to use
+     * @returns - Random string
+     * @example
+     * ```javascript
+     * const randString = Simulation.rand.string(10);
+     * console.log(randString); // e.g. "aZ3bT9xYqP"
+     * ```
+     */
     string(length: number, chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'): string {
       let result = '';
 
@@ -495,19 +409,68 @@ export class Simulation {
       return result;
     },
 
+    /**
+     * Pick random element from array
+     * @param arr - Array to pick from
+     * @returns - Random element and its index
+     * @example
+     * ```javascript
+     * const [element, index] = Simulation.rand.array(['apple', 'banana', 'cherry']);
+     * console.log(element, index); // e.g. "banana", 1
+     * ```
+     */
     array<T>(arr: T[]): [value: T, index: number] {
       const index = this.number(0, arr.length - 1);
 
       return [arr[index], index];
     },
 
-    date(rangeDays: number = 365): string {
+    /**
+     * Generate random date
+     * @param start - Start date
+     * @param end - End date
+     * @returns - Random date between start and end
+     * @example
+     * ```javascript
+     * const randDate = Simulation.rand.date(new Date(2020, 0, 1), new Date());
+     * console.log(randDate); // e.g. 2022-05-15T10:30:00.000Z
+     * ```
+     */
+    date(start: Date = new Date(2000, 0, 1), end: Date = new Date()): Date {
+      const date = new Date(this.number(start.getTime(), end.getTime()));
+
+      return date;
+    },
+
+    /**
+     * Generate ISO date string offset by days
+     * @param daysAgo - Number of days to go back
+     * @returns - ISO date string
+     * @example
+     * ```javascript
+     * const isoDate = Simulation.rand.daysOffset(7);
+     * console.log(isoDate); // e.g. "2024-06-10T14:23:45.678Z"
+     *
+     * const isoDate30 = Simulation.rand.daysOffset(30);
+     * console.log(isoDate30); // e.g. "2024-05-18T09:15:30.123Z"
+     * ```
+     */
+    daysOffset(daysAgo: number): string {
       const now = Date.now();
-      const past = now - this.number(0, rangeDays * 24 * 60 * 60 * 1000);
+      const past = now - this.number(0, daysAgo * 24 * 60 * 60 * 1000);
 
       return new Date(past).toISOString();
     },
 
+    /**
+     * Generate UUID v4
+     * @returns - UUID string
+     * @example
+     * ```javascript
+     * const uuid = Simulation.rand.uuid();
+     * console.log(uuid); // e.g. "3b12f1df-5232-4e3a-9a0c-3f9f1b1b1b1b"
+     * ```
+     */
     uuid(): string {
       return window.crypto && typeof crypto?.randomUUID === 'function'
         ? crypto.randomUUID()
@@ -517,7 +480,9 @@ export class Simulation {
     },
   };
 
-  static string = {
+  type Modifier = (value: string, param: string | null | undefined, values: { amount?: number; count?: number }) => string;
+
+  export const string = {
     /**
      * Replaces occurrences in a string based on a pattern with the result of an asynchronous callback function.
      * @param string - The input string to perform replacements on.
@@ -591,12 +556,12 @@ export class Simulation {
         aliases: {},
       },
     ): string {
-      const { mergeSpanStyles } = Simulation.element;
+      const { mergeSpanStyles } = element;
 
       values.skip = '<br/>';
       values.newline = '<br/>';
 
-      const flatten: Record<string, string> = Object.entries(Simulation.object.flatten(values)).reduce(
+      const flatten: Record<string, string> = Object.entries(object.flatten(values)).reduce(
         (acc, [k, v]) => {
           acc[k] = String(v);
 
@@ -633,7 +598,7 @@ export class Simulation {
       var amount = parseFloat(flatten?.amount ?? flatten?.count ?? 0);
 
       const HTML_MODIFIERS: Record<string, Modifier> = {
-        COLOR: (value, param) => mergeSpanStyles(param && !!Simulation.color.validate(param) ? `color: ${param}` : '', value),
+        COLOR: (value, param) => mergeSpanStyles(param && !!color.validate(param) ? `color: ${param}` : '', value),
         WEIGHT: (value, param) => mergeSpanStyles(param && !isNaN(parseInt(param)) ? `font-weight: ${param}` : '', value),
         BOLD: (value) => mergeSpanStyles('font-weight: bold', value),
         LIGHT: (value) => mergeSpanStyles('font-weight: lighter', value),
@@ -775,7 +740,7 @@ export class Simulation {
     },
   };
 
-  static element = {
+  export const element = {
     /**
      * Merges outer span styles with inner span styles in the provided HTML string.
      * @param outerStyle - The style string to be applied to the outer span.
@@ -949,7 +914,7 @@ export class Simulation {
     },
   };
 
-  static object = {
+  export const object = {
     /**
      * Flattens a nested object into a single-level object with dot-separated keys.
      * @param obj - The nested object to be flattened.
@@ -1025,7 +990,7 @@ export class Simulation {
     },
   };
 
-  static generate = {
+  export const generate = {
     session: {
       types: {
         name: { type: 'string', options: Simulation.data.names.filter((e) => e.length) },
@@ -1317,7 +1282,7 @@ export class Simulation {
               case 'string':
                 return Simulation.rand.array(config.options)[0];
               case 'date':
-                return Simulation.rand.date(config.range);
+                return Simulation.rand.daysOffset(config.range);
               case 'array':
                 return Simulation.rand.array(config.options)[0];
               case 'recent':
@@ -1915,292 +1880,239 @@ export class Simulation {
         }
       },
     },
-  };
-
-  static fields(settings: FieldSettings): Record<string, StreamElementsField> {
-    const defaultOptions: NormalizedFieldSettings = {
-      from: 'main',
-      endsWith: [],
-      ignore: [],
-      replace: {},
-      subgroup: false,
-      template: '• {key}',
-      subgroupTemplate: '★ {key}',
-      settings: {
-        types: [
-          [['size', 'width', 'number', 'gap', 'duration'], 'number'],
-          [['options', 'dropdown', 'weight'], 'dropdown'],
-          [['range', 'radius'], 'slider'],
-          [['color', 'background'], 'colorpicker'],
-          [['font-family', 'font', 'family'], 'googleFont'],
-        ],
-        addons: [
-          [['slider', 'radius'], { step: 1, min: 0, max: 'inherit' }],
-          [['options', 'dropdown'], { options: {} }],
-          [
-            ['weight'],
-            {
-              options: {
-                '100': 'Thin',
-                '200': 'Extra Light',
-                '300': 'Light',
-                '400': 'Regular',
-                '500': 'Medium',
-                '600': 'Semi Bold',
-                '700': 'Bold',
-                '800': 'Extra Bold',
-                '900': 'Black',
-              },
-            },
-          ],
-        ],
-        transforms: [
-          [['size', 'width', 'number', 'gap', 'duration'], (value) => parseFloat(String(value))],
-          [['font-family', 'font', 'family'], (value) => value],
-          [['range', 'radius'], (value) => parseFloat(String(value))],
-          [['options', 'dropdown'], (value) => value],
-          [['weight'], (value) => value],
-          [['color', 'background'], (value) => value],
-        ],
-        labels: [
-          [['font-size'], ' • In pixels'],
-          [['font-radius'], ' • In pixels'],
-        ],
-      },
-    };
-
-    function normalizeFieldSettings(settings: FieldSettings): NormalizedFieldSettings {
-      return {
-        ...defaultOptions,
-        ...settings,
-        endsWith: Array.isArray(settings.endsWith) ? settings.endsWith : defaultOptions.endsWith,
-        ignore: Array.isArray(settings.ignore) ? settings.ignore : defaultOptions.ignore,
-        replace: { ...defaultOptions.replace, ...(settings.replace ?? {}) },
+    cssVarsToCustomfields(settings: FieldSettings): Record<string, StreamElementsField> {
+      const defaultOptions: NormalizedFieldSettings = {
+        from: 'main',
+        endsWith: [],
+        ignore: [],
+        replace: {},
+        subgroup: false,
+        template: '• {key}',
+        subgroupTemplate: '★ {key}',
         settings: {
-          types: Array.isArray(settings.settings?.types) ? settings.settings.types : defaultOptions.settings.types,
-          addons: Array.isArray(settings.settings?.addons) ? settings.settings.addons : defaultOptions.settings.addons,
-          transforms: Array.isArray(settings.settings?.transforms) ? settings.settings.transforms : defaultOptions.settings.transforms,
-          labels: Array.isArray(settings.settings?.labels) ? settings.settings.labels : defaultOptions.settings.labels,
-        },
-        subgroup: settings.subgroup ?? defaultOptions.subgroup,
-        template: settings.template ?? defaultOptions.template,
-        subgroupTemplate: settings.subgroupTemplate ?? defaultOptions.subgroupTemplate,
-        from: settings.from ?? defaultOptions.from,
-      };
-    }
-
-    const options = normalizeFieldSettings(settings);
-
-    const extractCssVariables = (): Record<string, string> => {
-      return Array.from(document.styleSheets)
-        .filter(({ href }) => !href || href.startsWith(window.location.origin))
-        .reduce(
-          (acc, { cssRules }) => {
-            if (!cssRules) return acc;
-            Array.from(cssRules).forEach((rule) => {
-              if (rule instanceof CSSStyleRule && rule.selectorText === options.from && Array.from(rule.style).some((prop) => prop.startsWith('--'))) {
-                Array.from(rule.style)
-                  .filter((prop) => prop.startsWith('--'))
-                  .forEach((prop) => {
-                    acc[prop] = rule.style.getPropertyValue(prop).trim();
-                  });
-              }
-            });
-            return acc;
-          },
-          {} as Record<string, string>,
-        );
-    };
-
-    const allVariables = extractCssVariables();
-
-    const filteredVariables = Object.entries(allVariables)
-      .filter(([name]) => options.endsWith.some((suffix) => name.toLowerCase().endsWith(suffix.toLowerCase()) && !name.includes('-options-')))
-      .filter(([name]) => !options.ignore.some((ignoreName) => name.toLowerCase() === ignoreName.toLowerCase()))
-      .reduce(
-        (acc, [name, value]) => {
-          acc[name.replace('--', '')] = String(options.replace?.[name] ?? value);
-          return acc;
-        },
-        {} as Record<string, string | number>,
-      );
-
-    let usedSubgroups: string[] = [];
-
-    const fields = Object.entries(filteredVariables).reduce(
-      (fields, [name, value]) => {
-        let type = options.settings.types.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || 'text';
-
-        let transform = options.settings.transforms.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || ((v: any) => v);
-
-        let labelAddon = options.settings.labels.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || '';
-
-        let fieldAddons: Record<string, any> = {
-          type: 'text',
-          label: labelAddon,
-          ...(options.settings.addons.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || {}),
-        };
-
-        (['min', 'max', 'step', 'label', 'type'] as const).forEach((addonKey) => {
-          const addonValue = allVariables[`--${name}-${addonKey}`];
-          if (addonValue && addonValue.length) {
-            fieldAddons[addonKey] = isNaN(parseFloat(addonValue)) ? String(addonValue).replace(/^['"]|['"]$/g, '') : String(parseFloat(addonValue));
-          }
-        });
-
-        let subgroupKey = name
-          .replace(/-(size|color|weight|width|height|gap|duration|radius|amount)$/g, '')
-          .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
-          .replace(/[A-Z]/g, ' $&')
-          .toLowerCase()
-          .trim();
-
-        let matchingSubgroupVars = Object.keys(filteredVariables).filter((key) =>
-          key.startsWith(subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)),
-        );
-
-        if (
-          options.subgroup &&
-          !fields[`${subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)}-subgroup`] &&
-          matchingSubgroupVars.length > 1 &&
-          !usedSubgroups.includes(name)
-        ) {
-          usedSubgroups.push(...matchingSubgroupVars);
-
-          fields[`${subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)}-subgroup`] = {
-            type: 'hidden',
-            label: options.subgroupTemplate.replaceAll('{key}', Simulation.string.capitalize(subgroupKey)),
-          };
-        }
-
-        let label = Simulation.string.capitalize(
-          name
-            .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
-            .replace(/[A-Z]/g, ' $&')
-            .toLowerCase(),
-        );
-
-        value = transform(value) ?? value;
-
-        const getCustomOptions = () => {
-          const values = Object.entries(allVariables)
-            .filter(([key]) => key.startsWith(`--${name}-options-`))
-            .reduce(
-              (acc, [key, value]) => {
-                const optionLabel = key.replace(`--${name}-options-`, '');
-                if (optionLabel)
-                  acc[String(value)] = Simulation.string.capitalize(
-                    optionLabel
-                      .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
-                      .replace(/[A-Z]/g, ' $&')
-                      .toLowerCase(),
-                  );
-                return acc;
+          types: [
+            [['size', 'width', 'number', 'gap', 'duration'], 'number'],
+            [['options', 'dropdown', 'weight'], 'dropdown'],
+            [['range', 'radius'], 'slider'],
+            [['color', 'background'], 'colorpicker'],
+            [['font-family', 'font', 'family'], 'googleFont'],
+          ],
+          addons: [
+            [['slider', 'radius'], { step: 1, min: 0, max: 'inherit' }],
+            [['options', 'dropdown'], { options: {} }],
+            [
+              ['weight'],
+              {
+                options: {
+                  '100': 'Thin',
+                  '200': 'Extra Light',
+                  '300': 'Light',
+                  '400': 'Regular',
+                  '500': 'Medium',
+                  '600': 'Semi Bold',
+                  '700': 'Bold',
+                  '800': 'Extra Bold',
+                  '900': 'Black',
+                },
               },
-              {} as Record<string, string>,
-            );
-          return Object.keys(values).length ? values : null;
+            ],
+          ],
+          transforms: [
+            [['size', 'width', 'number', 'gap', 'duration'], (value) => parseFloat(String(value))],
+            [['font-family', 'font', 'family'], (value) => value],
+            [['range', 'radius'], (value) => parseFloat(String(value))],
+            [['options', 'dropdown'], (value) => value],
+            [['weight'], (value) => value],
+            [['color', 'background'], (value) => value],
+          ],
+          labels: [
+            [['font-size'], ' • In pixels'],
+            [['font-radius'], ' • In pixels'],
+          ],
+        },
+      };
+
+      function normalizeFieldSettings(settings: FieldSettings): NormalizedFieldSettings {
+        return {
+          ...defaultOptions,
+          ...settings,
+          endsWith: Array.isArray(settings.endsWith) ? settings.endsWith : defaultOptions.endsWith,
+          ignore: Array.isArray(settings.ignore) ? settings.ignore : defaultOptions.ignore,
+          replace: { ...defaultOptions.replace, ...(settings.replace ?? {}) },
+          settings: {
+            types: Array.isArray(settings.settings?.types) ? settings.settings.types : defaultOptions.settings.types,
+            addons: Array.isArray(settings.settings?.addons) ? settings.settings.addons : defaultOptions.settings.addons,
+            transforms: Array.isArray(settings.settings?.transforms) ? settings.settings.transforms : defaultOptions.settings.transforms,
+            labels: Array.isArray(settings.settings?.labels) ? settings.settings.labels : defaultOptions.settings.labels,
+          },
+          subgroup: settings.subgroup ?? defaultOptions.subgroup,
+          template: settings.template ?? defaultOptions.template,
+          subgroupTemplate: settings.subgroupTemplate ?? defaultOptions.subgroupTemplate,
+          from: settings.from ?? defaultOptions.from,
         };
+      }
 
-        const customOptions = getCustomOptions();
+      const options = normalizeFieldSettings(settings);
 
-        if (customOptions) {
-          type = 'dropdown';
-          fieldAddons.options = customOptions;
-          value = String(value);
-        }
-
-        Object.entries(fieldAddons).forEach(([key, val]) => {
-          if ([false, 'inherit', 'auto', null].includes(val)) fieldAddons[key] = value;
-        });
-
-        fields[name] = {
-          type: (fieldAddons.type as StreamElementsFieldTypes) || type,
-          label: options.template.toString().replaceAll('{key}', Simulation.string.capitalize(label) + fieldAddons.label),
-          value,
-          min: fieldAddons.min,
-          max: fieldAddons.max,
-          step: fieldAddons.step,
-          options: fieldAddons.options,
-        };
-
-        return fields;
-      },
-      {} as Record<string, StreamElementsField>,
-    );
-
-    const errors = Object.entries(fields).reduce(
-      (acc, [name, field]) => {
-        const hasInvalidLabel = field?.label?.includes('undefined');
-        const isInvalidValue = !['hidden', 'button'].includes(field.type) && field.value === undefined;
-        if (hasInvalidLabel || isInvalidValue) acc[name] = field;
-        return acc;
-      },
-      {} as Record<string, StreamElementsField>,
-    );
-
-    if (Object.keys(errors).length) {
-      Tixyel.logger.error('Simulation.fields: Detected errors in generated fields:', errors);
-
-      throw new Error('Error while processing fields');
-    }
-
-    return fields;
-  }
-
-  static async start() {
-    const localFiles = {
-      fields: ['fields.json', 'cf.json', 'field.json', 'customfields.json'].find((file) => {
-        try {
-          new URL('./' + file, window.location.href);
-          return true;
-        } catch (error) {
-          return false;
-        }
-      }),
-      data: ['data.json', 'fielddata.json', 'fd.json', 'DATA.json'].find((file) => {
-        try {
-          new URL('./' + file, window.location.href);
-          return true;
-        } catch (error) {
-          return false;
-        }
-      }),
-    };
-
-    const data: Record<string, string | number | boolean> = await fetch('./' + (localFiles.data ?? 'data.json'), {
-      cache: 'no-store',
-    })
-      .then((res) => res.json())
-      .catch(() => ({}));
-
-    await fetch('./' + (localFiles.fields ?? 'fields.json'), {
-      cache: 'no-store',
-    })
-      .then((res) => res.json())
-      .then(async (customfields: Record<string, StreamElementsField>) => {
-        const fields = Object.entries(customfields)
-          .filter(([_, { value }]) => value != undefined)
+      const extractCssVariables = (): Record<string, string> => {
+        return Array.from(document.styleSheets)
+          .filter(({ href }) => !href || href.startsWith(window.location.origin))
           .reduce(
-            (acc, [key, { value }]) => {
-              if (data && data[key] !== undefined) value = data[key];
-
-              acc[key] = value;
-
+            (acc, { cssRules }) => {
+              if (!cssRules) return acc;
+              Array.from(cssRules).forEach((rule) => {
+                if (rule instanceof CSSStyleRule && rule.selectorText === options.from && Array.from(rule.style).some((prop) => prop.startsWith('--'))) {
+                  Array.from(rule.style)
+                    .filter((prop) => prop.startsWith('--'))
+                    .forEach((prop) => {
+                      acc[prop] = rule.style.getPropertyValue(prop).trim();
+                    });
+                }
+              });
               return acc;
             },
-            {
-              ...data,
-            } as Record<string, StreamElementsFieldValue>,
+            {} as Record<string, string>,
+          );
+      };
+
+      const allVariables = extractCssVariables();
+
+      const filteredVariables = Object.entries(allVariables)
+        .filter(([name]) => options.endsWith.some((suffix) => name.toLowerCase().endsWith(suffix.toLowerCase()) && !name.includes('-options-')))
+        .filter(([name]) => !options.ignore.some((ignoreName) => name.toLowerCase() === ignoreName.toLowerCase()))
+        .reduce(
+          (acc, [name, value]) => {
+            acc[name.replace('--', '')] = String(options.replace?.[name] ?? value);
+            return acc;
+          },
+          {} as Record<string, string | number>,
+        );
+
+      let usedSubgroups: string[] = [];
+
+      const fields = Object.entries(filteredVariables).reduce(
+        (fields, [name, value]) => {
+          let type = options.settings.types.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || 'text';
+
+          let transform = options.settings.transforms.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || ((v: any) => v);
+
+          let labelAddon = options.settings.labels.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || '';
+
+          let fieldAddons: Record<string, any> = {
+            type: 'text',
+            label: labelAddon,
+            ...(options.settings.addons.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || {}),
+          };
+
+          (['min', 'max', 'step', 'label', 'type'] as const).forEach((addonKey) => {
+            const addonValue = allVariables[`--${name}-${addonKey}`];
+            if (addonValue && addonValue.length) {
+              fieldAddons[addonKey] = isNaN(parseFloat(addonValue)) ? String(addonValue).replace(/^['"]|['"]$/g, '') : String(parseFloat(addonValue));
+            }
+          });
+
+          let subgroupKey = name
+            .replace(/-(size|color|weight|width|height|gap|duration|radius|amount)$/g, '')
+            .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+            .replace(/[A-Z]/g, ' $&')
+            .toLowerCase()
+            .trim();
+
+          let matchingSubgroupVars = Object.keys(filteredVariables).filter((key) =>
+            key.startsWith(subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)),
           );
 
-        const load = await Simulation.generate.event.onWidgetLoad(fields, await Simulation.generate.session.get());
+          if (
+            options.subgroup &&
+            !fields[`${subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)}-subgroup`] &&
+            matchingSubgroupVars.length > 1 &&
+            !usedSubgroups.includes(name)
+          ) {
+            usedSubgroups.push(...matchingSubgroupVars);
 
-        window.dispatchEvent(new CustomEvent('onWidgetLoad', { detail: load }));
-      });
-  }
+            fields[`${subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)}-subgroup`] = {
+              type: 'hidden',
+              label: options.subgroupTemplate.replaceAll('{key}', Simulation.string.capitalize(subgroupKey)),
+            };
+          }
 
-  static emulate = {
+          let label = Simulation.string.capitalize(
+            name
+              .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+              .replace(/[A-Z]/g, ' $&')
+              .toLowerCase(),
+          );
+
+          value = transform(value) ?? value;
+
+          const getCustomOptions = () => {
+            const values = Object.entries(allVariables)
+              .filter(([key]) => key.startsWith(`--${name}-options-`))
+              .reduce(
+                (acc, [key, value]) => {
+                  const optionLabel = key.replace(`--${name}-options-`, '');
+                  if (optionLabel)
+                    acc[String(value)] = Simulation.string.capitalize(
+                      optionLabel
+                        .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
+                        .replace(/[A-Z]/g, ' $&')
+                        .toLowerCase(),
+                    );
+                  return acc;
+                },
+                {} as Record<string, string>,
+              );
+            return Object.keys(values).length ? values : null;
+          };
+
+          const customOptions = getCustomOptions();
+
+          if (customOptions) {
+            type = 'dropdown';
+            fieldAddons.options = customOptions;
+            value = String(value);
+          }
+
+          Object.entries(fieldAddons).forEach(([key, val]) => {
+            if ([false, 'inherit', 'auto', null].includes(val)) fieldAddons[key] = value;
+          });
+
+          fields[name] = {
+            type: (fieldAddons.type as StreamElementsFieldTypes) || type,
+            label: options.template.toString().replaceAll('{key}', Simulation.string.capitalize(label) + fieldAddons.label),
+            value,
+            min: fieldAddons.min,
+            max: fieldAddons.max,
+            step: fieldAddons.step,
+            options: fieldAddons.options,
+          };
+
+          return fields;
+        },
+        {} as Record<string, StreamElementsField>,
+      );
+
+      const errors = Object.entries(fields).reduce(
+        (acc, [name, field]) => {
+          const hasInvalidLabel = field?.label?.includes('undefined');
+          const isInvalidValue = !['hidden', 'button'].includes(field.type) && field.value === undefined;
+          if (hasInvalidLabel || isInvalidValue) acc[name] = field;
+          return acc;
+        },
+        {} as Record<string, StreamElementsField>,
+      );
+
+      if (Object.keys(errors).length) {
+        Tixyel.logger.error('Simulation.fields: Detected errors in generated fields:', errors);
+
+        throw new Error('Error while processing fields');
+      }
+
+      return fields;
+    },
+  };
+
+  export const emulate = {
     twitch: {
       message(data: Record<string, string | number | boolean> = {}) {
         Simulation.generate.event.onEventReceived('twitch', 'message', data).then((event) => {
@@ -2287,4 +2199,59 @@ export class Simulation {
       window.dispatchEvent(new CustomEvent(listener, { detail: event }));
     },
   };
+
+  export async function start(
+    fieldsFile: string[] = ['fields.json', 'cf.json', 'field.json', 'customfields.json'],
+    dataFiles: string[] = ['data.json', 'fielddata.json', 'fd.json', 'DATA.json'],
+  ) {
+    const localFiles = {
+      fields: fieldsFile.find((file) => {
+        try {
+          new URL('./' + file, window.location.href);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }),
+      data: dataFiles.find((file) => {
+        try {
+          new URL('./' + file, window.location.href);
+          return true;
+        } catch (error) {
+          return false;
+        }
+      }),
+    };
+
+    const data: Record<string, string | number | boolean> = await fetch('./' + (localFiles.data ?? 'data.json'), {
+      cache: 'no-store',
+    })
+      .then((res) => res.json())
+      .catch(() => ({}));
+
+    await fetch('./' + (localFiles.fields ?? 'fields.json'), {
+      cache: 'no-store',
+    })
+      .then((res) => res.json())
+      .then(async (customfields: Record<string, StreamElementsField>) => {
+        const fields = Object.entries(customfields)
+          .filter(([_, { value }]) => value != undefined)
+          .reduce(
+            (acc, [key, { value }]) => {
+              if (data && data[key] !== undefined) value = data[key];
+
+              acc[key] = value;
+
+              return acc;
+            },
+            {
+              ...data,
+            } as Record<string, StreamElementsFieldValue>,
+          );
+
+        const load = await Simulation.generate.event.onWidgetLoad(fields, await Simulation.generate.session.get());
+
+        window.dispatchEvent(new CustomEvent('onWidgetLoad', { detail: load }));
+      });
+  }
 }
