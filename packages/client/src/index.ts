@@ -5,7 +5,7 @@ import { onWidgetLoadEvent } from './types/streamelements/events/onWidgetLoad.js
 import { Logger } from './utils/Logger.js';
 import { Button } from './actions/button.js';
 import { Command } from './actions/command.js';
-import { findEmotesInText, replaceEmotesWithHTML } from './utils/Message.js';
+import { findEmotesInText, generateBadges, replaceEmotesWithHTML } from './utils/Message.js';
 import { EventProvider } from './utils/EventProvider.js';
 import { useStorage } from './utils/useStorage.js';
 import { useQueue } from './utils/useQueue.js';
@@ -25,6 +25,7 @@ export const Tixyel = {
   utils: {
     findEmotesInText,
     replaceEmotesWithHTML,
+    generateBadges,
   },
   modules: {
     Button,

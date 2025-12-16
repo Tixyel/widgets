@@ -89,6 +89,19 @@ export type BadgeOptions =
   | `${TwitchBadgesKeys}, ${TwitchBadgesKeys}`
   | `${TwitchBadgesKeys}, ${TwitchBadgesKeys}, ${TwitchBadgesKeys}`;
 
+/**
+ * Generates badge data based on the provided badges and platform.
+ * @param badges - The badges to generate. Can be an array or a comma-separated string.
+ * @param provider - The platform provider ('twitch' or 'youtube'). Defaults to 'twitch'.
+ * @returns A promise that resolves to the generated badge data.
+ * @example
+ * ```javascript
+ * // Generate Twitch badges
+ * const twitchBadges = await generateBadges(['broadcaster', 'moderator'], 'twitch');
+ * // Generate YouTube badges
+ * const youtubeBadges = await generateBadges('sponsor, moderator', 'youtube');
+ * ```
+ */
 export async function generateBadges(badges: BadgeOptions, provider: 'youtube'): Promise<YouTubeResult>;
 export async function generateBadges(badges: BadgeOptions, provider: 'twitch'): Promise<TwitchResult>;
 export async function generateBadges(badges: BadgeOptions = [], provider: Provider = 'twitch'): Promise<TwitchResult | YouTubeResult> {
