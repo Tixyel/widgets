@@ -1,5 +1,5 @@
 import { onWidgetLoad } from '../types/streamelements/events/onWidgetLoad.js';
-import { Alejo$Pronouns$name } from '../types/alejo/pronouns.js';
+import { Alejo } from '../types/alejo/pronouns.js';
 import { EventProvider } from '../utils/EventProvider.js';
 import { useStorage } from '../utils/useStorage.js';
 import { Session } from '../types/streamelements/session.js';
@@ -27,7 +27,7 @@ export type ClientStorageOptions<T> = {
 type ClientStorage = {
   user: Record<string, ClientStorageOptions<string>>;
   avatar: Record<string, ClientStorageOptions<string>>;
-  pronoun: Record<string, ClientStorageOptions<Alejo$Pronouns$name>>;
+  pronoun: Record<string, ClientStorageOptions<Alejo.Pronouns.name>>;
   emote: Record<string, ClientStorageOptions<string>>;
 };
 

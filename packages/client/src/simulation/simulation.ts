@@ -1,5 +1,5 @@
 import type { Provider } from '../types/client.js';
-import { Alejo$Pronouns } from '../types/alejo/pronouns.js';
+import { Alejo } from '../types/alejo/pronouns.js';
 import type {
   FieldSettings,
   NormalizedFieldSettings,
@@ -46,7 +46,7 @@ export namespace Simulation {
     badges,
     items,
     tts,
-    pronouns: Alejo$Pronouns,
+    pronouns: Alejo.Pronouns.map,
     css_color_names: [
       'aliceblue',
       'antiquewhite',
