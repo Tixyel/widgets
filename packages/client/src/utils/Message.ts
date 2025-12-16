@@ -5,6 +5,12 @@ import { BttvEmote, SeventvEmote, TwitchEmote } from '../types/emote.js';
 
 type Emote = TwitchEmote | BttvEmote | SeventvEmote;
 
+/**
+ * Finds emotes in a given text.
+ * @param text - The text to search for emotes.
+ * @param emotes - An array of emotes to search for. Defaults to Simulation data emotes.
+ * @returns An array of emotes found in the text with their positions.
+ */
 export function findEmotesInText(text: string, emotes: Emote[] = Simulation.data.emotes): Emote[] {
   const result: Emote[] = [];
 
@@ -33,6 +39,12 @@ export function findEmotesInText(text: string, emotes: Emote[] = Simulation.data
   return result.sort((a, b) => a.start - b.start);
 }
 
+/**
+ * Replaces emotes in the text with corresponding HTML image tags.
+ * @param text - The text containing emotes.
+ * @param emotes - An array of emotes with their positions in the text.
+ * @returns The text with emotes replaced by HTML image tags.
+ */
 export function replaceEmotesWithHTML(text: string, emotes: Emote[]): string {
   if (!emotes.length) return text;
 
