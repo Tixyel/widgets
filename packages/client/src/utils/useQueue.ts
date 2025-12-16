@@ -1,4 +1,4 @@
-import { Client } from '../client/index.js';
+import { Client } from '../client/client.js';
 import { Tixyel } from '../index.js';
 import { EventProvider } from './EventProvider.js';
 

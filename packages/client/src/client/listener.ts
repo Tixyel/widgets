@@ -1,13 +1,12 @@
 import { Button } from '../actions/button.js';
 import { Command } from '../actions/command.js';
-import { Simulation } from '../simulation/index.js';
 import { ClientEvents, Provider } from '../types/client.js';
 import { _storages } from '../utils/useStorage.js';
-import { Client, ClientStorageOptions } from './index.js';
+import { Client, ClientStorageOptions } from './client.js';
 
 window.addEventListener('load', () => {
   if (window.client instanceof Client) {
-    Simulation.start();
+    // Do nothing, just ensuring the client is initialized
   }
 });
 
@@ -124,10 +123,12 @@ window.addEventListener('onEventReceived', ({ detail }) => {
         switch (data.listener) {
           case 'tip-latest': {
             const event = data.event;
+
             break;
           }
           case 'event:skip': {
             const event = data.event;
+
             break;
           }
           case 'event:test': {
@@ -164,6 +165,7 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
           case 'bot:counter': {
             const event = data.event;
+
             break;
           }
           case 'alertService:toggleSound': {
@@ -183,10 +185,12 @@ window.addEventListener('onEventReceived', ({ detail }) => {
         switch (data.listener) {
           case 'delete-message': {
             const event = data.event;
+
             break;
           }
           case 'delete-messages': {
             const event = data.event;
+
             break;
           }
           case 'message': {
@@ -198,10 +202,12 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
           case 'follower-latest': {
             const event = data.event;
+
             break;
           }
           case 'cheer-latest': {
             const event = data.event;
+
             break;
           }
           case 'subscriber-latest': {
@@ -223,6 +229,7 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
           case 'raid-latest': {
             const event = data.event;
+
             break;
           }
         }

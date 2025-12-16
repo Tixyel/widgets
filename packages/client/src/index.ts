@@ -1,5 +1,4 @@
-import { Client } from './client/index.js';
-import { Simulation } from './simulation/index.js';
+import { Client } from './client/client.js';
 import { onEventReceivedEvent } from './types/streamelements/events/onEventReceived.js';
 import { onSessionUpdateEvent } from './types/streamelements/events/onSessionUpdate.js';
 import { onWidgetLoadEvent } from './types/streamelements/events/onWidgetLoad.js';
@@ -13,6 +12,7 @@ import { useQueue } from './utils/useQueue.js';
 import type { SE_API as SE_API_TYPE } from './types/streamelements/index.js';
 import './client/listener.js';
 import { initializeLocalSEAPI } from './streamelements/api.js';
+import { Simulation } from './simulation/simulation.js';
 
 export * from './types/index.js';
 

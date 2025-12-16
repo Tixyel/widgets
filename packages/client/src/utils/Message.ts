@@ -1,4 +1,4 @@
-import { Simulation } from '../simulation/index.js';
+import { Simulation } from '../simulation/simulation.js';
 import { TwitchBadge, TwitchBadgesKeys } from '../types/badge.js';
 import { Provider } from '../types/client.js';
 import { BttvEmote, SeventvEmote, TwitchEmote } from '../types/emote.js';
