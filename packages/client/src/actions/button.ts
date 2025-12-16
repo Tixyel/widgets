@@ -1,4 +1,4 @@
-import { Client } from '../client/index.js';
+import { Client } from '../client/client.js';
 import { Tixyel } from '../index.js';
 
 interface ButtonOptions {
@@ -29,6 +29,11 @@ export class Button {
   }
 
   parse(field: string, value: string | boolean | number): Button {
+    /**
+     * Extract the actual field name by removing the template part from the provided field.
+     * For example, if the template is "button-{id}" and the field is "button-123",
+     * this will extract "123" as the actual field name.
+     */
     var f = field.replace(typeof this.field === 'string' ? this.field : (this.template.replace(/\{[^}]*\}/g, '') ?? ''), '').trim();
 
     try {
@@ -40,27 +45,47 @@ export class Button {
     return this;
   }
 
+  remove(): void {
+    if (!(window.client instanceof Client)) return;
+
+    const index = window.client.actions.buttons.indexOf(this);
+
+    if (index > -1) {
+      window.client.actions.buttons.splice(index, 1);
+      window.client.emit('action', this, 'removed');
+    }
+  }
+
   static execute(field: string, value: string | boolean | number): boolean {
     try {
       if (!(window.client instanceof Client)) return false;
 
       if (window.client.actions.buttons.length) {
-        const button = window.client.actions.buttons.find((b) => {
+        const buttons = window.client.actions.buttons.filter((b) => {
+          /**
+           * Check if the button's field matches the provided field.
+           */
           if (typeof b.field === 'string') return b.field === field;
+          /**
+           * If the button's field is a function, call it with the provided field and value to determine a match.
+           */
           if (typeof b.field === 'function') return b.field(field, value);
 
           return false;
         });
 
-        if (button && button instanceof Button) {
-          try {
-            button.parse(field, value);
-            window.client.emit('action', button, 'executed');
+        if (buttons.length && buttons.every((b) => b instanceof Button)) {
+          buttons.forEach((button) => {
+            try {
+              button.parse(field, value);
 
-            Tixyel.logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ''}`);
-          } catch (error) {
-            Tixyel.logger.error(`Error executing button "${field}": ${error instanceof Error ? error.message : error}`);
-          }
+              window.client.emit('action', button, 'executed');
+
+              Tixyel.logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ''}`);
+            } catch (error) {
+              Tixyel.logger.error(`Error executing button "${field}": ${error instanceof Error ? error.message : error}`);
+            }
+          });
 
           return true;
         }

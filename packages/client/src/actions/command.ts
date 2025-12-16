@@ -1,4 +1,4 @@
-import { Client } from '../client/index.js';
+import { Client } from '../client/client.js';
 import { Tixyel } from '../index.js';
 import { Twitch$Message } from '../types/streamelements/events/twitch/message.js';
 import { Youtube$Message } from '../types/streamelements/events/youtube/message.js';
@@ -140,6 +140,17 @@ export class Command {
     return verify;
   }
 
+  remove(): void {
+    if (!(window.client instanceof Client)) return;
+
+    const index = window.client.actions.commands.indexOf(this);
+
+    if (index > -1) {
+      window.client.actions.commands.splice(index, 1);
+      window.client.emit('action', this, 'removed');
+    }
+  }
+
   static execute(received: CommandEvent): boolean {
     if (!(window.client instanceof Client)) return false;
 
@@ -147,19 +158,21 @@ export class Command {
 
     try {
       if (window.client.actions.commands.length && window.client.actions.commands.some((c) => data.event.data.text.startsWith(c.prefix))) {
-        const command = window.client.actions.commands.find((c) => {
+        const commands = window.client.actions.commands.filter((c) => {
           var nameAndAliases = [c.name, ...(c.aliases ?? [])];
           var commandMatch = data.event.data.text.replace(c.prefix, '').split(' ')[0];
 
           return nameAndAliases.includes(commandMatch);
         });
 
-        if (command && command instanceof Command) {
-          command.parse(data.event.data.text, received);
+        if (commands.length && commands.every((command) => command instanceof Command)) {
+          commands.forEach((command) => {
+            command.parse(data.event.data.text, received);
 
-          window.client.emit('action', command, 'executed');
+            window.client.emit('action', command, 'executed');
 
-          Tixyel.logger.received(`Command executed: ${data.event.data.text} by ${data.event.data.nick || data.event.data.displayName}`, data);
+            Tixyel.logger.received(`Command executed: ${data.event.data.text} by ${data.event.data.nick || data.event.data.displayName}`, data);
+          });
 
           return true;
         }
