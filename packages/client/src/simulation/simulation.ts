@@ -1,22 +1,22 @@
 import type { Provider } from '../types/client.js';
 import { Alejo$Pronouns } from '../types/alejo/pronouns.js';
-import {
+import type {
   FieldSettings,
   NormalizedFieldSettings,
   StreamElementsField,
   StreamElementsFieldTypes,
   StreamElementsFieldValue,
 } from '../types/streamelements/customfields.js';
-import { onEventReceived } from '../types/streamelements/events/onEventReceived.js';
-import { onSessionUpdate } from '../types/streamelements/events/onSessionUpdate.js';
-import { onWidgetLoad } from '../types/streamelements/events/onWidgetLoad.js';
-import { Youtube$Message } from '../types/streamelements/events/youtube/message.js';
+import type { onEventReceived } from '../types/streamelements/events/onEventReceived.js';
+import type { onSessionUpdate } from '../types/streamelements/events/onSessionUpdate.js';
+import type { onWidgetLoad } from '../types/streamelements/events/onWidgetLoad.js';
+import type { Youtube$Message } from '../types/streamelements/events/youtube/message.js';
 import { YouTube$Subscriber } from '../types/streamelements/events/youtube/subscriber.js';
-import { YouTube$Superchat } from '../types/streamelements/events/youtube/superchat.js';
-import { Session$AnyConfig, Session$AvailableCategory, Session$AvailableData } from '../types/streamelements/session.generate.js';
-import { Session } from '../types/streamelements/session.js';
+import type { YouTube$Superchat } from '../types/streamelements/events/youtube/superchat.js';
+import type { Session$AnyConfig, Session$AvailableCategory, Session$AvailableData } from '../types/streamelements/session.generate.js';
+import type { Session } from '../types/streamelements/session.js';
 import { names, messages, avatars, emotes, badges, tts, items, tiers } from './data/index.js';
-import {
+import type {
   StreamElements,
   Twitch,
   Twitch$Cheer,
@@ -27,14 +27,14 @@ import {
   Twitch$Raid,
   Youtube,
 } from '../types/index.js';
-import { BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
-import { Subscriber$community, Subscriber$gift, Subscriber$spam, Twitch$Subscriber } from '../types/streamelements/events/twitch/subscriber.js';
-import { StreamElements$Tip } from '../types/streamelements/events/integrated/tip.js';
-import { StreamElements$KVStore } from '../types/streamelements/events/integrated/kvstore.js';
-import { StreamElements$BotCounter } from '../types/streamelements/events/integrated/botCounter.js';
-import { StreamElements$AlertService } from '../types/streamelements/events/integrated/alertService.js';
-import { StreamElements$EventSkip } from '../types/streamelements/events/integrated/eventSkip.js';
-import { Sponsor$community, Sponsor$gift, Sponsor$spam, Youtube$Sponsor } from '../types/streamelements/events/youtube/sponsor.js';
+import { type BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
+import type { Subscriber$community, Subscriber$gift, Subscriber$spam, Twitch$Subscriber } from '../types/streamelements/events/twitch/subscriber.js';
+import type { StreamElements$Tip } from '../types/streamelements/events/integrated/tip.js';
+import type { StreamElements$KVStore } from '../types/streamelements/events/integrated/kvstore.js';
+import type { StreamElements$BotCounter } from '../types/streamelements/events/integrated/botCounter.js';
+import type { StreamElements$AlertService } from '../types/streamelements/events/integrated/alertService.js';
+import type { StreamElements$EventSkip } from '../types/streamelements/events/integrated/eventSkip.js';
+import type { Sponsor$community, Sponsor$gift, Sponsor$spam, Youtube$Sponsor } from '../types/streamelements/events/youtube/sponsor.js';
 
 export namespace Simulation {
   export const data = {
