@@ -1,16 +1,15 @@
-import { onWidgetLoad } from '../types/streamelements/events/onWidgetLoad.js';
-import { Alejo } from '../types/alejo/pronouns.js';
+import { Alejo } from '../types/alejo.js';
 import { EventProvider } from '../utils/EventProvider.js';
 import { useStorage } from '../utils/useStorage.js';
-import { Session } from '../types/streamelements/session.js';
 import { ClientEvents as events, Provider } from '../types/client.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
+import { StreamElements } from '../types/streamelements/main.js';
 
 type ClientEvents = {
-  load: [event: onWidgetLoad];
+  load: [event: StreamElements.Event.onWidgetLoad];
   action: [action: Button | Command, type: 'created' | 'executed' | 'removed'];
-  session: [session: Session];
+  session: [session: StreamElements.Session.Data];
   event: [event: events];
 };
 
@@ -36,9 +35,9 @@ export class Client extends EventProvider<ClientEvents> {
 
   public storage!: useStorage<ClientStorage>;
 
-  public fields: onWidgetLoad['fieldData'] = {};
+  public fields: StreamElements.Event.onWidgetLoad['fieldData'] = {};
 
-  public session!: Session;
+  public session!: StreamElements.Session.Data;
 
   public loaded: boolean = false;
 
@@ -70,9 +69,9 @@ export class Client extends EventProvider<ClientEvents> {
 
   public details!: {
     provider: Provider | 'local';
-    user: onWidgetLoad['channel'];
-    currency: onWidgetLoad['currency'];
-    overlay: onWidgetLoad['overlay'];
+    user: StreamElements.Event.onWidgetLoad['channel'];
+    currency: StreamElements.Event.onWidgetLoad['currency'];
+    overlay: StreamElements.Event.onWidgetLoad['overlay'];
   };
 
   public cache: { avatar: number; pronoun: number; emote: number } = {
@@ -99,7 +98,7 @@ export class Client extends EventProvider<ClientEvents> {
           },
           overlay: this.details.overlay,
           emulated: false,
-        } as onWidgetLoad,
+        } as StreamElements.Event.onWidgetLoad,
       ] as unknown as ClientEvents[K]);
 
       return this;

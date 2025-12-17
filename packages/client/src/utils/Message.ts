@@ -1,7 +1,7 @@
 import { Simulation } from '../simulation/simulation.js';
-import { TwitchBadge, TwitchBadgesKeys } from '../types/badge.js';
 import { Provider } from '../types/client.js';
 import { BttvEmote, SeventvEmote, TwitchEmote } from '../types/emote.js';
+import { Twitch } from '../types/twitch.js';
 
 type Emote = TwitchEmote | BttvEmote | SeventvEmote;
 
@@ -72,8 +72,8 @@ export function replaceEmotesWithHTML(text: string, emotes: Emote[]): string {
 }
 
 type TwitchResult = {
-  keys: TwitchBadgesKeys[];
-  badges: TwitchBadge[];
+  keys: Twitch.roles[];
+  badges: Twitch.badge[];
 };
 
 type YouTubeResult = {
@@ -83,11 +83,7 @@ type YouTubeResult = {
   isChatModerator: boolean;
 };
 
-export type BadgeOptions =
-  | TwitchBadgesKeys[]
-  | TwitchBadgesKeys
-  | `${TwitchBadgesKeys}, ${TwitchBadgesKeys}`
-  | `${TwitchBadgesKeys}, ${TwitchBadgesKeys}, ${TwitchBadgesKeys}`;
+export type BadgeOptions = Twitch.roles[] | Twitch.roles | `${Twitch.roles}, ${Twitch.roles}` | `${Twitch.roles}, ${Twitch.roles}, ${Twitch.roles}`;
 
 /**
  * Generates badge data based on the provided badges and platform.
@@ -106,14 +102,14 @@ export async function generateBadges(badges: BadgeOptions, provider: 'youtube'):
 export async function generateBadges(badges: BadgeOptions, provider: 'twitch'): Promise<TwitchResult>;
 export async function generateBadges(badges: BadgeOptions = [], provider: Provider = 'twitch'): Promise<TwitchResult | YouTubeResult> {
   if (!Array.isArray(badges) && typeof badges === 'string') {
-    badges = badges.split(',').map((e) => e.trim()) as TwitchBadgesKeys[];
+    badges = badges.split(',').map((e) => e.trim()) as Twitch.roles[];
   }
 
   if (!badges || !badges.length) {
     var max = Simulation.rand.number(1, 3);
 
     for await (const _ of Array.from({ length: max }, () => '')) {
-      var current = Simulation.rand.array(Object.keys(Simulation.data.badges))[0] as TwitchBadgesKeys;
+      var current = Simulation.rand.array(Object.keys(Simulation.data.badges))[0] as Twitch.roles;
 
       if (!badges.includes(current) && Array.isArray(badges)) {
         badges.push(current);
@@ -128,11 +124,11 @@ export async function generateBadges(badges: BadgeOptions = [], provider: Provid
   switch (provider) {
     case 'twitch': {
       result = {
-        keys: Array.from(badges).filter((e) => e in Simulation.data.badges) as TwitchBadgesKeys[],
+        keys: Array.from(badges).filter((e) => e in Simulation.data.badges) as Twitch.roles[],
         badges: Array.from(badges)
           .slice(0, 3)
           .map((badge) => Simulation.data.badges[badge])
-          .filter(Boolean) as TwitchBadge[],
+          .filter(Boolean) as Twitch.badge[],
       };
 
       break;

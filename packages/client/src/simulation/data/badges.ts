@@ -1,6 +1,6 @@
-import { TwitchBadge, TwitchBadgesKeys } from '../../types/badge.js';
+import { Twitch } from '../../types/twitch.js';
 
-export const badges: Record<TwitchBadgesKeys, TwitchBadge> = {
+export const badges: Record<Twitch.roles, Twitch.badge> = {
   '100 bits': {
     type: '100 bits',
     version: '1',

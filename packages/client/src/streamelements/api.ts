@@ -1,6 +1,6 @@
-import { SE_API } from '../types/streamelements/index.js';
+import { StreamElements } from '../types/streamelements/main.js';
 
-const LOCAL_SE_API: SE_API & { store: { list: Record<string, any> } } = {
+const LOCAL_SE_API: StreamElements.SE_API & { store: { list: Record<string, any> } } = {
   getOverlayStatus: () => {
     return {
       isEditorMode: false,

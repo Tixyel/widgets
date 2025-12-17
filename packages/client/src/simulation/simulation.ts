@@ -1,40 +1,8 @@
 import type { Provider } from '../types/client.js';
-import { Alejo } from '../types/alejo/pronouns.js';
-import type {
-  FieldSettings,
-  NormalizedFieldSettings,
-  StreamElementsField,
-  StreamElementsFieldTypes,
-  StreamElementsFieldValue,
-} from '../types/streamelements/customfields.js';
-import type { onEventReceived } from '../types/streamelements/events/onEventReceived.js';
-import type { onSessionUpdate } from '../types/streamelements/events/onSessionUpdate.js';
-import type { onWidgetLoad } from '../types/streamelements/events/onWidgetLoad.js';
-import type { Youtube$Message } from '../types/streamelements/events/youtube/message.js';
-import { YouTube$Subscriber } from '../types/streamelements/events/youtube/subscriber.js';
-import type { YouTube$Superchat } from '../types/streamelements/events/youtube/superchat.js';
-import type { Session$AnyConfig, Session$AvailableCategory, Session$AvailableData } from '../types/streamelements/session.generate.js';
-import type { Session } from '../types/streamelements/session.js';
+import { Alejo } from '../types/alejo.js';
 import { names, messages, avatars, emotes, badges, tts, items, tiers } from './data/index.js';
-import type {
-  StreamElements,
-  Twitch,
-  Twitch$Cheer,
-  Twitch$DeleteMessage,
-  Twitch$DeleteMessages,
-  Twitch$Follower,
-  Twitch$Message,
-  Twitch$Raid,
-  Youtube,
-} from '../types/index.js';
 import { type BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
-import type { Subscriber$community, Subscriber$gift, Subscriber$spam, Twitch$Subscriber } from '../types/streamelements/events/twitch/subscriber.js';
-import type { StreamElements$Tip } from '../types/streamelements/events/integrated/tip.js';
-import type { StreamElements$KVStore } from '../types/streamelements/events/integrated/kvstore.js';
-import type { StreamElements$BotCounter } from '../types/streamelements/events/integrated/botCounter.js';
-import type { StreamElements$AlertService } from '../types/streamelements/events/integrated/alertService.js';
-import type { StreamElements$EventSkip } from '../types/streamelements/events/integrated/eventSkip.js';
-import type { Sponsor$community, Sponsor$gift, Sponsor$spam, Youtube$Sponsor } from '../types/streamelements/events/youtube/sponsor.js';
+import { StreamElements } from '../types/streamelements/main.js';
 
 export namespace Simulation {
   export const data = {
@@ -998,9 +966,9 @@ export namespace Simulation {
         message: { type: 'string', options: Simulation.data.messages.filter((e) => e.length) },
         item: { type: 'array', options: Simulation.data.items },
         avatar: { type: 'string', options: Simulation.data.avatars.filter((e) => e.length) },
-      } as Record<string, Session$AnyConfig>,
+      } as Record<string, StreamElements.Session.Config.Any>,
 
-      available(): Session$AvailableData {
+      available(): StreamElements.Session.Config.Available.Data {
         const types = this.types;
 
         return {
@@ -1245,11 +1213,13 @@ export namespace Simulation {
         };
       },
 
-      async get(): Promise<Session> {
+      async get(): Promise<StreamElements.Session.Data> {
         const available = this.available();
 
-        const generate = (available: Session$AvailableData | Session$AvailableCategory | Session$AnyConfig): any => {
-          const generateRecentData = (config: Session$AnyConfig): Array<any> => {
+        const generate = (
+          available: StreamElements.Session.Config.Available.Data | StreamElements.Session.Config.Available.Category | StreamElements.Session.Config.Any,
+        ): any => {
+          const generateRecentData = (config: StreamElements.Session.Config.Any): Array<any> => {
             if (!config || !('amount' in config)) return [];
 
             const items: Array<{ createdAt: string }> = [];
@@ -1273,7 +1243,7 @@ export namespace Simulation {
             return result;
           };
 
-          const processTypedConfig = (config: Session$AnyConfig): any => {
+          const processTypedConfig = (config: StreamElements.Session.Config.Any): any => {
             if (!config) return config;
 
             switch (config.type) {
@@ -1308,7 +1278,7 @@ export namespace Simulation {
           return generateObjectData(available);
         };
 
-        var session: Session = Object.entries(generate(available)).reduce(
+        var session: StreamElements.Session.Data = Object.entries(generate(available)).reduce(
           (acc, [key, value]) => {
             Object.entries(value as any).forEach(
               ([subKey, subValue]) =>
@@ -1319,7 +1289,7 @@ export namespace Simulation {
             return acc;
           },
           {} as Record<string, any>,
-        ) as Session;
+        ) as StreamElements.Session.Data;
 
         return session;
       },
@@ -1332,7 +1302,11 @@ export namespace Simulation {
        * @param currency - The currency to be used (default is 'USD').
        * @returns A Promise that resolves to the simulated onWidgetLoad event data.
        */
-      async onWidgetLoad(fields: Record<string, StreamElementsFieldValue>, session: Session, currency: 'BRL' | 'USD' | 'EUR' = 'USD'): Promise<onWidgetLoad> {
+      async onWidgetLoad(
+        fields: Record<string, StreamElements.CustomField.Value>,
+        session: StreamElements.Session.Data,
+        currency: 'BRL' | 'USD' | 'EUR' = 'USD',
+      ): Promise<StreamElements.Event.onWidgetLoad> {
         const currencies = {
           BRL: { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' },
           USD: { code: 'USD', name: 'US Dollar', symbol: '$' },
@@ -1370,7 +1344,7 @@ export namespace Simulation {
        * @param session - The session data to be included in the event.
        * @returns A Promise that resolves to the simulated onSessionUpdate event data.
        */
-      async onSessionUpdate(session?: Session): Promise<onSessionUpdate> {
+      async onSessionUpdate(session?: StreamElements.Session.Data): Promise<StreamElements.Event.onSessionUpdate> {
         session ??= await Simulation.generate.session.get();
 
         return { session };
@@ -1392,9 +1366,9 @@ export namespace Simulation {
        */
       async onEventReceived(
         provider: Provider | 'random' = 'random',
-        type: onEventReceived['listener'] | 'random' | 'tip' | 'cheer' | 'follower' | 'raid' | 'subscriber' = 'random',
+        type: StreamElements.Event.onEventReceived['listener'] | 'random' | 'tip' | 'cheer' | 'follower' | 'raid' | 'subscriber' = 'random',
         options: Record<string, string | number | boolean> = {},
-      ): Promise<onEventReceived | null> {
+      ): Promise<StreamElements.Event.onEventReceived | null> {
         const available: Record<Provider, string[]> = {
           twitch: ['message', 'follower-latest', 'cheer-latest', 'raid-latest', 'subscriber-latest'],
           streamelements: ['tip-latest'],
@@ -1407,16 +1381,16 @@ export namespace Simulation {
           default:
           case 'random': {
             var randomProvider = Simulation.rand.array(Object.keys(available).filter((e) => available[e as Provider].length))[0] as Provider;
-            var randomEvent = Simulation.rand.array(available[randomProvider])[0] as onEventReceived['listener'];
+            var randomEvent = Simulation.rand.array(available[randomProvider])[0] as StreamElements.Event.onEventReceived['listener'];
 
             return this.onEventReceived(randomProvider, randomEvent);
           }
 
           case 'twitch': {
-            switch (type as Twitch['listener'] | 'random' | 'cheer' | 'follower' | 'raid' | 'subscriber') {
+            switch (type as StreamElements.Event.Provider.Twitch.Events['listener'] | 'random' | 'cheer' | 'follower' | 'raid' | 'subscriber') {
               default:
               case 'random': {
-                var randomEvent = Simulation.rand.array(available[provider])[0] as onEventReceived['listener'];
+                var randomEvent = Simulation.rand.array(available[provider])[0] as StreamElements.Event.onEventReceived['listener'];
 
                 return this.onEventReceived(provider, randomEvent);
               }
@@ -1433,7 +1407,7 @@ export namespace Simulation {
                 var userId = (options?.userId as string) ?? Simulation.rand.number(10000000, 99999999).toString();
                 var time = Date.now();
 
-                const event: Twitch$Message = {
+                const event: StreamElements.Event.Provider.Twitch.Message = {
                   listener: 'message',
                   event: {
                     service: provider,
@@ -1486,7 +1460,7 @@ export namespace Simulation {
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
                 var message = (options?.message as string) ?? Simulation.rand.array(Simulation.data.messages.filter((e) => e.length))[0];
 
-                const event: Twitch$Cheer = {
+                const event: StreamElements.Event.Provider.Twitch.Cheer = {
                   listener: 'cheer-latest',
                   event: {
                     amount,
@@ -1509,7 +1483,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: Twitch$Follower = {
+                const event: StreamElements.Event.Provider.Twitch.Follower = {
                   listener: 'follower-latest',
                   event: {
                     avatar,
@@ -1531,7 +1505,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: Twitch$Raid = {
+                const event: StreamElements.Event.Provider.Twitch.Raid = {
                   listener: 'raid-latest',
                   event: {
                     amount,
@@ -1566,17 +1540,17 @@ export namespace Simulation {
                   gift: {
                     sender,
                     gifted: true,
-                  } as Subscriber$gift,
+                  } as StreamElements.Event.Provider.Twitch.gift,
                   community: {
                     message,
                     sender,
                     bulkGifted: true,
-                  } as Subscriber$community,
+                  } as StreamElements.Event.Provider.Twitch.community,
                   spam: {
                     sender,
                     gifted: true,
                     isCommunityGift: true,
-                  } as Subscriber$spam,
+                  } as StreamElements.Event.Provider.Twitch.spam,
                 };
 
                 var subTypes = ['default', 'gift', 'community', 'spam'];
@@ -1584,7 +1558,7 @@ export namespace Simulation {
 
                 subType = subTypes.includes(subType) ? subType : 'default';
 
-                const event: Twitch$Subscriber = {
+                const event: StreamElements.Event.Provider.Twitch.Subscriber = {
                   listener: 'subscriber-latest',
                   event: {
                     amount,
@@ -1605,7 +1579,7 @@ export namespace Simulation {
                 return event;
               }
               case 'delete-message': {
-                const event: Twitch$DeleteMessage = {
+                const event: StreamElements.Event.Provider.Twitch.DeleteMessage = {
                   listener: 'delete-message',
                   event: {
                     msgId: (options?.id as string) ?? Simulation.rand.uuid(),
@@ -1615,7 +1589,7 @@ export namespace Simulation {
                 return event;
               }
               case 'delete-messages': {
-                const event: Twitch$DeleteMessages = {
+                const event: StreamElements.Event.Provider.Twitch.DeleteMessages = {
                   listener: 'delete-messages',
                   event: {
                     userId: (options?.id as string) ?? Simulation.rand.number(10000000, 99999999).toString(),
@@ -1628,10 +1602,10 @@ export namespace Simulation {
           }
 
           case 'streamelements': {
-            switch (type as StreamElements['listener'] | 'random' | 'tip' | 'mute' | 'unmute' | 'skip') {
+            switch (type as StreamElements.Event.Provider.StreamElements.Events['listener'] | 'random' | 'tip' | 'mute' | 'unmute' | 'skip') {
               default:
               case 'random': {
-                var randomEvent = Simulation.rand.array(available[provider])[0] as onEventReceived['listener'];
+                var randomEvent = Simulation.rand.array(available[provider])[0] as StreamElements.Event.onEventReceived['listener'];
 
                 return this.onEventReceived(provider, randomEvent);
               }
@@ -1641,7 +1615,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements$Tip = {
+                const event: StreamElements.Event.Provider.StreamElements.Tip = {
                   listener: 'tip-latest',
                   event: {
                     amount,
@@ -1659,7 +1633,7 @@ export namespace Simulation {
                 return event;
               }
               case 'kvstore:update': {
-                const event: StreamElements$KVStore = {
+                const event: StreamElements.Event.Provider.StreamElements.KVStore = {
                   listener: 'kvstore:update',
                   event: {
                     data: {
@@ -1672,7 +1646,7 @@ export namespace Simulation {
                 return event;
               }
               case 'bot:counter': {
-                const event: StreamElements$BotCounter = {
+                const event: StreamElements.Event.Provider.StreamElements.BotCounter = {
                   listener: 'bot:counter',
                   event: {
                     counter: (options?.counter as string) ?? 'sampleCounter',
@@ -1687,7 +1661,7 @@ export namespace Simulation {
               case 'alertService:toggleSound': {
                 var muted = (options?.muted as boolean) ?? !client.details.overlay.muted;
 
-                const event: StreamElements$AlertService = {
+                const event: StreamElements.Event.Provider.StreamElements.AlertService = {
                   listener: 'alertService:toggleSound',
                   event: { muted },
                 };
@@ -1696,7 +1670,7 @@ export namespace Simulation {
               }
               case 'skip':
               case 'event:skip': {
-                const event: StreamElements$EventSkip = {
+                const event: StreamElements.Event.Provider.StreamElements.EventSkip = {
                   listener: 'event:skip',
                   event: {},
                 };
@@ -1707,10 +1681,10 @@ export namespace Simulation {
           }
 
           case 'youtube': {
-            switch (type as Youtube['listener'] | 'random' | 'message' | 'superchat' | 'subscriber' | 'sponsor') {
+            switch (type as StreamElements.Event.Provider.YouTube.Events['listener'] | 'random' | 'message' | 'superchat' | 'subscriber' | 'sponsor') {
               default:
               case 'random': {
-                var randomEvent = Simulation.rand.array(available[provider])[0] as onEventReceived['listener'];
+                var randomEvent = Simulation.rand.array(available[provider])[0] as StreamElements.Event.onEventReceived['listener'];
 
                 return this.onEventReceived(provider, randomEvent);
               }
@@ -1729,7 +1703,7 @@ export namespace Simulation {
 
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
 
-                const event: Youtube$Message = {
+                const event: StreamElements.Event.Provider.YouTube.Message = {
                   listener: 'message',
                   event: {
                     service: 'youtube',
@@ -1780,7 +1754,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: YouTube$Subscriber = {
+                const event: StreamElements.Event.Provider.YouTube.Subscriber = {
                   listener: 'subscriber-latest',
                   event: {
                     avatar,
@@ -1802,7 +1776,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: YouTube$Superchat = {
+                const event: StreamElements.Event.Provider.YouTube.Superchat = {
                   listener: 'superchat-latest',
                   event: {
                     amount,
@@ -1837,17 +1811,17 @@ export namespace Simulation {
                   gift: {
                     sender,
                     gifted: true,
-                  } as Sponsor$gift,
+                  } as StreamElements.Event.Provider.YouTube.gift,
                   community: {
                     message,
                     sender,
                     bulkGifted: true,
-                  } as Sponsor$community,
+                  } as StreamElements.Event.Provider.YouTube.community,
                   spam: {
                     sender,
                     gifted: true,
                     isCommunityGift: true,
-                  } as Sponsor$spam,
+                  } as StreamElements.Event.Provider.YouTube.spam,
                 };
 
                 var subTypes = ['default', 'gift', 'community', 'spam'];
@@ -1855,7 +1829,7 @@ export namespace Simulation {
 
                 subType = subTypes.includes(subType) ? subType : 'default';
 
-                const event: Youtube$Sponsor = {
+                const event: StreamElements.Event.Provider.YouTube.Sponsor = {
                   listener: 'sponsor-latest',
                   event: {
                     amount,
@@ -1879,236 +1853,6 @@ export namespace Simulation {
           }
         }
       },
-    },
-    cssVarsToCustomfields(settings: FieldSettings): Record<string, StreamElementsField> {
-      const defaultOptions: NormalizedFieldSettings = {
-        from: 'main',
-        endsWith: [],
-        ignore: [],
-        replace: {},
-        subgroup: false,
-        template: '• {key}',
-        subgroupTemplate: '★ {key}',
-        settings: {
-          types: [
-            [['size', 'width', 'number', 'gap', 'duration'], 'number'],
-            [['options', 'dropdown', 'weight'], 'dropdown'],
-            [['range', 'radius'], 'slider'],
-            [['color', 'background'], 'colorpicker'],
-            [['font-family', 'font', 'family'], 'googleFont'],
-          ],
-          addons: [
-            [['slider', 'radius'], { step: 1, min: 0, max: 'inherit' }],
-            [['options', 'dropdown'], { options: {} }],
-            [
-              ['weight'],
-              {
-                options: {
-                  '100': 'Thin',
-                  '200': 'Extra Light',
-                  '300': 'Light',
-                  '400': 'Regular',
-                  '500': 'Medium',
-                  '600': 'Semi Bold',
-                  '700': 'Bold',
-                  '800': 'Extra Bold',
-                  '900': 'Black',
-                },
-              },
-            ],
-          ],
-          transforms: [
-            [['size', 'width', 'number', 'gap', 'duration'], (value) => parseFloat(String(value))],
-            [['font-family', 'font', 'family'], (value) => value],
-            [['range', 'radius'], (value) => parseFloat(String(value))],
-            [['options', 'dropdown'], (value) => value],
-            [['weight'], (value) => value],
-            [['color', 'background'], (value) => value],
-          ],
-          labels: [
-            [['font-size'], ' • In pixels'],
-            [['font-radius'], ' • In pixels'],
-          ],
-        },
-      };
-
-      function normalizeFieldSettings(settings: FieldSettings): NormalizedFieldSettings {
-        return {
-          ...defaultOptions,
-          ...settings,
-          endsWith: Array.isArray(settings.endsWith) ? settings.endsWith : defaultOptions.endsWith,
-          ignore: Array.isArray(settings.ignore) ? settings.ignore : defaultOptions.ignore,
-          replace: { ...defaultOptions.replace, ...(settings.replace ?? {}) },
-          settings: {
-            types: Array.isArray(settings.settings?.types) ? settings.settings.types : defaultOptions.settings.types,
-            addons: Array.isArray(settings.settings?.addons) ? settings.settings.addons : defaultOptions.settings.addons,
-            transforms: Array.isArray(settings.settings?.transforms) ? settings.settings.transforms : defaultOptions.settings.transforms,
-            labels: Array.isArray(settings.settings?.labels) ? settings.settings.labels : defaultOptions.settings.labels,
-          },
-          subgroup: settings.subgroup ?? defaultOptions.subgroup,
-          template: settings.template ?? defaultOptions.template,
-          subgroupTemplate: settings.subgroupTemplate ?? defaultOptions.subgroupTemplate,
-          from: settings.from ?? defaultOptions.from,
-        };
-      }
-
-      const options = normalizeFieldSettings(settings);
-
-      const extractCssVariables = (): Record<string, string> => {
-        return Array.from(document.styleSheets)
-          .filter(({ href }) => !href || href.startsWith(window.location.origin))
-          .reduce(
-            (acc, { cssRules }) => {
-              if (!cssRules) return acc;
-              Array.from(cssRules).forEach((rule) => {
-                if (rule instanceof CSSStyleRule && rule.selectorText === options.from && Array.from(rule.style).some((prop) => prop.startsWith('--'))) {
-                  Array.from(rule.style)
-                    .filter((prop) => prop.startsWith('--'))
-                    .forEach((prop) => {
-                      acc[prop] = rule.style.getPropertyValue(prop).trim();
-                    });
-                }
-              });
-              return acc;
-            },
-            {} as Record<string, string>,
-          );
-      };
-
-      const allVariables = extractCssVariables();
-
-      const filteredVariables = Object.entries(allVariables)
-        .filter(([name]) => options.endsWith.some((suffix) => name.toLowerCase().endsWith(suffix.toLowerCase()) && !name.includes('-options-')))
-        .filter(([name]) => !options.ignore.some((ignoreName) => name.toLowerCase() === ignoreName.toLowerCase()))
-        .reduce(
-          (acc, [name, value]) => {
-            acc[name.replace('--', '')] = String(options.replace?.[name] ?? value);
-            return acc;
-          },
-          {} as Record<string, string | number>,
-        );
-
-      let usedSubgroups: string[] = [];
-
-      const fields = Object.entries(filteredVariables).reduce(
-        (fields, [name, value]) => {
-          let type = options.settings.types.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || 'text';
-
-          let transform = options.settings.transforms.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || ((v: any) => v);
-
-          let labelAddon = options.settings.labels.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || '';
-
-          let fieldAddons: Record<string, any> = {
-            type: 'text',
-            label: labelAddon,
-            ...(options.settings.addons.find(([names]) => names.some((n) => name.toLowerCase().includes(n)))?.[1] || {}),
-          };
-
-          (['min', 'max', 'step', 'label', 'type'] as const).forEach((addonKey) => {
-            const addonValue = allVariables[`--${name}-${addonKey}`];
-            if (addonValue && addonValue.length) {
-              fieldAddons[addonKey] = isNaN(parseFloat(addonValue)) ? String(addonValue).replace(/^['"]|['"]$/g, '') : String(parseFloat(addonValue));
-            }
-          });
-
-          let subgroupKey = name
-            .replace(/-(size|color|weight|width|height|gap|duration|radius|amount)$/g, '')
-            .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
-            .replace(/[A-Z]/g, ' $&')
-            .toLowerCase()
-            .trim();
-
-          let matchingSubgroupVars = Object.keys(filteredVariables).filter((key) =>
-            key.startsWith(subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)),
-          );
-
-          if (
-            options.subgroup &&
-            !fields[`${subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)}-subgroup`] &&
-            matchingSubgroupVars.length > 1 &&
-            !usedSubgroups.includes(name)
-          ) {
-            usedSubgroups.push(...matchingSubgroupVars);
-
-            fields[`${subgroupKey.replace(/[A-Z]/g, '-$&').replaceAll(' ', '-').toLowerCase().slice(1)}-subgroup`] = {
-              type: 'hidden',
-              label: options.subgroupTemplate.replaceAll('{key}', Simulation.string.capitalize(subgroupKey)),
-            };
-          }
-
-          let label = Simulation.string.capitalize(
-            name
-              .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
-              .replace(/[A-Z]/g, ' $&')
-              .toLowerCase(),
-          );
-
-          value = transform(value) ?? value;
-
-          const getCustomOptions = () => {
-            const values = Object.entries(allVariables)
-              .filter(([key]) => key.startsWith(`--${name}-options-`))
-              .reduce(
-                (acc, [key, value]) => {
-                  const optionLabel = key.replace(`--${name}-options-`, '');
-                  if (optionLabel)
-                    acc[String(value)] = Simulation.string.capitalize(
-                      optionLabel
-                        .replace(/-([a-z])/g, (_, c) => c.toUpperCase())
-                        .replace(/[A-Z]/g, ' $&')
-                        .toLowerCase(),
-                    );
-                  return acc;
-                },
-                {} as Record<string, string>,
-              );
-            return Object.keys(values).length ? values : null;
-          };
-
-          const customOptions = getCustomOptions();
-
-          if (customOptions) {
-            type = 'dropdown';
-            fieldAddons.options = customOptions;
-            value = String(value);
-          }
-
-          Object.entries(fieldAddons).forEach(([key, val]) => {
-            if ([false, 'inherit', 'auto', null].includes(val)) fieldAddons[key] = value;
-          });
-
-          fields[name] = {
-            type: (fieldAddons.type as StreamElementsFieldTypes) || type,
-            label: options.template.toString().replaceAll('{key}', Simulation.string.capitalize(label) + fieldAddons.label),
-            value,
-            min: fieldAddons.min,
-            max: fieldAddons.max,
-            step: fieldAddons.step,
-            options: fieldAddons.options,
-          };
-
-          return fields;
-        },
-        {} as Record<string, StreamElementsField>,
-      );
-
-      const errors = Object.entries(fields).reduce(
-        (acc, [name, field]) => {
-          const hasInvalidLabel = field?.label?.includes('undefined');
-          const isInvalidValue = !['hidden', 'button'].includes(field.type) && field.value === undefined;
-          if (hasInvalidLabel || isInvalidValue) acc[name] = field;
-          return acc;
-        },
-        {} as Record<string, StreamElementsField>,
-      );
-
-      if (Object.keys(errors).length) {
-        Tixyel.logger.error('Simulation.fields: Detected errors in generated fields:', errors);
-
-        throw new Error('Error while processing fields');
-      }
-
-      return fields;
     },
   };
 
@@ -2194,7 +1938,11 @@ export namespace Simulation {
 
     send<T extends 'onEventReceived' | 'onSessionUpdate' | 'onWidgetLoad'>(
       listener: T,
-      event: T extends 'onEventReceived' ? onEventReceived : T extends 'onSessionUpdate' ? onSessionUpdate : onWidgetLoad,
+      event: T extends 'onEventReceived'
+        ? StreamElements.Event.onEventReceived
+        : T extends 'onSessionUpdate'
+          ? StreamElements.Event.onSessionUpdate
+          : StreamElements.Event.onWidgetLoad,
     ): void {
       window.dispatchEvent(new CustomEvent(listener, { detail: event }));
     },
@@ -2233,7 +1981,7 @@ export namespace Simulation {
       cache: 'no-store',
     })
       .then((res) => res.json())
-      .then(async (customfields: Record<string, StreamElementsField>) => {
+      .then(async (customfields: Record<string, StreamElements.CustomField.Schema>) => {
         const fields = Object.entries(customfields)
           .filter(([_, { value }]) => value != undefined)
           .reduce(
@@ -2246,7 +1994,7 @@ export namespace Simulation {
             },
             {
               ...data,
-            } as Record<string, StreamElementsFieldValue>,
+            } as Record<string, StreamElements.CustomField.Value>,
           );
 
         const load = await Simulation.generate.event.onWidgetLoad(fields, await Simulation.generate.session.get());

@@ -1,41 +1,25 @@
-import { StreamElements } from './streamelements/events/integrated/index.js';
-import { Twitch } from './streamelements/events/twitch/index.js';
-import { Youtube } from './streamelements/events/youtube/index.js';
+import { StreamElements } from './streamelements/main.js';
 
 export type Provider = 'twitch' | 'youtube' | 'kick' | 'facebook' | 'streamelements';
 
 export type ClientEvents =
   | {
       provider: 'streamelements';
-      data: StreamElements;
+      data: StreamElements.Event.Provider.StreamElements.Events;
     }
   | {
       provider: 'twitch';
-      data: Twitch;
+      data: StreamElements.Event.Provider.Twitch.Events;
     }
   | {
       provider: 'youtube';
-      data: Youtube;
+      data: StreamElements.Event.Provider.YouTube.Events;
     }
   | {
       provider: 'kick';
-      data: Kick;
+      data: StreamElements.Event.Provider.Kick.Events;
     }
   | {
       provider: 'facebook';
-      data: Facebook;
+      data: StreamElements.Event.Provider.Facebook.Events;
     };
-
-export type Kick = Kick$Message;
-
-type Kick$Message = {
-  listener: 'message';
-  event: {};
-};
-
-export type Facebook = Facebook$Message;
-
-type Facebook$Message = {
-  listener: 'message';
-  event: {};
-};

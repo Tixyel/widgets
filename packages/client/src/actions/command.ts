@@ -1,7 +1,6 @@
 import { Client } from '../client/client.js';
 import { Tixyel } from '../index.js';
-import { Twitch$Message } from '../types/streamelements/events/twitch/message.js';
-import { Youtube$Message } from '../types/streamelements/events/youtube/message.js';
+import { StreamElements } from '../types/streamelements/main.js';
 
 interface CommandOptions {
   prefix?: string;
@@ -15,7 +14,10 @@ interface CommandOptions {
   admins?: string[];
 }
 
-type CommandEvent = { provider: 'twitch'; data: Twitch$Message } | { provider: 'youtube'; data: Youtube$Message } | { provider: 'kick'; data: any };
+type CommandEvent =
+  | { provider: 'twitch'; data: StreamElements.Event.Provider.Twitch.Message }
+  | { provider: 'youtube'; data: StreamElements.Event.Provider.YouTube.Message }
+  | { provider: 'kick'; data: any };
 
 export class Command {
   prefix: string = '!';

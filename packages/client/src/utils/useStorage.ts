@@ -1,7 +1,7 @@
 import { USE_SE_API } from '../index.js';
-import { SE_API } from '../types/streamelements/index.js';
+import { StreamElements } from '../types/streamelements/main.js';
 import { EventProvider } from './EventProvider.js';
-import { PathValue } from './index.js';
+import { PathValue } from './helpers.js';
 
 type UseStorageEvents<T> = {
   load: [T | null];
@@ -36,7 +36,7 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
     this.start();
   }
 
-  SE_API: SE_API | null = null;
+  SE_API: StreamElements.SE_API | null = null;
 
   private start() {
     USE_SE_API?.then((se) => {

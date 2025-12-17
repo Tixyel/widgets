@@ -1,7 +1,4 @@
 import { Client } from './client/client.js';
-import { onEventReceivedEvent } from './types/streamelements/events/onEventReceived.js';
-import { onSessionUpdateEvent } from './types/streamelements/events/onSessionUpdate.js';
-import { onWidgetLoadEvent } from './types/streamelements/events/onWidgetLoad.js';
 import { Logger } from './utils/Logger.js';
 import { Button } from './actions/button.js';
 import { Command } from './actions/command.js';
@@ -9,14 +6,14 @@ import { findEmotesInText, generateBadges, replaceEmotesWithHTML } from './utils
 import { EventProvider } from './utils/EventProvider.js';
 import { useStorage } from './utils/useStorage.js';
 import { useQueue } from './utils/useQueue.js';
-import type { SE_API as SE_API_TYPE } from './types/streamelements/index.js';
 import './client/listener.js';
 import { initializeLocalSEAPI } from './streamelements/api.js';
 import { Simulation } from './simulation/simulation.js';
+import { StreamElements } from './types/streamelements/main.js';
 
 export * from './types/index.js';
 
-export const USE_SE_API: Promise<SE_API_TYPE> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
+export const USE_SE_API: Promise<StreamElements.SE_API> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
 
 export const Tixyel = {
   Client,
@@ -46,15 +43,15 @@ declare global {
   }
 
   interface WindowEventMap {
-    onWidgetLoad: onWidgetLoadEvent;
-    onSessionUpdate: onSessionUpdateEvent;
-    onEventReceived: onEventReceivedEvent;
+    onWidgetLoad: CustomEvent<StreamElements.Event.onWidgetLoad>;
+    onSessionUpdate: CustomEvent<StreamElements.Event.onSessionUpdate>;
+    onEventReceived: CustomEvent<StreamElements.Event.onEventReceived>;
   }
 
   const Tixyel: _Tixyel_;
   var client: Client;
 
-  const SE_API: SE_API_TYPE;
+  const SE_API: StreamElements.SE_API;
 }
 
 if (typeof window !== 'undefined') {
