@@ -177,6 +177,8 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
         }
 
+        window.client.emit('event', 'streamelements', received.data);
+
         break;
       }
       case 'twitch': {
@@ -234,6 +236,8 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
         }
 
+        window.client.emit('event', 'twitch', received.data);
+
         break;
       }
       case 'youtube': {
@@ -278,20 +282,22 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           }
         }
 
+        window.client.emit('event', 'youtube', received.data);
+
         break;
       }
       case 'kick': {
         const data = received.data;
 
+        window.client.emit('event', 'kick', received.data);
         break;
       }
       case 'facebook': {
         const data = received.data;
 
+        window.client.emit('event', 'facebook', received.data);
         break;
       }
     }
-
-    window.client.emit('event', received);
   }
 });

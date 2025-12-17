@@ -10,11 +10,12 @@ type ClientEvents = {
   load: [event: StreamElements.Event.onWidgetLoad];
   action: [action: Button | Command, type: 'created' | 'executed' | 'removed'];
   session: [session: StreamElements.Session.Data];
-  event: [event: events];
-};
-
-type ClientOptions = {
-  id?: string;
+  event:
+    | [provider: 'streamelements', event: StreamElements.Event.Provider.StreamElements.Events]
+    | [provider: 'twitch', event: StreamElements.Event.Provider.Twitch.Events]
+    | [provider: 'youtube', event: StreamElements.Event.Provider.YouTube.Events]
+    | [provider: 'kick', event: StreamElements.Event.Provider.Kick.Events]
+    | [provider: 'facebook', event: StreamElements.Event.Provider.Facebook.Events];
 };
 
 export type ClientStorageOptions<T> = {
@@ -28,6 +29,10 @@ type ClientStorage = {
   avatar: Record<string, ClientStorageOptions<string>>;
   pronoun: Record<string, ClientStorageOptions<Alejo.Pronouns.name>>;
   emote: Record<string, ClientStorageOptions<string>>;
+};
+
+type ClientOptions = {
+  id?: string;
 };
 
 export class Client extends EventProvider<ClientEvents> {
