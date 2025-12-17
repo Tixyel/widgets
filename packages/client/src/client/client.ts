@@ -1,10 +1,10 @@
-import { Alejo } from '../types/alejo.js';
+import { ClientEvents as events, Provider } from '../types/client.js';
+import { StreamElements } from '../types/streamelements/main.js';
 import { EventProvider } from '../utils/EventProvider.js';
 import { useStorage } from '../utils/useStorage.js';
-import { ClientEvents as events, Provider } from '../types/client.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
-import { StreamElements } from '../types/streamelements/main.js';
+import { Alejo } from '../types/alejo.js';
 
 type ClientEvents = {
   load: [event: StreamElements.Event.onWidgetLoad];

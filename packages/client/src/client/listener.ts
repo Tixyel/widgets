@@ -1,8 +1,8 @@
-import { Button } from '../actions/button.js';
-import { Command } from '../actions/command.js';
 import { ClientEvents, Provider } from '../types/client.js';
-import { _storages } from '../utils/useStorage.js';
 import { Client, ClientStorageOptions } from './client.js';
+import { _storages } from '../utils/useStorage.js';
+import { Command } from '../actions/command.js';
+import { Button } from '../actions/button.js';
 
 window.addEventListener('load', () => {
   if (window.client instanceof Client) {

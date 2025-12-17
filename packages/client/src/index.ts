@@ -1,15 +1,15 @@
+import { findEmotesInText, generateBadges, replaceEmotesWithHTML } from './utils/Message.js';
+import { StreamElements } from './types/streamelements/main.js';
+import { initializeLocalSEAPI } from './streamelements/api.js';
+import { EventProvider } from './utils/EventProvider.js';
+import { Simulation } from './simulation/simulation.js';
+import { useStorage } from './utils/useStorage.js';
+import { Command } from './actions/command.js';
+import { useQueue } from './utils/useQueue.js';
+import { Button } from './actions/button.js';
 import { Client } from './client/client.js';
 import { Logger } from './utils/Logger.js';
-import { Button } from './actions/button.js';
-import { Command } from './actions/command.js';
-import { findEmotesInText, generateBadges, replaceEmotesWithHTML } from './utils/Message.js';
-import { EventProvider } from './utils/EventProvider.js';
-import { useStorage } from './utils/useStorage.js';
-import { useQueue } from './utils/useQueue.js';
 import './client/listener.js';
-import { initializeLocalSEAPI } from './streamelements/api.js';
-import { Simulation } from './simulation/simulation.js';
-import { StreamElements } from './types/streamelements/main.js';
 
 export * from './types/index.js';
 
@@ -26,11 +26,11 @@ export const Tixyel = {
   modules: { Button, Command, EventProvider, useStorage, useQueue, Logger },
 } as const;
 
-type main = typeof Tixyel;
+type Main = typeof Tixyel;
 
 declare global {
   interface Window {
-    Tixyel: main;
+    Tixyel: Main;
     client: Client;
   }
 
@@ -40,7 +40,7 @@ declare global {
     onEventReceived: CustomEvent<StreamElements.Event.onEventReceived>;
   }
 
-  const Tixyel: main;
+  const Tixyel: Main;
   var client: Client;
 
   const SE_API: StreamElements.SE_API;

@@ -1,8 +1,9 @@
+import { type BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
+import { names, messages, avatars, emotes, badges, tts, items, tiers } from './data/index.js';
+import { StreamElements } from '../types/streamelements/main.js';
 import type { Provider } from '../types/client.js';
 import { Alejo } from '../types/alejo.js';
-import { names, messages, avatars, emotes, badges, tts, items, tiers } from './data/index.js';
-import { type BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
-import { StreamElements } from '../types/streamelements/main.js';
+import { logger } from '../index.js';
 
 export namespace Simulation {
   export const data = {
@@ -763,7 +764,7 @@ export namespace Simulation {
       const parent = customParent || element.parentElement || document.body;
 
       if (!parent) {
-        Tixyel.logger.warn('No parent element found for scaling');
+        logger.warn('No parent element found for scaling');
         return;
       }
 
@@ -772,7 +773,7 @@ export namespace Simulation {
       const elementHeight = element.offsetHeight;
 
       if (elementWidth === 0 || elementHeight === 0) {
-        Tixyel.logger.warn('Element has zero width or height, cannot scale');
+        logger.warn('Element has zero width or height, cannot scale');
         return;
       }
 

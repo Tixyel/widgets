@@ -1,6 +1,6 @@
+import { BttvEmote, SeventvEmote, TwitchEmote } from '../types/emote.js';
 import { Simulation } from '../simulation/simulation.js';
 import { Provider } from '../types/client.js';
-import { BttvEmote, SeventvEmote, TwitchEmote } from '../types/emote.js';
 import { Twitch } from '../types/twitch.js';
 
 type Emote = TwitchEmote | BttvEmote | SeventvEmote;

@@ -1,6 +1,6 @@
-import { Client } from '../client/client.js';
-import { Tixyel } from '../index.js';
 import { EventProvider } from './EventProvider.js';
+import { Client } from '../client/client.js';
+import { logger } from '../index.js';
 
 type QueueEvents<T> = {
   load: [];
@@ -124,7 +124,7 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
 
       this.emit('process', nextItem, this);
     } catch (error) {
-      Tixyel.logger.error(`Error during item processing: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(`Error during item processing: ${error instanceof Error ? error.message : String(error)}`);
     }
 
     this.history.push(nextItem);

@@ -1,6 +1,6 @@
-import { Client } from '../client/client.js';
-import { Tixyel } from '../index.js';
 import { StreamElements } from '../types/streamelements/main.js';
+import { Client } from '../client/client.js';
+import { logger } from '../index.js';
 
 interface CommandOptions {
   prefix?: string;
@@ -173,7 +173,7 @@ export class Command {
 
             window.client.emit('action', command, 'executed');
 
-            Tixyel.logger.received(`Command executed: ${data.event.data.text} by ${data.event.data.nick || data.event.data.displayName}`, data);
+            logger.received(`Command executed: ${data.event.data.text} by ${data.event.data.nick || data.event.data.displayName}`, data);
           });
 
           return true;

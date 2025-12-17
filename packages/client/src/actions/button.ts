@@ -1,5 +1,5 @@
 import { Client } from '../client/client.js';
-import { Tixyel } from '../index.js';
+import { logger } from '../index.js';
 
 interface ButtonOptions {
   field: string | ((field: string, value: string | boolean | number) => boolean);
@@ -81,9 +81,9 @@ export class Button {
 
               window.client.emit('action', button, 'executed');
 
-              Tixyel.logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ''}`);
+              logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ''}`);
             } catch (error) {
-              Tixyel.logger.error(`Error executing button "${field}": ${error instanceof Error ? error.message : error}`);
+              logger.error(`Error executing button "${field}": ${error instanceof Error ? error.message : error}`);
             }
           });
 
