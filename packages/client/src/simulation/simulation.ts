@@ -1,9 +1,10 @@
 import { type BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
-import { names, messages, avatars, emotes, badges, tts, items, tiers } from './data/index.js';
+import { names, messages, avatars, emotes, badges, tts, items, tiers, css_color_names } from './data/index.js';
 import { StreamElements } from '../types/streamelements/main.js';
 import type { Provider } from '../types/client.js';
 import { Alejo } from '../types/alejo.js';
 import { logger } from '../index.js';
+import { findClosestColorName, parseToRGBA, rgbaToHex, rgbToHsl } from '../utils/color.js';
 
 export namespace Simulation {
   export const data = {
@@ -16,157 +17,7 @@ export namespace Simulation {
     items,
     tts,
     pronouns: Alejo.Pronouns.map,
-    css_color_names: [
-      'aliceblue',
-      'antiquewhite',
-      'aqua',
-      'aquamarine',
-      'azure',
-      'beige',
-      'bisque',
-      'black',
-      'blanchedalmond',
-      'blue',
-      'blueviolet',
-      'brown',
-      'burlywood',
-      'cadetblue',
-      'chartreuse',
-      'chocolate',
-      'coral',
-      'cornflowerblue',
-      'cornsilk',
-      'crimson',
-      'cyan',
-      'darkblue',
-      'darkcyan',
-      'darkgoldenrod',
-      'darkgray',
-      'darkgreen',
-      'darkgrey',
-      'darkkhaki',
-      'darkmagenta',
-      'darkolivegreen',
-      'darkorange',
-      'darkorchid',
-      'darkred',
-      'darksalmon',
-      'darkseagreen',
-      'darkslateblue',
-      'darkslategray',
-      'darkslategrey',
-      'darkturquoise',
-      'darkviolet',
-      'deeppink',
-      'deepskyblue',
-      'dimgray',
-      'dimgrey',
-      'dodgerblue',
-      'firebrick',
-      'floralwhite',
-      'forestgreen',
-      'fuchsia',
-      'gainsboro',
-      'ghostwhite',
-      'gold',
-      'goldenrod',
-      'gray',
-      'green',
-      'greenyellow',
-      'grey',
-      'honeydew',
-      'hotpink',
-      'indianred',
-      'indigo',
-      'ivory',
-      'khaki',
-      'lavender',
-      'lavenderblush',
-      'lawngreen',
-      'lemonchiffon',
-      'lightblue',
-      'lightcoral',
-      'lightcyan',
-      'lightgoldenrodyellow',
-      'lightgray',
-      'lightgreen',
-      'lightgrey',
-      'lightpink',
-      'lightsalmon',
-      'lightseagreen',
-      'lightskyblue',
-      'lightslategray',
-      'lightslategrey',
-      'lightsteelblue',
-      'lightyellow',
-      'lime',
-      'limegreen',
-      'linen',
-      'magenta',
-      'maroon',
-      'mediumaquamarine',
-      'mediumblue',
-      'mediumorchid',
-      'mediumpurple',
-      'mediumseagreen',
-      'mediumslateblue',
-      'mediumspringgreen',
-      'mediumturquoise',
-      'mediumvioletred',
-      'midnightblue',
-      'mintcream',
-      'mistyrose',
-      'moccasin',
-      'navajowhite',
-      'navy',
-      'oldlace',
-      'olive',
-      'olivedrab',
-      'orange',
-      'orangered',
-      'orchid',
-      'palegoldenrod',
-      'palegreen',
-      'paleturquoise',
-      'palevioletred',
-      'papayawhip',
-      'peachpuff',
-      'peru',
-      'pink',
-      'plum',
-      'powderblue',
-      'purple',
-      'rebeccapurple',
-      'red',
-      'rosybrown',
-      'royalblue',
-      'saddlebrown',
-      'salmon',
-      'sandybrown',
-      'seagreen',
-      'seashell',
-      'sienna',
-      'silver',
-      'skyblue',
-      'slateblue',
-      'slategray',
-      'slategrey',
-      'snow',
-      'springgreen',
-      'steelblue',
-      'tan',
-      'teal',
-      'thistle',
-      'tomato',
-      'turquoise',
-      'violet',
-      'wheat',
-      'white',
-      'whitesmoke',
-      'yellow',
-      'yellowgreen',
-      'transparent',
-    ],
+    css_color_names,
   };
 
   export const color = {
@@ -247,6 +98,63 @@ export namespace Simulation {
       }
 
       return false;
+    },
+
+    /**
+     * Convert color to different format
+     * @param str - Color string to convert (e.g. "#FF5733", "rgb(255, 87, 51)")
+     * @param format - Target format
+     * @returns - Converted color string
+     * @example
+     * ```javascript
+     * const hexColor = Simulation.color.convert("rgb(255, 87, 51)", "hex"); // "#FF5733"
+     * const rgbColor = Simulation.color.convert("#FF5733", "rgb"); // "rgb(255, 87, 51)"
+     * const hslColor = Simulation.color.convert("#FF5733", "hsl"); // "hsl(14, 100%, 60%)"
+     * const colorName = Simulation.color.convert("#FF5733", "css-color-name"); // "orangered"
+     * ```
+     */
+    convert(str: string, format: 'hex' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name'): string | null {
+      const valid = this.validate(str);
+
+      if (!valid) {
+        throw new Error(`Invalid color format: ${str}`);
+      }
+
+      if (valid === format) {
+        throw new Error(`Color is already in the desired format: ${format}`);
+      }
+
+      const rgba = parseToRGBA(str.trim(), valid);
+
+      if (!rgba) {
+        throw new Error(`Failed to parse color: ${str}`);
+      }
+
+      switch (format) {
+        case 'hex': {
+          return rgbaToHex(rgba, false);
+        }
+        case 'rgb': {
+          return `rgb(${rgba.r}, ${rgba.g}, ${rgba.b})`;
+        }
+        case 'rgba': {
+          return `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
+        }
+        case 'hsl': {
+          const hsl = rgbToHsl(rgba.r, rgba.g, rgba.b);
+          return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+        }
+        case 'hsla': {
+          const hsl = rgbToHsl(rgba.r, rgba.g, rgba.b);
+          return `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${rgba.a})`;
+        }
+        case 'css-color-name': {
+          return findClosestColorName(rgba.r, rgba.g, rgba.b);
+        }
+        default: {
+          return null;
+        }
+      }
     },
   };
 
@@ -1461,7 +1369,7 @@ export namespace Simulation {
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
                 var message = (options?.message as string) ?? Simulation.rand.array(Simulation.data.messages.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.Twitch.Cheer = {
+                const event: StreamElements.Event.Provider.Twitch.Cheer & { event: { provider: Provider } } = {
                   listener: 'cheer-latest',
                   event: {
                     amount,
@@ -1474,6 +1382,7 @@ export namespace Simulation {
                     sessionTop: false,
                     type: 'cheer',
                     originalEventName: 'cheer-latest',
+                    provider,
                   },
                 };
 
@@ -1484,7 +1393,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.Twitch.Follower = {
+                const event: StreamElements.Event.Provider.Twitch.Follower & { event: { provider: Provider } } = {
                   listener: 'follower-latest',
                   event: {
                     avatar,
@@ -1495,6 +1404,7 @@ export namespace Simulation {
                     sessionTop: false,
                     type: 'follower',
                     originalEventName: 'follower-latest',
+                    provider,
                   },
                 };
 
@@ -1506,7 +1416,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.Twitch.Raid = {
+                const event: StreamElements.Event.Provider.Twitch.Raid & { event: { provider: Provider } } = {
                   listener: 'raid-latest',
                   event: {
                     amount,
@@ -1518,6 +1428,7 @@ export namespace Simulation {
                     sessionTop: false,
                     type: 'raid',
                     originalEventName: 'raid-latest',
+                    provider,
                   },
                 };
 
@@ -1559,7 +1470,7 @@ export namespace Simulation {
 
                 subType = subTypes.includes(subType) ? subType : 'default';
 
-                const event: StreamElements.Event.Provider.Twitch.Subscriber = {
+                const event: StreamElements.Event.Provider.Twitch.Subscriber & { event: { provider: Provider } } = {
                   listener: 'subscriber-latest',
                   event: {
                     amount,
@@ -1574,26 +1485,29 @@ export namespace Simulation {
                     sessionTop: false,
                     type: 'subscriber',
                     originalEventName: 'subscriber-latest',
+                    provider,
                   },
                 };
 
                 return event;
               }
               case 'delete-message': {
-                const event: StreamElements.Event.Provider.Twitch.DeleteMessage = {
+                const event: StreamElements.Event.Provider.Twitch.DeleteMessage & { event: { provider: Provider } } = {
                   listener: 'delete-message',
                   event: {
                     msgId: (options?.id as string) ?? Simulation.rand.uuid(),
+                    provider,
                   },
                 };
 
                 return event;
               }
               case 'delete-messages': {
-                const event: StreamElements.Event.Provider.Twitch.DeleteMessages = {
+                const event: StreamElements.Event.Provider.Twitch.DeleteMessages & { event: { provider: Provider } } = {
                   listener: 'delete-messages',
                   event: {
                     userId: (options?.id as string) ?? Simulation.rand.number(10000000, 99999999).toString(),
+                    provider,
                   },
                 };
 
@@ -1616,7 +1530,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.StreamElements.Tip = {
+                const event: StreamElements.Event.Provider.StreamElements.Tip & { event: { provider: Provider } } = {
                   listener: 'tip-latest',
                   event: {
                     amount,
@@ -1628,30 +1542,33 @@ export namespace Simulation {
                     sessionTop: false,
                     type: 'tip',
                     originalEventName: 'tip-latest',
+                    provider,
                   },
                 };
 
                 return event;
               }
               case 'kvstore:update': {
-                const event: StreamElements.Event.Provider.StreamElements.KVStore = {
+                const event: StreamElements.Event.Provider.StreamElements.KVStore & { event: { provider: Provider } } = {
                   listener: 'kvstore:update',
                   event: {
                     data: {
                       key: `customWidget.${(options?.key as string) ?? 'sampleKey'}`,
                       value: (options?.value as string) ?? 'sampleValue',
                     },
+                    provider,
                   },
                 };
 
                 return event;
               }
               case 'bot:counter': {
-                const event: StreamElements.Event.Provider.StreamElements.BotCounter = {
+                const event: StreamElements.Event.Provider.StreamElements.BotCounter & { event: { provider: Provider } } = {
                   listener: 'bot:counter',
                   event: {
                     counter: (options?.counter as string) ?? 'sampleCounter',
                     value: (options?.value as number) ?? Simulation.rand.number(0, 100),
+                    provider,
                   },
                 };
 
@@ -1662,18 +1579,23 @@ export namespace Simulation {
               case 'alertService:toggleSound': {
                 var muted = (options?.muted as boolean) ?? !client.details.overlay.muted;
 
-                const event: StreamElements.Event.Provider.StreamElements.AlertService = {
+                const event: StreamElements.Event.Provider.StreamElements.AlertService & { event: { provider: Provider } } = {
                   listener: 'alertService:toggleSound',
-                  event: { muted },
+                  event: {
+                    muted,
+                    provider,
+                  },
                 };
 
                 return event;
               }
               case 'skip':
               case 'event:skip': {
-                const event: StreamElements.Event.Provider.StreamElements.EventSkip = {
+                const event: StreamElements.Event.Provider.StreamElements.EventSkip & { event: { provider: Provider } } = {
                   listener: 'event:skip',
-                  event: {},
+                  event: {
+                    provider,
+                  },
                 };
 
                 return event;
@@ -1707,7 +1629,7 @@ export namespace Simulation {
                 const event: StreamElements.Event.Provider.YouTube.Message = {
                   listener: 'message',
                   event: {
-                    service: 'youtube',
+                    service: provider,
                     data: {
                       kind: '',
                       etag: '',
@@ -1755,7 +1677,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.YouTube.Subscriber = {
+                const event: StreamElements.Event.Provider.YouTube.Subscriber & { event: { provider: Provider } } = {
                   listener: 'subscriber-latest',
                   event: {
                     avatar,
@@ -1766,6 +1688,7 @@ export namespace Simulation {
                     sessionTop: false,
                     type: 'subscriber',
                     originalEventName: 'subscriber-latest',
+                    provider,
                   },
                 };
 
@@ -1777,7 +1700,7 @@ export namespace Simulation {
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.YouTube.Superchat = {
+                const event: StreamElements.Event.Provider.YouTube.Superchat & { event: { provider: Provider } } = {
                   listener: 'superchat-latest',
                   event: {
                     amount,
@@ -1789,6 +1712,7 @@ export namespace Simulation {
                     sessionTop: false,
                     type: 'superchat',
                     originalEventName: 'superchat-latest',
+                    provider,
                   },
                 };
 
@@ -1830,7 +1754,7 @@ export namespace Simulation {
 
                 subType = subTypes.includes(subType) ? subType : 'default';
 
-                const event: StreamElements.Event.Provider.YouTube.Sponsor = {
+                const event: StreamElements.Event.Provider.YouTube.Sponsor & { event: { provider: Provider } } = {
                   listener: 'sponsor-latest',
                   event: {
                     amount,
@@ -1845,6 +1769,7 @@ export namespace Simulation {
                     sessionTop: false,
                     type: 'sponsor',
                     originalEventName: 'sponsor-latest',
+                    provider,
                   },
                 };
 
