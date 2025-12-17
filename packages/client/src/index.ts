@@ -15,30 +15,22 @@ export * from './types/index.js';
 
 export const USE_SE_API: Promise<StreamElements.SE_API> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
 
+export const logger = new Logger();
+
 export const Tixyel = {
-  Client,
-  Simulation,
-  logger: new Logger(),
-  utils: {
-    findEmotesInText,
-    replaceEmotesWithHTML,
-    generateBadges,
-  },
-  modules: {
-    Button,
-    Command,
-    EventProvider,
-    useStorage,
-    useQueue,
-  },
   USE_SE_API,
+  Simulation,
+  Client,
+  logger,
+  utils: { findEmotesInText, replaceEmotesWithHTML, generateBadges },
+  modules: { Button, Command, EventProvider, useStorage, useQueue, Logger },
 } as const;
 
-type _Tixyel_ = typeof Tixyel;
+type main = typeof Tixyel;
 
 declare global {
   interface Window {
-    Tixyel: _Tixyel_;
+    Tixyel: main;
     client: Client;
   }
 
@@ -48,7 +40,7 @@ declare global {
     onEventReceived: CustomEvent<StreamElements.Event.onEventReceived>;
   }
 
-  const Tixyel: _Tixyel_;
+  const Tixyel: main;
   var client: Client;
 
   const SE_API: StreamElements.SE_API;
