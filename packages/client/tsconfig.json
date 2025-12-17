@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "es2021",
+    "target": "es2022",
     "module": "NodeNext",
     "declaration": true,
     "declarationDir": "dist",
@@ -17,7 +17,7 @@
     "allowSyntheticDefaultImports": true,
     "noEmit": false,
     "types": [],
-    "lib": ["ES2021", "DOM"],
+    "lib": ["ES2022", "DOM"],
     "jsx": "react-jsx"
   },
   "include": ["src"],
