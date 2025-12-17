@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.6.0
+
+### Minor Changes
+
+- dcd270d: Add utility functions for youtube events.
+
 ## 3.5.0
 
 ### Minor Changes
