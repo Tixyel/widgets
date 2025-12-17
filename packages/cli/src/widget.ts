@@ -15,6 +15,7 @@ import inquirer from 'inquirer';
 import postcss from 'postcss';
 import cssnano from 'cssnano';
 import JSZip from 'jszip';
+import { transformSync } from 'esbuild';
 
 export interface DotTixyel {
   name: string;
@@ -332,6 +333,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
   const findPatterns = workspaceConfig.build?.find || {
     html: ['index.html'],
     script: ['script.js'],
+    typescript: ['script.ts'],
     css: ['styles.css'],
     fields: ['fields.json'],
   };
@@ -514,6 +516,33 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           }
 
           result += mergedJS.trim();
+        } else if (['typescript', 'ts'].some((k) => key === k)) {
+          result += watermark.script + '\n';
+
+          if (verbose) console.log(`  - Processing TypeScript...`);
+          const files = findAndRead(entryDir, list);
+
+          let mergedTS = '';
+
+          for await (const content of files) {
+            try {
+              const transpiled = transformSync(content, {
+                loader: 'ts',
+                target: 'es2021',
+                format: 'iife',
+              });
+
+              mergedTS += transpiled.code + '\n';
+            } catch (error) {
+              console.warn(`   ⚠️  Failed to compile TypeScript: ${error}`);
+              throw error;
+            }
+          }
+
+          // Obfuscate the compiled JavaScript
+          const obfuscated = JavaScriptObfuscator.obfuscate(mergedTS.trim(), workspaceConfig.build?.obfuscation?.javascript);
+
+          result += obfuscated.getObfuscatedCode();
         } else if (['fields', 'FIELDS', 'fielddata', 'fieldData'].some((k) => key === k)) {
           if (verbose) console.log(`  - Processing Json...`);
           const files = findAndRead(entryDir, list);
