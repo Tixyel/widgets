@@ -1,6 +1,6 @@
 import { ClientEvents, Provider } from '../types/client.js';
 import { Client, ClientStorageOptions } from './client.js';
-import { _storages } from '../utils/useStorage.js';
+import { usedStorages } from '../utils/useStorage.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
 
@@ -106,9 +106,8 @@ window.addEventListener('onSessionUpdate', (data) => {
 
 window.addEventListener('onEventReceived', ({ detail }) => {
   if (window.client instanceof Client) {
-    var provider: Provider =
-      // @ts-ignore
-      detail.event?.provider || detail.event?.service || detail.event?.data?.provider || window.client.details.provider;
+    // @ts-ignore
+    var provider: Provider = detail.event?.provider || detail.event?.service || detail.event?.data?.provider || window.client.details.provider;
 
     const actAsStreamElements = ['kvstore:update', 'bot:counter', 'alertService:toggleSound', 'event:skip', 'tip-latest', 'event:test'];
 
@@ -153,8 +152,8 @@ window.addEventListener('onEventReceived', ({ detail }) => {
           case 'kvstore:update': {
             const event = data.event;
 
-            if (_storages.length) {
-              var storage = _storages.find((s) => s.id === event.data.key.replace('customWidget.', ''));
+            if (usedStorages.length) {
+              var storage = usedStorages.find((s) => s.id === event.data.key.replace('customWidget.', ''));
 
               if (storage) {
                 storage.update(event.data.value);
@@ -290,12 +289,14 @@ window.addEventListener('onEventReceived', ({ detail }) => {
         const data = received.data;
 
         window.client.emit('event', 'kick', received.data);
+
         break;
       }
       case 'facebook': {
         const data = received.data;
 
         window.client.emit('event', 'facebook', received.data);
+
         break;
       }
     }

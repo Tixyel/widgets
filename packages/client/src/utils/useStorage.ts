@@ -13,9 +13,9 @@ type UseStorageOptions<T> = {
   data: T;
 };
 
-export var _storages: Array<useStorage<any>> = [];
+export var usedStorages: Array<useStorage<any>> = [];
 
-export class useStorage<T extends object = Record<string, any>> extends EventProvider<UseStorageEvents<T>> {
+export class useStorage<T extends Record<string, any>> extends EventProvider<UseStorageEvents<T>> {
   /**
    * The unique identifier for the storage instance.
    */
@@ -31,7 +31,7 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
     this.id = options.id || this.id;
     this.data = options.data ?? ({} as T);
 
-    _storages.push(this);
+    usedStorages.push(this);
 
     this.start();
   }
@@ -57,7 +57,8 @@ export class useStorage<T extends object = Record<string, any>> extends EventPro
         })
         .catch(() => {
           this.loaded = true;
-          this.emit('load', null);
+
+          this.emit('load', this.data);
         });
     });
 

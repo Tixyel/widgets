@@ -3,7 +3,7 @@ import { StreamElements } from './types/streamelements/main.js';
 import { initializeLocalSEAPI } from './streamelements/api.js';
 import { EventProvider } from './utils/EventProvider.js';
 import { Simulation } from './simulation/simulation.js';
-import { useStorage } from './utils/useStorage.js';
+import { usedStorages, useStorage } from './utils/useStorage.js';
 import { Command } from './actions/command.js';
 import { useQueue } from './utils/useQueue.js';
 import { Button } from './actions/button.js';
@@ -24,6 +24,7 @@ export const Tixyel = {
   logger,
   utils: { findEmotesInText, replaceEmotesWithHTML, generateBadges },
   modules: { Button, Command, EventProvider, useStorage, useQueue, Logger },
+  data: { usedStorages },
 } as const;
 
 type Main = typeof Tixyel;
