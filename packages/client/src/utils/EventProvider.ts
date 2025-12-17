@@ -6,15 +6,15 @@
  * interface TestEvents {
  *   load: [event: { type: 'load' }];
  *   event: [event: { type: 'event' }];
- * }
+ * };
  *
  * class Test extends EventProvider<TestEvents> {}
  *
  * const test = new Test();
- * test.once('load', (data) => {})
+ * test.once('load', (data) => {});
  * test.emit('load', { type: 'load' });
  *
- * test.on('event', (data) => {})
+ * test.on('event', (data) => {});
  * test.emit('event', { type: 'event' });
  * ```
  */
