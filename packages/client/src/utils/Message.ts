@@ -71,6 +71,25 @@ export function replaceEmotesWithHTML(text: string, emotes: Emote[]): string {
   return result;
 }
 
+export function replaceYoutubeEmotesWithHTML(text: string, emotes = Simulation.data.youtube_emotes): string {
+  const emoteCodesInside = Array.from(text.matchAll(/:(.*?):/gim), (x) => x[0]);
+
+  emoteCodesInside.forEach((code) => {
+    const emote = emotes.find((e) => e.shortcuts.includes(code) || e.searchTerms.includes(code.slice(1, -1)));
+
+    if (emote) {
+      const url = emote.image.thumbnails.at(-1)?.url;
+      const alt = emote.image.accessibility.accessibilityData.label;
+
+      if (url) {
+        text = text.replace(code, `<img src="${url}" alt="${alt}" class="emote" style="width: auto; height: 1em; vertical-align: middle;" />`);
+      }
+    }
+  });
+
+  return text;
+}
+
 type TwitchResult = {
   keys: Twitch.roles[];
   badges: Twitch.badge[];
