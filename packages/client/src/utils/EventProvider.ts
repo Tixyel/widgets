@@ -4,16 +4,18 @@
  * @example
  * ```typescript
  * interface TestEvents {
- *   load: [{ type: 'load' }];
- *   event: [{ type: 'event' }];
+ *   load: [event: { type: 'load' }];
+ *   event: [event: { type: 'event' }];
  * }
  *
  * class Test extends EventProvider<TestEvents> {}
  *
  * const test = new Test();
- * test.on('load', (data) => {})
- * test.once('event', (data) => {})
+ * test.once('load', (data) => {})
  * test.emit('load', { type: 'load' });
+ *
+ * test.on('event', (data) => {})
+ * test.emit('event', { type: 'event' });
  * ```
  */
 export class EventProvider<EventMap extends Record<string, any[]> = Record<string, any[]>> {
