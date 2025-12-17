@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.5.0
+
+### Minor Changes
+
+- 3bc9b4d: Refactored types and reexport utility classes
+
 ## 3.4.0
 
 ### Minor Changes
