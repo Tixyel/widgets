@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.3.0
+
+### Minor Changes
+
+- 81f4ef8: Add API module and update workspace configuration imports
+
 ## 2.2.0
 
 ### Minor Changes
