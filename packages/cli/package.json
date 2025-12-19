@@ -36,6 +36,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./api": {
+      "types": "./dist/api.d.ts",
+      "import": "./dist/api.js",
+      "default": "./dist/api.js"
     }
   },
   "files": [
@@ -52,6 +57,7 @@
     "commander": "^14.0.2",
     "cross-env": "^10.1.0",
     "cssnano": "^7.1.2",
+    "chokidar": "^3.6.0",
     "esbuild": "^0.25.12",
     "fast-glob": "^3.3.3",
     "html-minifier-terser": "^7.2.0",
@@ -62,14 +68,16 @@
     "postcss": "^8.5.6",
     "postcss-nested": "^7.0.2",
     "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "react-dom": "^19.2.1",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/html-minifier": "^4.0.6",
     "@types/html-minifier-terser": "^7.0.2",
     "@types/inquirer": "^9.0.9",
     "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "@types/ws": "^8.5.12"
   },
   "publishConfig": {
     "access": "public",

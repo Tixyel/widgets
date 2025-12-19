@@ -1,5 +1,5 @@
 export const workspace_config = `
-import { defineWorkspaceConfig } from '@tixyel/cli';
+import { defineWorkspaceConfig } from '@tixyel/cli/api';
 
 export default defineWorkspaceConfig({
   search: {
