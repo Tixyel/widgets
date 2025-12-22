@@ -4,7 +4,7 @@ import { EventProvider } from '../utils/EventProvider.js';
 import { useStorage } from '../utils/useStorage.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
-import { Alejo } from '../types/alejo.js';
+import { Alejo } from '../utils/alejo.js';
 
 type ClientEvents = {
   load: [event: StreamElements.Event.onWidgetLoad];
@@ -79,10 +79,23 @@ export class Client extends EventProvider<ClientEvents> {
     overlay: StreamElements.Event.onWidgetLoad['overlay'];
   };
 
-  public cache: { avatar: number; pronoun: number; emote: number } = {
+  public cache: {
+    /**
+     * Avatar cache duration in minutes.
+     */
+    avatar: number;
+    /**
+     * Pronoun cache duration in minutes.
+     */
+    pronoun: number;
+    /**
+     * Emote cache duration in minutes.
+     */
+    emote: number;
+  } = {
     avatar: 30,
-    pronoun: 30,
-    emote: 30,
+    pronoun: 60,
+    emote: 120,
   };
 
   override on<K extends keyof ClientEvents>(eventName: K, callback: (this: Client, ...args: ClientEvents[K]) => void): this {

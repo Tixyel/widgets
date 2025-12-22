@@ -1,4 +1,4 @@
-import { findEmotesInText, generateBadges, replaceEmotesWithHTML } from './utils/Message.js';
+import { findEmotesInText, generateBadges, replaceEmotesWithHTML, replaceYoutubeEmotesWithHTML } from './utils/Message.js';
 import { StreamElements } from './types/streamelements/main.js';
 import { initializeLocalSEAPI } from './streamelements/api.js';
 import { EventProvider } from './utils/EventProvider.js';
@@ -9,22 +9,43 @@ import { useQueue } from './utils/useQueue.js';
 import { Button } from './actions/button.js';
 import { Client } from './client/client.js';
 import { Logger } from './utils/Logger.js';
+import { Alejo } from './utils/alejo.js';
 import './client/listener.js';
 
-export * from './types/index.js';
+export type * from './types/index.js';
+export type * from './utils/alejo.js';
 
 export const USE_SE_API: Promise<StreamElements.SE_API> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
 
 export const logger = new Logger();
 
 export const Tixyel = {
+  Client,
+
   USE_SE_API,
   Simulation,
-  Client,
   logger,
-  utils: { findEmotesInText, replaceEmotesWithHTML, generateBadges },
-  modules: { Button, Command, EventProvider, useStorage, useQueue, Logger },
-  data: { usedStorages },
+  Alejo,
+
+  utils: {
+    findEmotesInText,
+    replaceEmotesWithHTML,
+    replaceYoutubeEmotesWithHTML,
+    generateBadges,
+  },
+
+  modules: {
+    Button,
+    Command,
+    EventProvider,
+    useStorage,
+    useQueue,
+    Logger,
+  },
+
+  data: {
+    usedStorages,
+  },
 } as const;
 
 type Main = typeof Tixyel;

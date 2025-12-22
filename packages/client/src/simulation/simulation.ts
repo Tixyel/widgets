@@ -2,7 +2,7 @@ import { type BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithH
 import { names, messages, avatars, emotes, badges, tts, items, tiers, css_color_names, youtube_emotes } from './data/index.js';
 import { StreamElements } from '../types/streamelements/main.js';
 import type { Provider } from '../types/client.js';
-import { Alejo } from '../types/alejo.js';
+import { Alejo } from '../utils/alejo.js';
 import { logger } from '../index.js';
 import { findClosestColorName, parseToRGBA, rgbaToHex, rgbToHsl } from '../utils/color.js';
 

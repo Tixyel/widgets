@@ -85,7 +85,7 @@ window.addEventListener('onWidgetLoad', async (data) => {
         client.storage.add(`avatar.${detail.channel.providerId.toLowerCase()}`, {
           value: detail.channel.avatar,
           timestamp: Date.now(),
-          expire: Date.now() + client.cache.avatar * 60 * 60 * 1000,
+          expire: Date.now() + client.cache.avatar * 60 * 1000,
         });
       }
     });
