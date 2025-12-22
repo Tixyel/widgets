@@ -2005,9 +2005,18 @@ export namespace Simulation {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  export function probability(items: Record<string, number>) {
-    const total = Object.values(items).reduce((acc, val) => acc + val, 0);
-    const sorted = Object.entries(items).sort((a, b) => b[1] - a[1]);
+  /**
+   * Returns typed entries of an object.
+   * @param obj - The object to get entries from.
+   * @returns - An array of key-value pairs from the object.
+   */
+  export function typedEntries<K extends string, V>(obj: Record<K, V>): [K, V][] {
+    return Object.entries(obj) as [K, V][];
+  }
+
+  export function probability<K extends string, V extends number>(items: Record<K, V>): K | undefined {
+    const total = (Object.values(items) as number[]).reduce((acc, val) => acc + val, 0);
+    const sorted = typedEntries(items).sort((a, b) => b[1] - a[1]);
     const rand = Math.random() * total;
 
     let cumulative = 0;
@@ -2019,6 +2028,8 @@ export namespace Simulation {
         return item;
       }
     }
+
+    return undefined;
   }
 
   export async function start(
