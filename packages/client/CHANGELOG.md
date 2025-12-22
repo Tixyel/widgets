@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.7.0
+
+### Minor Changes
+
+- 92d49bc: Add utility functions for the Alejo pronouns API and export
+
 ## 3.6.0
 
 ### Minor Changes
