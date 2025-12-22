@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.8.0
+
+### Minor Changes
+
+- 714002f: Enhance probability function with typedEntries utility
+
 ## 3.7.1
 
 ### Patch Changes
