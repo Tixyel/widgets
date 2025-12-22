@@ -386,9 +386,12 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
       `Widget name: ${widget.config.name}`,
       `Version: ${widget.config.version}`,
       `Description: ${widget.config.description}`,
-      `Tags: ${widget.config.metadata?.tags?.join(',')}`,
+      `Tags: ${widget.config.metadata?.tags?.join(', ')}`,
       `Made by: ${widget.config.metadata?.author}`,
-      widget.config.metadata?.clientId ? `Made for ${widget.config.metadata?.clientId}` : undefined,
+      widget.config.metadata?.clientId ? `Made for: ${widget.config.metadata?.clientId}` : undefined,
+      ...Object.entries(widget.config.metadata || {})
+        .filter(([key]) => !['tags', 'author', 'clientId'].includes(key))
+        .map(([key, value]) => `${key}: ${value}`),
       ' ',
       'DO NOT EDIT, SHARE OR DISTRIBUTE THIS CODE WITHOUT PERMISSION FROM THE AUTHOR',
       `--->`,
@@ -402,9 +405,12 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
       `Widget name: ${widget.config.name}`,
       `Version: ${widget.config.version}`,
       `Description: ${widget.config.description}`,
-      `Tags: ${widget.config.metadata?.tags?.join(',')}`,
+      `Tags: ${widget.config.metadata?.tags?.join(', ')}`,
       `Made by: ${widget.config.metadata?.author}`,
-      widget.config.metadata?.clientId ? `Made for ${widget.config.metadata?.clientId}` : undefined,
+      widget.config.metadata?.clientId ? `Made for: ${widget.config.metadata?.clientId}` : undefined,
+      ...Object.entries(widget.config.metadata || {})
+        .filter(([key]) => !['tags', 'author', 'clientId'].includes(key))
+        .map(([key, value]) => `${key}: ${value}`),
       ' ',
       'DO NOT EDIT, SHARE OR DISTRIBUTE THIS CODE WITHOUT PERMISSION FROM THE AUTHOR',
       `*/`,
@@ -418,9 +424,12 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
       `Widget name: ${widget.config.name}`,
       `Version: ${widget.config.version}`,
       `Description: ${widget.config.description}`,
-      `Tags: ${widget.config.metadata?.tags?.join(',')}`,
+      `Tags: ${widget.config.metadata?.tags?.join(', ')}`,
       `Made by: ${widget.config.metadata?.author}`,
-      widget.config.metadata?.clientId ? `Made for ${widget.config.metadata?.clientId}` : undefined,
+      widget.config.metadata?.clientId ? `Made for: ${widget.config.metadata?.clientId}` : undefined,
+      ...Object.entries(widget.config.metadata || {})
+        .filter(([key]) => !['tags', 'author', 'clientId'].includes(key))
+        .map(([key, value]) => `${key}: ${value}`),
       ' ',
       'DO NOT EDIT, SHARE OR DISTRIBUTE THIS CODE WITHOUT PERMISSION FROM THE AUTHOR',
       `*/`,
