@@ -456,8 +456,8 @@ export namespace Simulation {
           }
 
           if (['amount', 'count'].some((e) => k === e)) {
-            acc['amount'] = String(amount);
-            acc['count'] = String(acc?.count || amount);
+            acc['amount'] = String(acc?.amount || acc.count || v);
+            acc['count'] = String(acc?.count || acc?.amount || v);
           }
 
           acc['currency'] = acc.currency || window.client?.details.currency.symbol || '$';
