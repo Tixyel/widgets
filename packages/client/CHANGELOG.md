@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.7.1
+
+### Patch Changes
+
+- e073f47: improve logic for amount and count assignment in Simulation namespace
+
 ## 3.7.0
 
 ### Minor Changes
