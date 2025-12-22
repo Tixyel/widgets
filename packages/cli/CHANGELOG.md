@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.3.1
+
+### Patch Changes
+
+- 499cdf0: Minor changes
+
 ## 2.3.0
 
 ### Minor Changes
