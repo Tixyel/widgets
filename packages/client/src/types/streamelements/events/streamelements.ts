@@ -1,3 +1,5 @@
+import { Provider } from '../../client.js';
+
 export namespace StreamElementsEvents {
   export namespace Tip {
     export type Data = {
@@ -79,6 +81,7 @@ export namespace StreamElementsEvents {
       field: string;
       value: string | number | boolean;
     };
+
     type EventType = 'follower' | 'subscriber' | 'tip' | 'cheer' | 'raid';
 
     type EventTier = 'prime' | '1000' | '2000' | '3000';
@@ -188,5 +191,38 @@ export namespace StreamElementsEvents {
         isTest: true;
       };
     };
+  }
+
+  export interface BaseEvent {
+    provider: Provider;
+    flagged: boolean;
+    channel: string;
+    createdAt: string;
+    _id: string;
+    expiresAt: string;
+    updatedAt: string;
+    activityId: string;
+    sessionEventsCount: number;
+  }
+
+  export namespace Event {
+    export type Data = {
+      listener: 'event';
+      event: Event;
+    };
+
+    export type Event = Tip;
+
+    export interface Tip extends BaseEvent {
+      type: 'tip';
+      data: {
+        amount: string;
+        currency: string;
+        username: string;
+        tipId: string;
+        message: string;
+        avatar: string;
+      };
+    }
   }
 }

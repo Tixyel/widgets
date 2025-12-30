@@ -116,40 +116,44 @@ export namespace StreamElements {
       export namespace StreamElements {
         export type Events =
           | StreamElementsEvents.Tip.Data
+          | StreamElementsEvents.Event.Data
           | StreamElementsEvents.KVStore.Data
-          | StreamElementsEvents.BotCounter.Data
-          | StreamElementsEvents.AlertService.Data
           | StreamElementsEvents.EventSkip.Data
-          | StreamElementsEvents.EventTest.Data;
+          | StreamElementsEvents.EventTest.Data
+          | StreamElementsEvents.BotCounter.Data
+          | StreamElementsEvents.AlertService.Data;
 
         export type Tip = StreamElementsEvents.Tip.Data;
+        export type Event = StreamElementsEvents.Event.Data;
         export type KVStore = StreamElementsEvents.KVStore.Data;
-        export type BotCounter = StreamElementsEvents.BotCounter.Data;
-        export type AlertService = StreamElementsEvents.AlertService.Data;
         export type EventSkip = StreamElementsEvents.EventSkip.Data;
         export type EventTest = StreamElementsEvents.EventTest.Data;
+        export type BotCounter = StreamElementsEvents.BotCounter.Data;
+        export type AlertService = StreamElementsEvents.AlertService.Data;
       }
 
       export namespace Twitch {
         export type Events =
-          | TwitchEvents.Cheer.Data
-          | TwitchEvents.Follower.Data
           | TwitchEvents.Raid.Data
-          | TwitchEvents.Subscriber.Data
+          | TwitchEvents.Event.Data
+          | TwitchEvents.Cheer.Data
           | TwitchEvents.Message.Data
+          | TwitchEvents.Follower.Data
+          | TwitchEvents.Subscriber.Data
           | TwitchEvents.DeleteMessage.Data
           | TwitchEvents.DeleteMessages.Data;
 
+        export type Raid = TwitchEvents.Raid.Data;
+        export type Event = TwitchEvents.Event.Data;
+        export type Cheer = TwitchEvents.Cheer.Data;
+        export type spam = TwitchEvents.Subscriber.spam;
+        export type gift = TwitchEvents.Subscriber.gift;
         export type Message = TwitchEvents.Message.Data;
+        export type Follower = TwitchEvents.Follower.Data;
+        export type Subscriber = TwitchEvents.Subscriber.Data;
+        export type community = TwitchEvents.Subscriber.community;
         export type DeleteMessage = TwitchEvents.DeleteMessage.Data;
         export type DeleteMessages = TwitchEvents.DeleteMessages.Data;
-        export type Cheer = TwitchEvents.Cheer.Data;
-        export type Follower = TwitchEvents.Follower.Data;
-        export type Raid = TwitchEvents.Raid.Data;
-        export type Subscriber = TwitchEvents.Subscriber.Data;
-        export type gift = TwitchEvents.Subscriber.gift;
-        export type community = TwitchEvents.Subscriber.community;
-        export type spam = TwitchEvents.Subscriber.spam;
       }
 
       export namespace Kick {
@@ -165,19 +169,19 @@ export namespace StreamElements {
   }
 
   export namespace Session {
-    export type Data = Follower &
-      Subscriber &
+    export type Data = Tip &
       Host &
       Raid &
-      CharityCampaignDonation &
       Cheer &
-      CheerPurchase &
-      Superchat &
-      Hypetrain &
-      ChannelPoints &
-      Tip &
       Merch &
-      Purchase;
+      Purchase &
+      Follower &
+      Hypetrain &
+      Superchat &
+      Subscriber &
+      CheerPurchase &
+      ChannelPoints &
+      CharityCampaignDonation;
 
     export namespace Config {
       export type Int = {

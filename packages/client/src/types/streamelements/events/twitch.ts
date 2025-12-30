@@ -1,5 +1,6 @@
 import { MapNumberValuesToString } from '../../../utils/helpers.js';
 import { Twitch } from '../../twitch.js';
+import { StreamElements } from '../main.js';
 
 export namespace TwitchEvents {
   export namespace Message {
@@ -195,6 +196,118 @@ export namespace TwitchEvents {
       gifted: true;
       bulkGifted?: false;
       isCommunityGift: true;
+    };
+  }
+
+  export interface BaseEvent {
+    provider: 'twitch';
+    flagged: boolean;
+    channel: string;
+    createdAt: string;
+    _id: string;
+    expiresAt: string;
+    updatedAt: string;
+    activityId: string;
+    sessionEventsCount: number;
+  }
+
+  export namespace Event {
+    export type Data = {
+      listener: 'event';
+      event: Event;
+    };
+
+    export type Event = ChannelPointsRedemption | Follower | Cheer | Subscriber;
+
+    export interface ChannelPointsRedemption extends BaseEvent {
+      type: 'channelPointsRedemption';
+      data: {
+        amount: number;
+        username: string;
+        displayName: string;
+        providerId: string;
+        redemption: string;
+        message?: string;
+        quantity: number;
+        avatar: string;
+      };
+    }
+
+    export interface Follower extends BaseEvent {
+      type: 'follower';
+      data: {
+        username: string;
+        displayName: string;
+        providerId: string;
+        quantity: number;
+        avatar: string;
+      };
+    }
+
+    export interface Cheer extends BaseEvent {
+      type: 'cheer';
+      data: {
+        amount: number;
+        username: string;
+        displayName: string;
+        providerId: string;
+        message: string;
+        quantity: number;
+        avatar: string;
+      };
+    }
+
+    export interface Subscriber extends BaseEvent {
+      type: 'subscriber';
+      data: FirstTimeSubscriber | Resubscribe | GiftedSubscriber | CommunityGiftedSubscriber;
+    }
+
+    export type FirstTimeSubscriber = {
+      amount: number;
+      username: string;
+      displayName: string;
+      providerId: string;
+      tier: 'prime' | '1000' | '2000' | '3000';
+      quantity: 0;
+      avatar: string;
+    };
+
+    export type Resubscribe = {
+      amount: number;
+      username: string;
+      displayName: string;
+      providerId: string;
+      message: string;
+      tier: 'prime' | '1000' | '2000' | '3000';
+      streak: number;
+      quantity: number;
+      avatar: string;
+    };
+
+    export type GiftedSubscriber = {
+      amount: number;
+      username: string;
+      displayName: string;
+      providerId: string;
+      message: string;
+      tier: 'prime' | '1000' | '2000' | '3000';
+      sender: string;
+      gifted: true;
+      quantity: 0;
+      avatar: string;
+    };
+
+    export type CommunityGiftedSubscriber = {
+      amount: number;
+      username: string;
+      displayName: string;
+      providerId: string;
+      message: string;
+      tier: 'prime' | '1000' | '2000' | '3000';
+      sender: string;
+      gifted: true;
+      quantity: 0;
+      avatar: string;
     };
   }
 }
