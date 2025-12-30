@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.9.0
+
+### Minor Changes
+
+- dac6657: Add Event types and enhance StreamElements and Twitch event handling
+
 ## 3.8.0
 
 ### Minor Changes
