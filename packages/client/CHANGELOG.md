@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.0.0
+
+### Major Changes
+
+- 393fefe: Implement ComfyJS instance management for Twitch chat interactions
+
 ## 3.10.0
 
 ### Minor Changes
