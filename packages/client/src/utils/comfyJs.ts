@@ -57,7 +57,9 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
   public username!: string;
   public password?: string;
   public channels!: string[];
+
   public isDebug: boolean = false;
+  private init: boolean = false;
 
   public emulate: boolean = false;
 
@@ -66,14 +68,14 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
    * @param options - Configuration options for ComfyJS instance.
    * @param emulate - Whether to emulate chat messages in the Simulation module.
    */
-  constructor(options: { username: string; password?: string; channels: string[]; isDebug?: boolean }, emulate: boolean) {
+  constructor(options: { username: string; password?: string; channels: string[]; isDebug?: boolean; init?: boolean }, emulate: boolean) {
     super();
 
     this.username = options.username;
     this.password = options.password;
     this.channels = options.channels;
     this.isDebug = Boolean(options.isDebug);
-
+    this.init = Boolean(options.init);
     this.emulate = emulate;
 
     this.load()
@@ -296,5 +298,9 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onReconnect = (reconnectCount) => {
       this.emit('reconnect', reconnectCount);
     };
+
+    if (this.init) {
+      this.instance.Init(this.username, this.password, this.channels, this.isDebug);
+    }
   }
 }
