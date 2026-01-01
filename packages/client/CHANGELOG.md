@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 3.10.0
+
+### Minor Changes
+
+- 612bdac: Update YouTube badge generation to reflect correct ownership and verification statuses and enhance Twitch and YouTube event handling with improved data structures
+
 ## 3.9.0
 
 ### Minor Changes
