@@ -1906,36 +1906,72 @@ export namespace Simulation {
 
   export const emulate = {
     twitch: {
-      message(data: Record<string, string | number | boolean> = {}) {
-        Simulation.generate.event.onEventReceived('twitch', 'message', data).then((event) => {
+      message(
+        data: Partial<{
+          name: string;
+          message: string;
+          badges: BadgeOptions;
+          color: string;
+          userId: string;
+        }> = {},
+      ) {
+        Simulation.generate.event.onEventReceived('twitch', 'message', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
         });
       },
-      follower(data: Record<string, string | number | boolean> = {}) {
-        Simulation.generate.event.onEventReceived('twitch', 'follower-latest', data).then((event) => {
+      follower(
+        data: Partial<{
+          avatar: string;
+          name: string;
+        }> = {},
+      ) {
+        Simulation.generate.event.onEventReceived('twitch', 'follower-latest', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
         });
       },
-      raid(data: Record<string, string | number | boolean> = {}) {
-        Simulation.generate.event.onEventReceived('twitch', 'raid-latest', data).then((event) => {
+      raid(
+        data: Partial<{
+          amount: number;
+          avatar: string;
+          name: string;
+        }> = {},
+      ) {
+        Simulation.generate.event.onEventReceived('twitch', 'raid-latest', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
         });
       },
-      cheer(data: Record<string, string | number | boolean> = {}) {
-        Simulation.generate.event.onEventReceived('twitch', 'cheer-latest', data).then((event) => {
+      cheer(
+        data: Partial<{
+          amount: number;
+          avatar: string;
+          name: string;
+          message: string;
+        }> = {},
+      ) {
+        Simulation.generate.event.onEventReceived('twitch', 'cheer-latest', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
         });
       },
-      subscriber(data: Record<string, string | number | boolean> & { subType?: 'default' | 'gift' | 'community' | 'spam' } = {}) {
-        Simulation.generate.event.onEventReceived('twitch', 'subscriber-latest', data).then((event) => {
+      subscriber(
+        data: Partial<{
+          tier: '1000' | '2000' | '3000' | 'prime';
+          amount: number;
+          avatar: string;
+          name: string;
+          sender: string;
+          message: string;
+          subType: 'default' | 'gift' | 'community' | 'spam';
+        }> & { subType?: 'default' | 'gift' | 'community' | 'spam' } = {},
+      ) {
+        Simulation.generate.event.onEventReceived('twitch', 'subscriber-latest', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
@@ -1943,8 +1979,14 @@ export namespace Simulation {
       },
     },
     streamelements: {
-      tip(data: Record<string, string | number | boolean> = {}) {
-        Simulation.generate.event.onEventReceived('streamelements', 'tip-latest', data).then((event) => {
+      tip(
+        data: Partial<{
+          amount: number;
+          avatar: string;
+          name: string;
+        }> = {},
+      ) {
+        Simulation.generate.event.onEventReceived('streamelements', 'tip-latest', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
@@ -1952,29 +1994,59 @@ export namespace Simulation {
       },
     },
     youtube: {
-      message(data: Record<string, string | number | boolean> = {}) {
-        Simulation.generate.event.onEventReceived('youtube', 'message', data).then((event) => {
+      message(
+        data: Partial<{
+          name: string;
+          message: string;
+          badges: BadgeOptions;
+          color: string;
+          userId: string;
+          avatar: string;
+        }> = {},
+      ) {
+        Simulation.generate.event.onEventReceived('youtube', 'message', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
         });
       },
-      subscriber(data: Record<string, string | number | boolean> = {}) {
-        Simulation.generate.event.onEventReceived('youtube', 'subscriber-latest', data).then((event) => {
+      subscriber(
+        data: Partial<{
+          avatar: string;
+          name: string;
+        }> = {},
+      ) {
+        Simulation.generate.event.onEventReceived('youtube', 'subscriber-latest', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
         });
       },
-      superchat(data: Record<string, string | number | boolean> = {}) {
-        Simulation.generate.event.onEventReceived('youtube', 'superchat-latest', data).then((event) => {
+      superchat(
+        data: Partial<{
+          amount: number;
+          avatar: string;
+          name: string;
+        }> = {},
+      ) {
+        Simulation.generate.event.onEventReceived('youtube', 'superchat-latest', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }
         });
       },
-      sponsor(data: Record<string, string | number | boolean> & { subType?: 'default' | 'gift' | 'community' | 'spam' } = {}) {
-        Simulation.generate.event.onEventReceived('youtube', 'sponsor-latest', data).then((event) => {
+      sponsor(
+        data: Partial<{
+          tier: '1000' | '2000' | '3000';
+          amount: number;
+          avatar: string;
+          name: string;
+          sender: string;
+          message: string;
+          subType: 'default' | 'gift' | 'community' | 'spam';
+        }> & { subType?: 'default' | 'gift' | 'community' | 'spam' } = {},
+      ) {
+        Simulation.generate.event.onEventReceived('youtube', 'sponsor-latest', data as { [key: string]: string | number | boolean }).then((event) => {
           if (event) {
             Simulation.emulate.send('onEventReceived', event);
           }

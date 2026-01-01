@@ -155,12 +155,12 @@ export async function generateBadges(badges: BadgeOptions = [], provider: Provid
 
     case 'youtube': {
       var details = {
-        'verified': { isVerified: false },
-        'broadcaster': { isChatOwner: false },
-        'host': { isChatOwner: false },
-        'sponsor': { isChatSponsor: false },
-        'subscriber': { isChatSponsor: false },
-        'moderator': { isChatModerator: false },
+        'verified': { isVerified: true },
+        'broadcaster': { isChatOwner: true },
+        'host': { isChatOwner: true },
+        'sponsor': { isChatSponsor: true },
+        'subscriber': { isChatSponsor: true },
+        'moderator': { isChatModerator: true },
       };
 
       result = Object.entries(badges).reduce(
