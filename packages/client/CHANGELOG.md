@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.0.1
+
+### Patch Changes
+
+- 45e7935: Update ComfyJS integration and add initialization option
+
 ## 4.0.0
 
 ### Major Changes
