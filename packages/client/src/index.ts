@@ -4,6 +4,8 @@ import { initializeLocalSEAPI } from './streamelements/api.js';
 import { EventProvider } from './utils/EventProvider.js';
 import { Simulation } from './simulation/simulation.js';
 import { usedStorages, useStorage } from './utils/useStorage.js';
+import type { ComfyJSInstance } from 'comfy.js';
+import { useComfyJs } from './utils/comfyJs.js';
 import { Command } from './actions/command.js';
 import { useQueue } from './utils/useQueue.js';
 import { Button } from './actions/button.js';
@@ -38,6 +40,7 @@ export const Tixyel = {
     Button,
     Command,
     EventProvider,
+    useComfyJs,
     useStorage,
     useQueue,
     Logger,
@@ -54,6 +57,7 @@ declare global {
   interface Window {
     Tixyel: Main;
     client: Client;
+    ComfyJS?: ComfyJSInstance;
   }
 
   interface WindowEventMap {

@@ -1436,7 +1436,10 @@ export namespace Simulation {
 
                 var color = (options?.color as string) ?? Simulation.rand.color('hex');
                 var userId = (options?.userId as string) ?? Simulation.rand.number(10000000, 99999999).toString();
-                var time = Date.now();
+                var msgId = (options?.msgId as string) ?? Simulation.rand.uuid();
+                var time = (options?.time as number) ?? Date.now();
+
+                var channel = (options?.channel as string) ?? client.details.user.username;
 
                 const event: StreamElements.Event.Provider.Twitch.Message = {
                   listener: 'message',
@@ -1463,18 +1466,18 @@ export namespace Simulation {
 
                         'client-nonce': Simulation.rand.string(16),
                         'flags': '',
-                        'id': Simulation.rand.uuid(),
+                        'id': msgId,
                         'first-msg': '0',
                         'returning-chatter': '0',
                       },
                       nick: name.toLowerCase(),
                       displayName: name,
                       displayColor: color,
-                      channel: 'local',
+                      channel: channel,
                       text: message,
                       isAction: false,
                       userId: userId,
-                      msgId: Simulation.rand.uuid(),
+                      msgId: msgId,
                       badges: badges.badges,
                       emotes: emotes,
                     },
@@ -1744,9 +1747,12 @@ export namespace Simulation {
 
                 var color = (options?.color as string) ?? Simulation.rand.color('hex');
                 var userId = (options?.userId as string) ?? Simulation.rand.number(10000000, 99999999).toString();
-                var time = Date.now();
+                var msgId = (options?.msgId as string) ?? Simulation.rand.uuid();
+                var time = (options?.time as number) ?? Date.now();
 
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
+
+                var channel = (options?.channel as string) ?? client.details.user.username;
 
                 const event: StreamElements.Event.Provider.YouTube.Message = {
                   listener: 'message',
@@ -1759,7 +1765,7 @@ export namespace Simulation {
                       snippet: {
                         type: '',
                         liveChatId: '',
-                        authorChannelId: 'local',
+                        authorChannelId: channel,
                         publishedAt: new Date().toISOString(),
                         hasDisplayContent: true,
                         displayMessage: message,
@@ -1768,22 +1774,22 @@ export namespace Simulation {
                         },
                       },
                       authorDetails: {
-                        channelId: 'local',
+                        channelId: channel,
                         channelUrl: '',
                         displayName: name,
                         profileImageUrl: avatar,
                         ...badges,
                       },
-                      msgId: Simulation.rand.uuid(),
-                      userId: Simulation.rand.uuid(),
+                      msgId: msgId,
+                      userId: userId,
                       nick: name.toLowerCase(),
                       badges: [],
                       displayName: name,
                       isAction: false,
-                      time: Date.now(),
+                      time: time,
                       tags: [],
-                      displayColor: Simulation.rand.color('hex'),
-                      channel: 'local',
+                      displayColor: color,
+                      channel: channel,
                       text: message,
                       avatar: avatar,
                       emotes: [],
@@ -1913,6 +1919,9 @@ export namespace Simulation {
           badges: BadgeOptions;
           color: string;
           userId: string;
+          msgId: string;
+          channel: string;
+          time: number;
         }> = {},
       ) {
         Simulation.generate.event.onEventReceived('twitch', 'message', data as { [key: string]: string | number | boolean }).then((event) => {
@@ -1920,6 +1929,30 @@ export namespace Simulation {
             Simulation.emulate.send('onEventReceived', event);
           }
         });
+      },
+      deleteMessage(msgId: string) {
+        if (!msgId || typeof msgId !== 'string') return;
+
+        const event: StreamElements.Event.Provider.Twitch.DeleteMessage = {
+          listener: 'delete-message',
+          event: {
+            msgId: msgId,
+          },
+        };
+
+        Simulation.emulate.send('onEventReceived', event);
+      },
+      deleteMessages(userId: string) {
+        if (!userId || typeof userId !== 'string') return;
+
+        const event: StreamElements.Event.Provider.Twitch.DeleteMessages = {
+          listener: 'delete-messages',
+          event: {
+            userId: userId,
+          },
+        };
+
+        Simulation.emulate.send('onEventReceived', event);
       },
       follower(
         data: Partial<{
@@ -2001,6 +2034,9 @@ export namespace Simulation {
           badges: BadgeOptions;
           color: string;
           userId: string;
+          msgId: string;
+          channel: string;
+          time: number;
           avatar: string;
         }> = {},
       ) {

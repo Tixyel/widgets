@@ -49,8 +49,10 @@
     "build": "vite build && rollup -c rollup.config.js",
     "dev": "concurrently \"vite build --watch\" \"rollup -c rollup.config.js --watch\""
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/tmi.js": "^1.8.6",
+    "comfy.js": "^1.1.29",
+    "tmi.js": "^1.8.5",
     "vite": "^7.1.5"
   },
   "engines": {
