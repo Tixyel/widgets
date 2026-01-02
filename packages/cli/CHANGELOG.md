@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.4.0
+
+### Minor Changes
+
+- 0306d4b: Add package installation prompt during workspace initialization
+
 ## 2.3.2
 
 ### Patch Changes
