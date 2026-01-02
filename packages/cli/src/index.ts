@@ -33,6 +33,72 @@ program
     const root = process.cwd();
     const config = resolve(root, 'tixyel.config.ts');
 
+    // Pergunta se o usuário quer instalar pacotes npm
+    const inquirer = (await import('inquirer')).default;
+    const { exec } = await import('child_process');
+    const util = await import('util');
+    const execPromise = util.promisify(exec);
+
+    const { installPackages } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        name: 'installPackages',
+        message: 'You want to install essential npm/bun packages?',
+        default: true,
+      },
+    ]);
+
+    if (installPackages) {
+      const { packageManager } = await inquirer.prompt([
+        {
+          type: 'select',
+          name: 'packageManager',
+          message: 'Select your package manager:',
+          choices: ['npm', 'yarn', 'pnpm', 'bun'],
+          default: 'npm',
+        },
+      ]);
+
+      console.log(`📦 Installing packages using ${packageManager} ...`);
+
+      let installCommand = '';
+
+      const packages = ['@tixyel/cli', '@tixyel/streamelements', 'comfy.js', 'motion', 'typescript', '@types/node', '@types/jquery', 'lottie-web'];
+
+      switch (packageManager) {
+        case 'npm': {
+          installCommand = `npm install ${packages.join(' ')}`;
+          break;
+        }
+        case 'yarn': {
+          installCommand = `yarn add ${packages.join(' ')}`;
+          break;
+        }
+        case 'pnpm': {
+          installCommand = `pnpm add ${packages.join(' ')}`;
+          break;
+        }
+        case 'bun': {
+          installCommand = `bun add ${packages.join(' ')}`;
+          break;
+        }
+      }
+
+      if (!installCommand) {
+        console.error('❌ Invalid package manager selected.');
+        return;
+      }
+
+      try {
+        const { stdout, stderr } = await execPromise(installCommand, { cwd: root });
+        if (stdout) process.stdout.write(stdout);
+        if (stderr) process.stderr.write(stderr);
+        console.log('✅ Packages installed successfully.');
+      } catch (error) {
+        console.error('❌ Error installing packages:', error);
+      }
+    }
+
     console.log('🚀 Initializing new workspace...');
     console.log(`📁 Workspace root: ${root}`);
 
