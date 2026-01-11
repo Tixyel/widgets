@@ -1,10 +1,12 @@
 import { type BadgeOptions, findEmotesInText, generateBadges, replaceEmotesWithHTML } from '../utils/Message.js';
 import { names, messages, avatars, emotes, badges, tts, items, tiers, css_color_names, youtube_emotes } from './data/index.js';
 import { StreamElements } from '../types/streamelements/main.js';
-import type { Provider } from '../types/client.js';
+import type { ClientEvents, Provider } from '../types/client.js';
 import { Alejo } from '../utils/alejo.js';
 import { logger } from '../index.js';
 import { findClosestColorName, parseToRGBA, rgbaToHex, rgbToHsl } from '../utils/color.js';
+import { useQueue } from '../utils/useQueue.js';
+import { parseProvider } from '../client/listener.js';
 
 export namespace Simulation {
   export const data = {
@@ -1375,8 +1377,270 @@ export namespace Simulation {
        * @param session - The session data to be included in the event.
        * @returns A Promise that resolves to the simulated onSessionUpdate event data.
        */
-      async onSessionUpdate(session?: StreamElements.Session.Data): Promise<StreamElements.Event.onSessionUpdate> {
+      async onSessionUpdate(session?: StreamElements.Session.Data, update?: ClientEvents): Promise<StreamElements.Event.onSessionUpdate> {
         session ??= await Simulation.generate.session.get();
+
+        if (update) {
+          const orderByDateDesc = (a: { createdAt: string }, b: { createdAt: string }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+
+          switch (update.provider) {
+            case 'twitch': {
+              const data = update.data;
+
+              switch (data.listener) {
+                case 'cheer-latest': {
+                  const amount = data.event.amount;
+                  const name = data.event.displayName ?? data.event.name;
+                  const message = data.event.message;
+
+                  session['cheer-latest'] = { name, amount, message };
+
+                  const update = (type: 'session' | 'weekly' | 'monthly' | 'alltime' | 'all') => {
+                    if (type === 'all') {
+                      update('alltime');
+                      update('monthly');
+                      update('weekly');
+                      update('session');
+
+                      return;
+                    }
+
+                    const topDonation = session[`cheer-${type}-top-donation`];
+
+                    if (topDonation && amount > topDonation.amount) {
+                      topDonation.amount = amount;
+                      topDonation.name = name;
+                    }
+
+                    const topDonator = session[`cheer-${type}-top-donator`];
+
+                    const donatorCurrent = session['cheer-recent']
+                      .filter((e) => e.name.toLowerCase() === topDonator.name.toLowerCase())
+                      .reduce((acc, curr) => acc + curr.amount, 0);
+
+                    const donatorNew = session['cheer-recent']
+                      .filter((e) => e.name.toLowerCase() === name.toLowerCase())
+                      .reduce((acc, curr) => acc + curr.amount, 0);
+
+                    if (donatorNew > donatorCurrent) {
+                      topDonator.amount = donatorNew;
+                      topDonator.name = name;
+                    }
+                  };
+
+                  update('all');
+
+                  session['cheer-session'].amount += amount;
+                  session['cheer-week'].amount += amount;
+                  session['cheer-month'].amount += amount;
+                  session['cheer-total'].amount += amount;
+                  session['cheer-count'].count += 1;
+                  session['cheer-goal'].amount += amount;
+                  session['cheer-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
+                  session['cheer-recent'] = (session['cheer-recent'] || []).sort(orderByDateDesc);
+
+                  break;
+                }
+                case 'follower-latest': {
+                  const name = data.event.displayName ?? data.event.name;
+
+                  session['follower-latest'].name = name;
+
+                  session['follower-session'].count += 1;
+                  session['follower-week'].count += 1;
+                  session['follower-month'].count += 1;
+                  session['follower-total'].count += 1;
+                  session['follower-goal'].amount += 1;
+                  session['follower-recent'].unshift({ name: name, createdAt: new Date().toISOString() });
+                  session['follower-recent'] = (session['follower-recent'] || []).sort(orderByDateDesc);
+
+                  break;
+                }
+                case 'subscriber-latest': {
+                  const name = data.event.displayName ?? data.event.name;
+                  const amount = data.event.amount;
+                  const tier = data.event.tier;
+                  const message = data.event.message;
+
+                  session['subscriber-latest'] = { name, amount, tier, message: message ?? '' };
+
+                  if (!session['subscriber-recent'].find((e) => e.name.toLowerCase() === name.toLowerCase())) {
+                    session['subscriber-new-latest'] = { name, amount, message: message ?? '' };
+                    session['subscriber-new-session'].count += 1;
+                  } else if (amount > 1) {
+                    session['subscriber-resub-latest'] = { name, amount, message: message ?? '' };
+                    session['subscriber-resub-session'].count += 1;
+                  }
+
+                  if (!data.event.gifted && !data.event.bulkGifted && !data.event.isCommunityGift) {
+                    // normal
+                  } else if (data.event.gifted && !data.event.bulkGifted && !data.event.isCommunityGift) {
+                    const sender = data.event.sender;
+                    // gift
+                    session['subscriber-gifted-latest'] = {
+                      name,
+                      amount,
+                      tier,
+                      message: message ?? '',
+                      sender,
+                    };
+                    session['subscriber-gifted-session'].count += 1;
+
+                    session['subscriber-alltime-gifter'] = { name: sender, amount };
+                  } else if (data.event.gifted && !data.event.bulkGifted && data.event.isCommunityGift) {
+                    // community gift spam
+                  } else if (!data.event.gifted && data.event.bulkGifted && !data.event.isCommunityGift) {
+                    // community gift
+                  }
+
+                  session['subscriber-session'].count += amount;
+                  session['subscriber-week'].count += amount;
+                  session['subscriber-month'].count += amount;
+                  session['subscriber-total'].count += amount;
+                  session['subscriber-goal'].amount += amount;
+                  session['subscriber-points'].amount += amount;
+
+                  session['subscriber-recent'].unshift({ name: name, amount: amount, tier: tier, createdAt: new Date().toISOString() });
+                  session['subscriber-recent'] = (session['subscriber-recent'] || []).sort(orderByDateDesc);
+
+                  break;
+                }
+                case 'raid-latest': {
+                  const name = data.event.displayName ?? data.event.name;
+                  const amount = data.event.amount;
+
+                  session['raid-latest'] = { name, amount };
+
+                  session['raid-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
+                  session['raid-recent'] = (session['raid-recent'] || []).sort(orderByDateDesc);
+                  break;
+                }
+              }
+
+              break;
+            }
+            case 'youtube': {
+              const data = update.data;
+
+              switch (data.listener) {
+                case 'superchat-latest': {
+                  const name = data.event.displayName ?? data.event.name;
+                  const amount = data.event.amount;
+
+                  session['superchat-latest'] = { name, amount };
+
+                  const update = (type: 'session' | 'weekly' | 'monthly' | 'alltime' | 'all') => {
+                    if (type === 'all') {
+                      update('alltime');
+                      update('monthly');
+                      update('weekly');
+                      update('session');
+
+                      return;
+                    }
+
+                    const topDonation = session[`superchat-${type}-top-donation`];
+
+                    if (topDonation && amount > topDonation.amount) {
+                      topDonation.amount = amount;
+                      topDonation.name = name;
+                    }
+
+                    const topDonator = session[`superchat-${type}-top-donator`];
+
+                    const donatorCurrent = session['superchat-recent']
+                      .filter((e) => e.name.toLowerCase() === topDonator.name.toLowerCase())
+                      .reduce((acc, curr) => acc + curr.amount, 0);
+
+                    const donatorNew = session['superchat-recent']
+                      .filter((e) => e.name.toLowerCase() === name.toLowerCase())
+                      .reduce((acc, curr) => acc + curr.amount, 0);
+
+                    if (donatorNew > donatorCurrent) {
+                      topDonator.amount = donatorNew;
+                      topDonator.name = name;
+                    }
+                  };
+
+                  update('all');
+
+                  session['superchat-session'].amount += amount;
+                  session['superchat-week'].amount += amount;
+                  session['superchat-month'].amount += amount;
+                  session['superchat-total'].amount += amount;
+                  session['superchat-count'].count += 1;
+                  session['superchat-goal'].amount += amount;
+                  session['superchat-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
+                  session['superchat-recent'] = (session['superchat-recent'] || []).sort(orderByDateDesc);
+
+                  break;
+                }
+              }
+
+              break;
+            }
+            case 'streamelements': {
+              const data = update.data;
+
+              switch (data.listener) {
+                case 'tip-latest': {
+                  const name = data.event.displayName ?? data.event.name;
+                  const amount = data.event.amount;
+
+                  session['tip-latest'] = { name, amount };
+
+                  const update = (type: 'session' | 'weekly' | 'monthly' | 'alltime' | 'all') => {
+                    if (type === 'all') {
+                      update('alltime');
+                      update('monthly');
+                      update('weekly');
+                      update('session');
+
+                      return;
+                    }
+
+                    const topDonation = session[`tip-${type}-top-donation`];
+
+                    if (topDonation && amount > topDonation.amount) {
+                      topDonation.amount = amount;
+                      topDonation.name = name;
+                    }
+
+                    const topDonator = session[`tip-${type}-top-donator`];
+
+                    const donatorCurrent = session['tip-recent']
+                      .filter((e) => e.name.toLowerCase() === topDonator.name.toLowerCase())
+                      .reduce((acc, curr) => acc + curr.amount, 0);
+
+                    const donatorNew = session['tip-recent']
+                      .filter((e) => e.name.toLowerCase() === name.toLowerCase())
+                      .reduce((acc, curr) => acc + curr.amount, 0);
+
+                    if (donatorNew > donatorCurrent) {
+                      topDonator.amount = donatorNew;
+                      topDonator.name = name;
+                    }
+                  };
+
+                  update('all');
+
+                  session['tip-session'].amount += amount;
+                  session['tip-week'].amount += amount;
+                  session['tip-month'].amount += amount;
+                  session['tip-total'].amount += amount;
+                  session['tip-count'].count += 1;
+                  session['tip-goal'].amount += amount;
+                  session['tip-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
+                  session['tip-recent'] = (session['tip-recent'] || []).sort(orderByDateDesc);
+
+                  break;
+                }
+              }
+
+              break;
+            }
+          }
+        }
 
         return { session };
       },
@@ -1561,7 +1825,7 @@ export namespace Simulation {
               }
               case 'subscriber':
               case 'subscriber-latest': {
-                var tier = (options?.tier as string) ?? Simulation.rand.array(['1000', '2000', '3000'])[0];
+                var tier = (options?.tier as string) ?? Simulation.rand.array(['1000', '2000', '3000', 'prime'])[0];
                 var amount = (options?.amount as number) ?? Simulation.rand.number(1, 24);
                 var avatar = (options?.avatar as string) ?? Simulation.rand.array(Simulation.data.avatars)[0];
                 var name = (options?.name as string) ?? Simulation.rand.array(Simulation.data.names.filter((e) => e.length))[0];
@@ -1571,7 +1835,6 @@ export namespace Simulation {
                 var addons = {
                   default: {
                     avatar,
-                    tier,
                     playedAsCommunityGift: false,
                   },
                   gift: {
@@ -1602,6 +1865,7 @@ export namespace Simulation {
                     name: name.toLowerCase(),
                     displayName: name,
                     providerId: '',
+                    tier: tier as StreamElements.Event.Provider.Twitch.SubscriberTier,
 
                     ...addons.default,
                     ...addons[subType as keyof typeof addons],
@@ -1858,7 +2122,6 @@ export namespace Simulation {
                 var addons = {
                   default: {
                     avatar,
-                    tier,
                     playedAsCommunityGift: false,
                   },
                   gift: {
@@ -1909,6 +2172,23 @@ export namespace Simulation {
       },
     },
   };
+
+  export const Queue = new useQueue<
+    | { listener: 'onEventReceived'; data: StreamElements.Event.onEventReceived; session?: boolean }
+    | { listener: 'onWidgetLoad'; data: StreamElements.Event.onWidgetLoad }
+    | { listener: 'onSessionUpdate'; data: StreamElements.Event.onSessionUpdate }
+  >({
+    duration: 'client',
+    async processor(received) {
+      window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
+
+      if (received.listener === 'onEventReceived' && received.session) {
+        const sessionEvent = await Simulation.generate.event.onSessionUpdate(client.session, parseProvider(received.data));
+
+        window.dispatchEvent(new CustomEvent('onSessionUpdate', { detail: sessionEvent }));
+      }
+    },
+  });
 
   export const emulate = {
     twitch: {
@@ -2100,7 +2380,33 @@ export namespace Simulation {
           ? StreamElements.Event.onSessionUpdate
           : StreamElements.Event.onWidgetLoad,
     ): void {
-      window.dispatchEvent(new CustomEvent(listener, { detail: event }));
+      switch (listener) {
+        case 'onEventReceived': {
+          Simulation.Queue.enqueue({
+            listener,
+            data: event as StreamElements.Event.onEventReceived,
+            session: listener === 'onEventReceived' ? true : undefined,
+          });
+
+          break;
+        }
+        case 'onSessionUpdate': {
+          Simulation.Queue.enqueue({
+            listener,
+            data: event as StreamElements.Event.onSessionUpdate,
+          });
+
+          break;
+        }
+        case 'onWidgetLoad': {
+          Simulation.Queue.enqueue({
+            listener,
+            data: event as StreamElements.Event.onWidgetLoad,
+          });
+
+          break;
+        }
+      }
     },
   };
 

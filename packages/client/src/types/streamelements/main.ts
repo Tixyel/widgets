@@ -143,6 +143,8 @@ export namespace StreamElements {
           | TwitchEvents.DeleteMessage.Data
           | TwitchEvents.DeleteMessages.Data;
 
+        export type SubscriberTier = TwitchEvents.Subscriber.SubscriberTier;
+
         export type Raid = TwitchEvents.Raid.Data;
         export type Event = TwitchEvents.Event.Data;
         export type Cheer = TwitchEvents.Cheer.Data;
@@ -384,19 +386,12 @@ export namespace StreamElements {
         name: string;
         amount: number;
       };
-      'cheer-weekly-top-donation': {
-        name: string;
-        amount: number;
-      };
-      'cheer-monthly-top-donation': {
-        name: string;
-        amount: number;
-      };
-      'cheer-alltime-top-donation': {
-        name: string;
-        amount: number;
-      };
       'cheer-session-top-donator': {
+        name: string;
+        amount: number;
+      };
+
+      'cheer-weekly-top-donation': {
         name: string;
         amount: number;
       };
@@ -404,7 +399,17 @@ export namespace StreamElements {
         name: string;
         amount: number;
       };
+
+      'cheer-monthly-top-donation': {
+        name: string;
+        amount: number;
+      };
       'cheer-monthly-top-donator': {
+        name: string;
+        amount: number;
+      };
+
+      'cheer-alltime-top-donation': {
         name: string;
         amount: number;
       };
@@ -412,6 +417,7 @@ export namespace StreamElements {
         name: string;
         amount: number;
       };
+
       'cheer-session': {
         amount: number;
       };

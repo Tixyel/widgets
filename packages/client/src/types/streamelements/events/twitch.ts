@@ -143,10 +143,13 @@ export namespace TwitchEvents {
 
     export type Event = common & (normal | gift | community | spam);
 
+    export type SubscriberTier = 'prime' | '1000' | '2000' | '3000';
+
     type common = {
       amount: number;
       name: string;
       displayName: string;
+      tier: SubscriberTier;
 
       message?: string;
       providerId?: string;
@@ -267,7 +270,7 @@ export namespace TwitchEvents {
       username: string;
       displayName: string;
       providerId: string;
-      tier: 'prime' | '1000' | '2000' | '3000';
+      tier: Subscriber.SubscriberTier;
       quantity: 0;
       avatar: string;
     };
@@ -278,7 +281,7 @@ export namespace TwitchEvents {
       displayName: string;
       providerId: string;
       message: string;
-      tier: 'prime' | '1000' | '2000' | '3000';
+      tier: Subscriber.SubscriberTier;
       streak: number;
       quantity: number;
       avatar: string;
@@ -290,7 +293,7 @@ export namespace TwitchEvents {
       displayName: string;
       providerId: string;
       message: string;
-      tier: 'prime' | '1000' | '2000' | '3000';
+      tier: Subscriber.SubscriberTier;
       sender: string;
       gifted: true;
       quantity: 0;
@@ -303,7 +306,7 @@ export namespace TwitchEvents {
       displayName: string;
       providerId: string;
       message: string;
-      tier: 'prime' | '1000' | '2000' | '3000';
+      tier: Subscriber.SubscriberTier;
       sender: string;
       gifted: true;
       quantity: 0;

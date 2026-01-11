@@ -26,13 +26,30 @@ interface QueueOptions<T> {
   /**
    * Duration between processing each item in milliseconds. Set to `0` or `false` for immediate processing.
    */
-  duration: QueueDuration;
+  duration: QueueDuration | 'client';
   /**
    * Function to process each item in the queue.
    */
   processor: QueueProcessor<T>;
 }
 
+/**
+ * A utility class to manage a queue of items with support for priority, looping, and immediate processing.
+ * @template T - The type of items in the queue.
+ * @extends EventProvider<QueueEvents<T>>
+ * @example
+ * ```javascript
+ * const myQueue = new useQueue({
+ *   duration: 1000,
+ *   processor: async (item) => {
+ *    console.log('Processing item:', item);
+ *  },
+ * });
+ *
+ * myQueue.enqueue('Item 1');
+ * myQueue.enqueue('Item 2', { isPriority: true });
+ * ```
+ */
 export class useQueue<T> extends EventProvider<QueueEvents<T>> {
   queue: QueueItem<T>[] = [];
   priorityQueue: QueueItem<T>[] = [];
@@ -53,10 +70,13 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
 
     super();
 
-    this.duration = options.duration;
     this.processor = options.processor;
 
+    if (options.duration !== 'client') this.duration = options.duration;
+
     window.client.on('load', () => {
+      if (options.duration === 'client') this.duration = (client.fields.widgetDuration ?? 0) as number;
+
       this.emit('load');
 
       this.loaded = true;

@@ -3,7 +3,7 @@ import { Client, ClientStorageOptions } from './client.js';
 import { usedStorages } from '../utils/useStorage.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
-import { logger } from '../index.js';
+import { logger, StreamElements } from '../index.js';
 
 window.addEventListener('load', () => {
   if (window.client instanceof Client) {
@@ -115,16 +115,29 @@ window.addEventListener('onSessionUpdate', (data) => {
   }
 });
 
+export function parseProvider(detail: StreamElements.Event.onEventReceived) {
+  // @ts-ignore
+  var provider: Provider = detail.event?.provider || detail.event?.service || detail.event?.data?.provider || window.client.details.provider;
+
+  const actAsStreamElements = [
+    'kvstore:update',
+    'bot:counter',
+    'alertService:toggleSound',
+    'tip-latest',
+    'event:test',
+    'event:skip',
+  ] as StreamElements.Event.onEventReceived['listener'][];
+
+  if (actAsStreamElements.some((l) => l === detail.listener)) provider = 'streamelements';
+
+  const received = { provider: provider, data: detail } as ClientEvents;
+
+  return received;
+}
+
 window.addEventListener('onEventReceived', ({ detail }) => {
   if (window.client instanceof Client) {
-    // @ts-ignore
-    var provider: Provider = detail.event?.provider || detail.event?.service || detail.event?.data?.provider || window.client.details.provider;
-
-    const actAsStreamElements = ['kvstore:update', 'bot:counter', 'alertService:toggleSound', 'event:skip', 'tip-latest', 'event:test'];
-
-    if (actAsStreamElements.some((l) => l === detail.listener)) provider = 'streamelements';
-
-    const received = { provider: provider, data: detail } as ClientEvents;
+    const received = parseProvider(detail);
 
     switch (received.provider) {
       case 'streamelements': {
@@ -322,7 +335,7 @@ window.addEventListener('onEventReceived', ({ detail }) => {
     ];
 
     if (client.debug && !excludeListeners.some((e) => e === received.data.listener)) {
-      logger.received('[Client]', `Event ${received.data.listener} received from ${provider}`, received.data.event);
+      logger.received('[Client]', `Event ${received.data.listener} received from ${received.provider}`, received.data.event);
     }
   }
 });
