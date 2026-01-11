@@ -322,7 +322,7 @@ window.addEventListener('onEventReceived', ({ detail }) => {
     ];
 
     if (client.debug && !excludeListeners.some((e) => e === received.data.listener)) {
-      logger.received('[Client]', `Event ${received.data.listener} received`, provider, received.data.event);
+      logger.received('[Client]', `Event ${received.data.listener} received from ${provider}`, received.data.event);
     }
   }
 });
