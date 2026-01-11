@@ -3,6 +3,7 @@ import { Client, ClientStorageOptions } from './client.js';
 import { usedStorages } from '../utils/useStorage.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
+import { logger } from '../index.js';
 
 window.addEventListener('load', () => {
   if (window.client instanceof Client) {
@@ -50,6 +51,12 @@ window.addEventListener('onWidgetLoad', async (data) => {
     client.loaded = true;
 
     client.storage.on('load', (data) => {
+      if (client.debug && data) {
+        logger.debug('[Client]', 'Storage loaded for client', `"${client.id}";`, `Provider: "${client.details.provider}";`, data);
+      } else if (client.debug) {
+        logger.debug('[Client]', 'Storage loaded for client', `"${client.id}";`, `Provider: "${client.details.provider}";`, 'No data found.');
+      }
+
       if (data) {
         const clearExpired = <T extends Record<string, ClientStorageOptions<string>>>(data: T) => {
           const now = Date.now();
@@ -101,6 +108,10 @@ window.addEventListener('onSessionUpdate', (data) => {
     client.session = detail.session;
 
     client.emit('session', detail.session);
+
+    if (client.debug) {
+      logger.debug('[Client]', 'Session updated', detail.session);
+    }
   }
 });
 
@@ -299,6 +310,19 @@ window.addEventListener('onEventReceived', ({ detail }) => {
 
         break;
       }
+    }
+
+    const excludeListeners: Array<(typeof received.data)['listener']> = [
+      'bot:counter',
+      'alertService:toggleSound',
+      'event',
+      'event:skip',
+      'event:test',
+      'kvstore:update',
+    ];
+
+    if (client.debug && !excludeListeners.some((e) => e === received.data.listener)) {
+      logger.received('[Client]', `Event ${received.data.listener} received`, provider, received.data.event);
     }
   }
 });

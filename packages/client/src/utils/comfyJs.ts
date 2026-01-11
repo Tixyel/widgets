@@ -97,6 +97,10 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
   private load(): Promise<ComfyJSInstance> {
     if (typeof window.ComfyJS !== 'undefined' && !window.ComfyJS) {
       return new Promise((resolve, reject) => {
+        if (this.emulate && !client) {
+          return reject(new Error('useComfyJs: Cannot emulate chat messages without a Client instance.'));
+        }
+
         const script = document.createElement('script');
 
         script.src = 'https://cdn.jsdelivr.net/npm/comfy.js@latest/dist/comfy.min.js';
@@ -117,9 +121,14 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
   private connect() {
     this.instance.onError = (error) => {
       this.emit('error', error);
+
+      if (client.debug) logger.error('[Client]', 'ComfyJS Error:', error);
     };
+
     this.instance.onCommand = (user, command, message, flags, extra) => {
       this.emit('command', user, command, message, flags, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Command: !${command} ${message} (User: ${user})`);
 
       if (this.emulate) {
         const roles = {
@@ -131,7 +140,7 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
           founder: flags.founder,
         };
 
-        Simulation.emulate.twitch.message({
+        const data = {
           name: user,
           message: `!${command} ${message}`,
           badges: Object.entries(roles)
@@ -142,11 +151,15 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
           userId: extra.userId,
           msgId: extra.id,
           channel: extra.channel,
-        });
+        };
+
+        Simulation.emulate.twitch.message(data);
       }
     };
     this.instance.onChat = (user, message, flags, self, extra) => {
       this.emit('chat', user, message, flags, self, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Chat: ${message} (User: ${user})`);
 
       if (this.emulate) {
         const roles = {
@@ -175,9 +188,13 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     };
     this.instance.onWhisper = (user, message, flags, self, extra) => {
       this.emit('whisper', user, message, flags, self, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Whisper: ${message} (User: ${user})`);
     };
     this.instance.onMessageDeleted = (id, extra) => {
       this.emit('messageDeleted', id, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Message Deleted: ${id}`);
 
       if (this.emulate) {
         Simulation.emulate.twitch.deleteMessage(id);
@@ -185,15 +202,23 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     };
     this.instance.onJoin = (user, self, extra) => {
       this.emit('join', user, self, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Join: ${user}`);
     };
     this.instance.onPart = (user, self, extra) => {
       this.emit('part', user, self, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Part: ${user}`);
     };
     this.instance.onHosted = (user, viewers, autohost, extra) => {
       this.emit('hosted', user, viewers, autohost, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Hosted: ${user} (${viewers} viewers)`);
     };
     this.instance.onRaid = (user, viewers, extra) => {
       this.emit('raid', user, viewers, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Raid: ${user} (${viewers} viewers)`);
 
       if (this.emulate) {
         Simulation.emulate.twitch.raid({
@@ -204,6 +229,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     };
     this.instance.onSub = (user, message, subTierInfo, extra) => {
       this.emit('sub', user, message, subTierInfo, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Sub: ${user} (${subTierInfo.plan})`);
 
       if (this.emulate) {
         const tier = subTierInfo.plan === 'Prime' ? 'prime' : subTierInfo.plan;
@@ -219,6 +246,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onResub = (user, message, streakMonths, cumulativeMonths, subTierInfo, extra) => {
       this.emit('resub', user, message, streakMonths, cumulativeMonths, subTierInfo, extra);
 
+      if (client.debug) logger.debug('[Client]', `ComfyJS Resub: ${user} (${cumulativeMonths} months)`);
+
       if (this.emulate) {
         const tier = subTierInfo.plan === 'Prime' ? 'prime' : subTierInfo.plan;
 
@@ -233,6 +262,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     };
     this.instance.onSubGift = (gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra) => {
       this.emit('subGift', gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Sub Gift: ${gifterUser} gifted ${senderCount} subs`);
 
       if (this.emulate) {
         const tier = subTierInfo.plan === 'Prime' ? 'prime' : subTierInfo.plan;
@@ -250,6 +281,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onSubMysteryGift = (gifterUser, numbOfSubs, senderCount, subTierInfo, extra) => {
       this.emit('subMysteryGift', gifterUser, numbOfSubs, senderCount, subTierInfo, extra);
 
+      if (client.debug) logger.debug('[Client]', `ComfyJS Sub Mystery Gift: ${gifterUser} gifted ${numbOfSubs} subs`);
+
       if (this.emulate) {
         const tier = subTierInfo.plan === 'Prime' ? 'prime' : subTierInfo.plan;
 
@@ -265,6 +298,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onGiftSubContinue = (user, sender, extra) => {
       this.emit('giftSubContinue', user, sender, extra);
 
+      if (client.debug) logger.debug('[Client]', `ComfyJS Gift Sub Continue: ${user} continued their gifted sub from ${sender}`);
+
       if (this.emulate) {
         Simulation.emulate.twitch.subscriber({
           name: user,
@@ -278,6 +313,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onCheer = (user, message, bits, flags, extra) => {
       this.emit('cheer', user, message, bits, flags, extra);
 
+      if (client.debug) logger.debug('[Client]', `ComfyJS Cheer: ${user} cheered ${bits} bits - ${message}`);
+
       if (this.emulate) {
         Simulation.emulate.twitch.cheer({
           name: user,
@@ -288,15 +325,23 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     };
     this.instance.onChatMode = (flags, channel) => {
       this.emit('chatMode', flags, channel);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Chat Mode Changed on ${channel}`);
     };
     this.instance.onReward = (user, reward, cost, message, extra) => {
       this.emit('reward', user, reward, cost, message, extra);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Reward: ${user} redeemed ${reward} for ${cost} - ${message}`);
     };
     this.instance.onConnected = (address, port, isFirstConnect) => {
       this.emit('connected', address, port, isFirstConnect);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Connected: ${address}:${port} (First Connect: ${isFirstConnect})`);
     };
     this.instance.onReconnect = (reconnectCount) => {
       this.emit('reconnect', reconnectCount);
+
+      if (client.debug) logger.debug('[Client]', `ComfyJS Reconnect: Attempt #${reconnectCount}`);
     };
 
     if (this.init) {

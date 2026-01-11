@@ -51,9 +51,9 @@ export class Logger {
   });
 
   readonly debug = this.apply({
-    color: '#6c757d',
+    color: '#8c9ba8',
     background: 'transparent',
-    fontSize: 11,
+    fontSize: 12,
     icon: '●',
   });
 

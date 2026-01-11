@@ -33,10 +33,12 @@ type ClientStorage = {
 
 type ClientOptions = {
   id?: string;
+  debug?: boolean | (() => boolean);
 };
 
 export class Client extends EventProvider<ClientEvents> {
   public id: string = 'default';
+  public debug: boolean = false;
 
   public storage!: useStorage<ClientStorage>;
 
@@ -59,6 +61,10 @@ export class Client extends EventProvider<ClientEvents> {
         pronoun: {},
         emote: {},
       },
+    });
+
+    this.on('load', () => {
+      this.debug = Boolean(typeof options.debug === 'function' ? options.debug() : options.debug);
     });
 
     window.client = this;
