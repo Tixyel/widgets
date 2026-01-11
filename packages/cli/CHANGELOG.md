@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.5.0
+
+### Minor Changes
+
+- 9f12c49: Enhance package manager selection during workspace initialization
+
 ## 2.4.0
 
 ### Minor Changes
