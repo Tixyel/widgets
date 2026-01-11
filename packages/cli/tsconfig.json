@@ -12,8 +12,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "ignoreDeprecations": "6.0"
+    "moduleResolution": "node"
   },
   "include": ["src"],
   "exclude": ["dist", "node_modules", "src/dev-panel"]
