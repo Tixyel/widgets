@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.2.0
+
+### Minor Changes
+
+- 180bce3: Enhance session update handling with new event types and queue processing
+
 ## 4.1.0
 
 ### Minor Changes
