@@ -2173,13 +2173,13 @@ export namespace Simulation {
     },
   };
 
-  export const Queue = new useQueue<
+  export const queue = new useQueue<
     | { listener: 'onEventReceived'; data: StreamElements.Event.onEventReceived; session?: boolean }
     | { listener: 'onWidgetLoad'; data: StreamElements.Event.onWidgetLoad }
     | { listener: 'onSessionUpdate'; data: StreamElements.Event.onSessionUpdate }
   >({
     duration: 'client',
-    async processor(received) {
+    processor: async function processor(received) {
       window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
 
       if (received.listener === 'onEventReceived' && received.session) {
@@ -2382,7 +2382,7 @@ export namespace Simulation {
     ): void {
       switch (listener) {
         case 'onEventReceived': {
-          Simulation.Queue.enqueue({
+          Simulation.queue.enqueue({
             listener,
             data: event as StreamElements.Event.onEventReceived,
             session: listener === 'onEventReceived' ? true : undefined,
@@ -2391,7 +2391,7 @@ export namespace Simulation {
           break;
         }
         case 'onSessionUpdate': {
-          Simulation.Queue.enqueue({
+          Simulation.queue.enqueue({
             listener,
             data: event as StreamElements.Event.onSessionUpdate,
           });
@@ -2399,7 +2399,7 @@ export namespace Simulation {
           break;
         }
         case 'onWidgetLoad': {
-          Simulation.Queue.enqueue({
+          Simulation.queue.enqueue({
             listener,
             data: event as StreamElements.Event.onWidgetLoad,
           });

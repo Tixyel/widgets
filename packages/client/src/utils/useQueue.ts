@@ -26,7 +26,7 @@ interface QueueOptions<T> {
   /**
    * Duration between processing each item in milliseconds. Set to `0` or `false` for immediate processing.
    */
-  duration: QueueDuration | 'client';
+  duration?: QueueDuration | 'client';
   /**
    * Function to process each item in the queue.
    */
@@ -68,14 +68,20 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
   constructor(options: QueueOptions<T>) {
     super();
 
-    if (!(window.client instanceof Client)) return;
+    if (!(window.client instanceof Client)) {
+      throw new Error('useQueue can only be instantiated after the Client is initialized.');
+    }
+
+    if (!options.processor || typeof options.processor !== 'function') {
+      throw new Error('A valid processor function must be provided to useQueue.');
+    }
 
     this.processor = options.processor;
 
-    if (options.duration !== 'client') this.duration = options.duration;
+    if (options.duration !== 'client') this.duration = options.duration ?? 0;
 
     window.client.on('load', () => {
-      if (options.duration === 'client') this.duration = (client.fields.widgetDuration ?? 0) as number;
+      if (options.duration === 'client') this.duration = (window.client.fields?.widgetDuration ?? 0) as number;
 
       this.emit('load');
 
