@@ -49,15 +49,40 @@ program
     ]);
 
     if (installPackages) {
-      const { packageManager } = await inquirer.prompt([
-        {
-          type: 'select',
-          name: 'packageManager',
-          message: 'Select your package manager:',
-          choices: ['npm', 'yarn', 'pnpm', 'bun'],
-          default: 'npm',
-        },
-      ]);
+      const availablesManagers: string[] = [];
+
+      // check if npm is available
+      const checkManager = async (manager: string) => {
+        try {
+          await execPromise(`${manager} --version`);
+          availablesManagers.push(manager);
+        } catch {
+          // not available
+        }
+      };
+
+      await Promise.all(['npm', 'yarn', 'pnpm', 'bun'].map((mgr) => checkManager(mgr)));
+
+      var packageManager: string | undefined;
+
+      if (availablesManagers.length === 0) {
+        console.error('❌ No package managers found (npm, yarn, pnpm, bun). Please install one and try again.');
+        return;
+      } else if (availablesManagers.length === 1) {
+        packageManager = availablesManagers[0];
+      } else {
+        const response = await inquirer.prompt([
+          {
+            type: 'select',
+            name: 'packageManager',
+            message: 'Select your package manager:',
+            choices: availablesManagers,
+            default: 'npm',
+          },
+        ]);
+
+        packageManager = response.packageManager;
+      }
 
       console.log(`📦 Installing packages using ${packageManager} ...`);
 
