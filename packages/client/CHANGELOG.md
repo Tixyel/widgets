@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.1.0
+
+### Minor Changes
+
+- b294736: Add debug option to Client and enhance logging in ComfyJS
+
 ## 4.0.1
 
 ### Patch Changes
