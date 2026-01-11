@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.2.3
+
+### Patch Changes
+
+- bf23e67: Initialize Simulation queue on client load and handle event processing
+
 ## 4.2.2
 
 ### Patch Changes
