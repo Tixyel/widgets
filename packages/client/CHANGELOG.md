@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.2.2
+
+### Patch Changes
+
+- 9258adc: Rename Queue to queue and improve error handling in useQueue
+
 ## 4.2.1
 
 ### Patch Changes
