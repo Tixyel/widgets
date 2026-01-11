@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.2.1
+
+### Patch Changes
+
+- 56c5609: Ensure client instance check is performed in the constructor of useQueue
+
 ## 4.2.0
 
 ### Minor Changes
