@@ -1519,6 +1519,7 @@ export namespace Simulation {
 
               break;
             }
+
             case 'youtube': {
               const data = update.data;
 
@@ -1579,6 +1580,7 @@ export namespace Simulation {
 
               break;
             }
+
             case 'streamelements': {
               const data = update.data;
 
@@ -1633,6 +1635,9 @@ export namespace Simulation {
                   session['tip-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
                   session['tip-recent'] = (session['tip-recent'] || []).sort(orderByDateDesc);
 
+                  break;
+                }
+                case 'event:test': {
                   break;
                 }
               }
