@@ -2173,22 +2173,13 @@ export namespace Simulation {
     },
   };
 
-  export const queue = new useQueue<
-    | { listener: 'onEventReceived'; data: StreamElements.Event.onEventReceived; session?: boolean }
-    | { listener: 'onWidgetLoad'; data: StreamElements.Event.onWidgetLoad }
-    | { listener: 'onSessionUpdate'; data: StreamElements.Event.onSessionUpdate }
-  >({
-    duration: 'client',
-    processor: async function processor(received) {
-      window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
-
-      if (received.listener === 'onEventReceived' && received.session) {
-        const sessionEvent = await Simulation.generate.event.onSessionUpdate(client.session, parseProvider(received.data));
-
-        window.dispatchEvent(new CustomEvent('onSessionUpdate', { detail: sessionEvent }));
-      }
-    },
-  });
+  export var queue:
+    | useQueue<
+        | { listener: 'onEventReceived'; data: StreamElements.Event.onEventReceived; session?: boolean }
+        | { listener: 'onWidgetLoad'; data: StreamElements.Event.onWidgetLoad }
+        | { listener: 'onSessionUpdate'; data: StreamElements.Event.onSessionUpdate }
+      >
+    | undefined;
 
   export const emulate = {
     twitch: {
@@ -2380,6 +2371,14 @@ export namespace Simulation {
           ? StreamElements.Event.onSessionUpdate
           : StreamElements.Event.onWidgetLoad,
     ): void {
+      if (!Simulation.queue) {
+        logger.warn('Simulation queue is not initialized.');
+
+        window.dispatchEvent(new CustomEvent(listener, { detail: event }));
+
+        return;
+      }
+
       switch (listener) {
         case 'onEventReceived': {
           Simulation.queue.enqueue({

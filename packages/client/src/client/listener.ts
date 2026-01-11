@@ -4,10 +4,23 @@ import { usedStorages } from '../utils/useStorage.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
 import { logger, StreamElements } from '../index.js';
+import { Simulation } from '../simulation/simulation.js';
+import { useQueue } from '../utils/useQueue.js';
 
 window.addEventListener('load', () => {
   if (window.client instanceof Client) {
-    // Do nothing, just ensuring the client is initialized
+    Simulation.queue = new useQueue({
+      duration: 'client',
+      processor: async function processor(received) {
+        window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
+
+        if (received.listener === 'onEventReceived' && received.session) {
+          const sessionEvent = await Simulation.generate.event.onSessionUpdate(client.session, parseProvider(received.data));
+
+          window.dispatchEvent(new CustomEvent('onSessionUpdate', { detail: sessionEvent }));
+        }
+      },
+    });
   }
 });
 
