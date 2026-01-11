@@ -66,9 +66,9 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
   public processor!: QueueProcessor<T>;
 
   constructor(options: QueueOptions<T>) {
-    if (!(window.client instanceof Client)) return;
-
     super();
+
+    if (!(window.client instanceof Client)) return;
 
     this.processor = options.processor;
 
