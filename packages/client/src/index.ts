@@ -13,6 +13,7 @@ import { Client } from './client/client.js';
 import { Logger } from './utils/Logger.js';
 import { Alejo } from './utils/alejo.js';
 import './client/listener.js';
+import { parseProvider } from './client/listener.js';
 
 export type * from './types/index.js';
 export type * from './utils/alejo.js';
@@ -34,6 +35,7 @@ export const Tixyel = {
     replaceEmotesWithHTML,
     replaceYoutubeEmotesWithHTML,
     generateBadges,
+    parseProvider,
   },
 
   modules: {

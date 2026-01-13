@@ -6,8 +6,8 @@ export type PathValue<T, P extends string> = P extends `${infer K}.${infer Rest}
     ? T[P]
     : never;
 
-export type NumberAsString<T extends number | bigint | string> = ReturnType<T['toString']>;
+export type NumberAsString = string;
 
 export type MapNumberValuesToString<T> = {
-  [K in keyof T]: T[K] extends number ? NumberAsString<T[K]> : T[K];
+  [K in keyof T]: T[K] extends number ? `${T[K]}` | ReturnType<T[K]['toString']> : T[K];
 };

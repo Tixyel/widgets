@@ -6,7 +6,6 @@ import { Alejo } from '../utils/alejo.js';
 import { logger } from '../index.js';
 import { findClosestColorName, parseToRGBA, rgbaToHex, rgbToHsl } from '../utils/color.js';
 import { useQueue } from '../utils/useQueue.js';
-import { parseProvider } from '../client/listener.js';
 
 export namespace Simulation {
   export const data = {
