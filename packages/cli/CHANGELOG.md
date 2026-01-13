@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.6.6
+
+### Patch Changes
+
+- e7bee74: Update TypeScript target from es2021 to es2020 in widget processing
+
 ## 2.6.5
 
 ### Patch Changes
