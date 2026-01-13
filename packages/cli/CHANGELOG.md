@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.6.5
+
+### Patch Changes
+
+- 3dd765f: Update processBuild function to change TypeScript output format from IIFE to CommonJS
+
 ## 2.6.4
 
 ### Patch Changes
