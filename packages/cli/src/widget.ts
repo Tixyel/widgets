@@ -381,8 +381,20 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
 
         if (!list.length) return [key, ''];
 
+        const check = (keys: string | string[], formats: string | string[]) => {
+          !Array.isArray(keys) && (keys = [keys]);
+          !Array.isArray(formats) && (formats = [formats]);
+
+          return (
+            // check keys
+            keys.some((k) => key.toLowerCase() === k.toLowerCase()) ||
+            // check formats
+            list.some((p) => formats.some((f) => p.toLowerCase().endsWith(f.toLowerCase())))
+          );
+        };
+
         // Process HTML
-        if (['html', 'HTML'].some((k) => key === k) || list.some((p) => p.toLowerCase().endsWith('.html'))) {
+        if (check('html', '.html')) {
           if (!usedWatermarks.has('html')) result += watermark.html(widget) + '\n';
 
           usedWatermarks.add('html');
@@ -417,7 +429,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           const minified = await minifyHTML(mergedHTML, workspaceConfig.build?.obfuscation?.html);
 
           result += minified.trim();
-        } else if (['css', 'style', 'styles'].some((k) => key === k) || list.some((p) => p.toLowerCase().endsWith('.css'))) {
+        } else if (check(['css', 'style', 'styles'], '.css')) {
           if (!usedWatermarks.has('css')) result += watermark.css(widget) + '\n';
 
           usedWatermarks.add('css');
@@ -446,7 +458,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           }
 
           result += mergedCSS.trim();
-        } else if (['script', 'js', 'javascript'].some((k) => key === k) || list.some((p) => p.toLowerCase().endsWith('.js'))) {
+        } else if (check(['script', 'js', 'javascript'], '.js')) {
           if (!usedWatermarks.has('script')) result += watermark.script(widget) + '\n';
 
           usedWatermarks.add('script');
@@ -463,7 +475,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           }
 
           result += mergedJS.trim();
-        } else if (['typescript', 'ts'].some((k) => key === k) || list.some((p) => p.toLowerCase().endsWith('.ts'))) {
+        } else if (check(['typescript', 'ts'], '.ts')) {
           if (!usedWatermarks.has('script')) result += watermark.script(widget) + '\n';
 
           usedWatermarks.add('script');
@@ -492,7 +504,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           const obfuscated = JavaScriptObfuscator.obfuscate(mergedTS.trim(), workspaceConfig.build?.obfuscation?.javascript);
 
           result += obfuscated.getObfuscatedCode();
-        } else if (['fields', 'FIELDS', 'fielddata', 'fieldData'].some((k) => key === k) || list.some((p) => p.toLowerCase().endsWith('.json'))) {
+        } else if (check(['fields', 'fielddata', 'fieldData', 'cf', 'customfields'], '.json')) {
           if (verbose) console.log(`  - Processing Json...`);
           const files = findAndRead(entryDir, list);
 
