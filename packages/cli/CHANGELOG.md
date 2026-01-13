@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.6.4
+
+### Patch Changes
+
+- 08e2df7: Enhance processBuild function to track processed files and improve file handling
+
 ## 2.6.3
 
 ### Patch Changes
