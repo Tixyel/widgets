@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.6.0
+
+### Minor Changes
+
+- d807157: Integrate watermark functionality into processBuild and update BuildResultMap type to accept typescript code inside the result
+
 ## 2.5.0
 
 ### Minor Changes
