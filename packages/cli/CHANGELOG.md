@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.6.1
+
+### Patch Changes
+
+- bd843d3: Refactor processBuild to use a reusable check function for file type and format validation
+
 ## 2.6.0
 
 ### Minor Changes
