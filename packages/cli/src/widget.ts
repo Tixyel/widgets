@@ -372,6 +372,13 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
 
   const usedWatermarks = new Set<string>();
 
+  /**
+   * Build results processing
+   * Find all files based on patterns and process them according to their type
+   * (html, css, script, fields)
+   * Group results based on resultMapping and compactedMapping
+   * Compact/minify where applicable
+   */
   const results: Record<keyof typeof findPatterns, string> = Object.fromEntries(
     await Promise.all(
       Object.entries(findPatterns).map(async ([key, patterns]) => {
@@ -393,13 +400,15 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           );
         };
 
+        const processed = new Set<string>();
+
         // Process HTML
         if (check('html', '.html')) {
           if (!usedWatermarks.has('html')) result += watermark.html(widget) + '\n';
 
           usedWatermarks.add('html');
 
-          if (verbose) console.log(`  - Processing HTML...`);
+          if (verbose) console.log(`  - Processing HTML for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
           const files = findAndRead(entryDir, list);
 
           let mergedHTML = '';
@@ -429,12 +438,16 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           const minified = await minifyHTML(mergedHTML, workspaceConfig.build?.obfuscation?.html);
 
           result += minified.trim();
-        } else if (check(['css', 'style', 'styles'], '.css')) {
+
+          processed.add('html');
+        }
+
+        if (check(['css', 'style', 'styles'], '.css')) {
           if (!usedWatermarks.has('css')) result += watermark.css(widget) + '\n';
 
           usedWatermarks.add('css');
 
-          if (verbose) console.log(`  - Processing CSS...`);
+          if (verbose) console.log(`  - Processing CSS for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
           const files = findAndRead(entryDir, list);
 
           let mergedCSS = '';
@@ -457,30 +470,19 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
             mergedCSS += processed.css + '\n';
           }
 
-          result += mergedCSS.trim();
-        } else if (check(['script', 'js', 'javascript'], '.js')) {
+          if (processed.has('html')) {
+            result = result += `<style>${mergedCSS.trim()}</style>`;
+          } else result += mergedCSS.trim();
+
+          processed.add('css');
+        }
+
+        if (check(['typescript', 'ts'], '.ts')) {
           if (!usedWatermarks.has('script')) result += watermark.script(widget) + '\n';
 
           usedWatermarks.add('script');
 
-          if (verbose) console.log(`  - Processing JavaScript...`);
-          const files = findAndRead(entryDir, list);
-
-          let mergedJS = '';
-
-          for await (const content of files) {
-            const obfuscated = JavaScriptObfuscator.obfuscate(content, workspaceConfig.build?.obfuscation?.javascript);
-
-            mergedJS += obfuscated.getObfuscatedCode() + '\n';
-          }
-
-          result += mergedJS.trim();
-        } else if (check(['typescript', 'ts'], '.ts')) {
-          if (!usedWatermarks.has('script')) result += watermark.script(widget) + '\n';
-
-          usedWatermarks.add('script');
-
-          if (verbose) console.log(`  - Processing TypeScript...`);
+          if (verbose) console.log(`  - Processing TypeScript for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
           const files = findAndRead(entryDir, list);
 
           let mergedTS = '';
@@ -503,9 +505,39 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           // Obfuscate the compiled JavaScript
           const obfuscated = JavaScriptObfuscator.obfuscate(mergedTS.trim(), workspaceConfig.build?.obfuscation?.javascript);
 
-          result += obfuscated.getObfuscatedCode();
-        } else if (check(['fields', 'fielddata', 'fieldData', 'cf', 'customfields'], '.json')) {
-          if (verbose) console.log(`  - Processing Json...`);
+          if (processed.has('html')) {
+            result = result += `<script>${obfuscated.getObfuscatedCode()}</script>`;
+          } else result += obfuscated.getObfuscatedCode();
+
+          processed.add('typescript');
+        }
+
+        if (check(['script', 'js', 'javascript'], '.js')) {
+          if (!usedWatermarks.has('script')) result += watermark.script(widget) + '\n';
+
+          usedWatermarks.add('script');
+
+          if (verbose) console.log(`  - Processing JavaScript for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
+          const files = findAndRead(entryDir, list);
+
+          let mergedJS = '';
+
+          for await (const content of files) {
+            const obfuscated = JavaScriptObfuscator.obfuscate(content, workspaceConfig.build?.obfuscation?.javascript);
+
+            mergedJS += obfuscated.getObfuscatedCode() + '\n';
+          }
+
+          if (processed.has('html')) {
+            result = result += `<script>${mergedJS.trim()}</script>`;
+          } else result += mergedJS.trim();
+
+          processed.add('script');
+        }
+
+        if (check(['fields', 'fielddata', 'fieldData', 'cf', 'customfields'], '.json')) {
+          if (verbose) console.log(`  - Processing JSON for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
+
           const files = findAndRead(entryDir, list);
 
           let mergedFields = {};
@@ -522,8 +554,12 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
             }
           }
 
-          result += JSON.stringify(mergedFields, null, 2);
-        } else {
+          if (!processed.size) result += JSON.stringify(mergedFields, null, 2);
+
+          processed.add('fields');
+        }
+
+        if (!result.length) {
           if (verbose) console.log(`  - Unknown build key: ${key}, the available keys are html, css, script and fields.`);
 
           result += '';
@@ -533,6 +569,15 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
       }),
     ),
   );
+
+  if (verbose) {
+    console.log(
+      `   - Build results:`,
+      Object.keys(results)
+        .map((k) => `${k}: ${results[k].length} bytes`)
+        .join(', '),
+    );
+  }
 
   for await (const [filename, key] of Object.entries(resultMapping)) {
     let content = '';
