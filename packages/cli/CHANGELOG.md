@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.6.3
+
+### Patch Changes
+
+- 6e60ef8: Enhance processBuild function with detailed logging and improved result handling
+
 ## 2.6.2
 
 ### Patch Changes
