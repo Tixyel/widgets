@@ -356,14 +356,14 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
   const normalizeList = (value?: string[]): string[] => (Array.isArray(value) ? value.filter(Boolean) : []);
 
   const findAndRead = (baseDir: string, patterns: string[]) => {
-    const contents: string[] = [];
+    const contents: Record<string, string> = {};
 
     for (const pattern of patterns) {
       const fullPath = join(baseDir, pattern);
 
       if (existsSync(fullPath)) {
         const content = readFileSync(fullPath, 'utf-8');
-        contents.push(content);
+        contents[pattern] = content;
       }
     }
 
@@ -371,6 +371,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
   };
 
   const usedWatermarks = new Set<string>();
+  const processedFile = new Set<string>();
 
   /**
    * Build results processing
@@ -384,7 +385,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
       Object.entries(findPatterns).map(async ([key, patterns]) => {
         let result = '';
 
-        const list = normalizeList(patterns);
+        let list = normalizeList(patterns.filter((p) => !processedFile.has(p)));
 
         if (!list.length) return [key, ''];
 
@@ -405,33 +406,22 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
         // Process HTML
         if (check('html', '.html')) {
           if (!usedWatermarks.has('html')) result += watermark.html(widget) + '\n';
-
           usedWatermarks.add('html');
 
-          if (verbose) console.log(`  - Processing HTML for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
-          const files = findAndRead(entryDir, list);
+          const fileList = list.filter((e) => e.endsWith('.html') && !processedFile.has(e));
+
+          if (verbose) console.log(`  - Processing HTML for ${widget.config.name} [${key}, ${fileList.join(', ')}]...`);
+          const files = findAndRead(entryDir, fileList);
 
           let mergedHTML = '';
 
-          for await (const fileContent of files) {
+          for await (const [pattern, fileContent] of Object.entries(files)) {
             // Extract body content
             const bodyMatch = fileContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
             if (bodyMatch && bodyMatch[1]) {
               mergedHTML += bodyMatch[1].trim() + '\n';
-            }
 
-            // Extract and inline styles
-            const styleMatches = fileContent.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi);
-            for (const match of styleMatches) {
-              mergedHTML += `<style>${match[1]}</style>\n`;
-            }
-
-            // Extract and inline <script> tags
-            const scriptMatches = fileContent.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi);
-            for (const match of scriptMatches) {
-              if (match[1]) {
-                mergedHTML += `<script>${match[1]}</script>\n`;
-              }
+              processedFile.add(pattern);
             }
           }
 
@@ -444,15 +434,16 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
 
         if (check(['css', 'style', 'styles'], '.css')) {
           if (!usedWatermarks.has('css')) result += watermark.css(widget) + '\n';
-
           usedWatermarks.add('css');
 
-          if (verbose) console.log(`  - Processing CSS for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
-          const files = findAndRead(entryDir, list);
+          const fileList = list.filter((e) => e.endsWith('.css') && !processedFile.has(e));
+
+          if (verbose) console.log(`  - Processing CSS for ${widget.config.name} [${key}, ${fileList.join(', ')}]...`);
+          const files = findAndRead(entryDir, fileList);
 
           let mergedCSS = '';
 
-          for await (const content of files) {
+          for await (const [pattern, content] of Object.entries(files)) {
             const plugin: postcss.AcceptedPlugin[] = [
               autoprefixer({
                 overrideBrowserslist: ['Chrome 127'],
@@ -468,6 +459,8 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
             const processed = await postcss(plugin).process(content, { from: undefined });
 
             mergedCSS += processed.css + '\n';
+
+            processedFile.add(pattern);
           }
 
           if (processed.has('html')) {
@@ -482,12 +475,14 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
 
           usedWatermarks.add('script');
 
-          if (verbose) console.log(`  - Processing TypeScript for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
-          const files = findAndRead(entryDir, list);
+          const fileList = list.filter((e) => e.endsWith('.ts') && !processedFile.has(e));
+
+          if (verbose) console.log(`  - Processing TypeScript for ${widget.config.name} [${key}, ${fileList.join(', ')}]...`);
+          const files = findAndRead(entryDir, fileList);
 
           let mergedTS = '';
 
-          for await (const content of files) {
+          for await (const [pattern, content] of Object.entries(files)) {
             try {
               const transpiled = transformSync(content, {
                 loader: 'ts',
@@ -499,6 +494,8 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
             } catch (error) {
               console.warn(`   ⚠️  Failed to compile TypeScript: ${error}`);
               throw error;
+            } finally {
+              processedFile.add(pattern);
             }
           }
 
@@ -514,18 +511,21 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
 
         if (check(['script', 'js', 'javascript'], '.js')) {
           if (!usedWatermarks.has('script')) result += watermark.script(widget) + '\n';
-
           usedWatermarks.add('script');
 
-          if (verbose) console.log(`  - Processing JavaScript for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
-          const files = findAndRead(entryDir, list);
+          const fileList = list.filter((e) => e.endsWith('.js') && !processedFile.has(e));
+
+          if (verbose) console.log(`  - Processing JavaScript for ${widget.config.name} [${key}, ${fileList.join(', ')}]...`);
+          const files = findAndRead(entryDir, fileList);
 
           let mergedJS = '';
 
-          for await (const content of files) {
+          for await (const [pattern, content] of Object.entries(files)) {
             const obfuscated = JavaScriptObfuscator.obfuscate(content, workspaceConfig.build?.obfuscation?.javascript);
 
             mergedJS += obfuscated.getObfuscatedCode() + '\n';
+
+            processedFile.add(pattern);
           }
 
           if (processed.has('html')) {
@@ -536,13 +536,14 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
         }
 
         if (check(['fields', 'fielddata', 'fieldData', 'cf', 'customfields'], '.json')) {
-          if (verbose) console.log(`  - Processing JSON for ${widget.config.name} [${key}, ${list.join(', ')}]...`);
+          const fileList = list.filter((e) => e.endsWith('.json') && !processedFile.has(e));
 
-          const files = findAndRead(entryDir, list);
+          if (verbose) console.log(`  - Processing JSON for ${widget.config.name} [${key}, ${fileList.join(', ')}]...`);
+          const files = findAndRead(entryDir, fileList);
 
           let mergedFields = {};
 
-          for await (const content of files) {
+          for await (const [pattern, content] of Object.entries(files)) {
             try {
               const noComments = parse(content);
               const parsed = JSON.parse(JSON.stringify(noComments));
