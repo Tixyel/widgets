@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.6.2
+
+### Patch Changes
+
+- 50975a5: update watermark import to include file extension
+
 ## 2.6.1
 
 ### Patch Changes
