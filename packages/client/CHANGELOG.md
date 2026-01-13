@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.3.0
+
+### Minor Changes
+
+- d6f28d9: Enhance type exports and improve NumberAsString type definition
+
 ## 4.2.3
 
 ### Patch Changes
