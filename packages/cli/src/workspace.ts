@@ -119,7 +119,7 @@ export interface WorkspaceConfig<Find extends BuildFindMap = BuildFindMap> {
 }
 
 type BuildFindMap = Record<string, string[]>;
-type BuildResultMap<Find extends BuildFindMap> = Record<string, keyof Find>;
+type BuildResultMap<Find extends BuildFindMap> = Record<string, keyof Find | (keyof Find)[]>;
 
 const DEFAULT_WORKSPACE_CONFIG: WorkspaceConfig = {
   search: {
