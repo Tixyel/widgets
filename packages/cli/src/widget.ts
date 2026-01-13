@@ -16,7 +16,7 @@ import postcss from 'postcss';
 import cssnano from 'cssnano';
 import JSZip from 'jszip';
 import { transformSync } from 'esbuild';
-import { watermark } from './utils/watermark';
+import { watermark } from './utils/watermark.js';
 
 export interface DotTixyel {
   name: string;
