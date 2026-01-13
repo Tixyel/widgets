@@ -6,7 +6,7 @@ describe('Should parse typescript into javascript', () => {
 
   const transpiled = transformSync(tsContent, {
     loader: 'ts',
-    target: 'es2021',
+    target: 'es2020',
     format: 'cjs',
   });
 

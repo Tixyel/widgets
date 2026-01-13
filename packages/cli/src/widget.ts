@@ -486,7 +486,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
             try {
               const transpiled = transformSync(content, {
                 loader: 'ts',
-                target: 'es2021',
+                target: 'es2020',
                 format: 'cjs',
               });
 
@@ -503,8 +503,8 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
           const obfuscated = JavaScriptObfuscator.obfuscate(mergedTS.trim(), workspaceConfig.build?.obfuscation?.javascript);
 
           if (processed.has('html')) {
-            result = result += `<script>${obfuscated.getObfuscatedCode()}</script>`;
-          } else result += obfuscated.getObfuscatedCode();
+            result = result += `<script>${obfuscated.getObfuscatedCode()}</script>\n`;
+          } else result += obfuscated.getObfuscatedCode() + '\n';
 
           processed.add('typescript');
         }
