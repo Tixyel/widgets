@@ -50,7 +50,8 @@
   "scripts": {
     "build": "cross-env TIXYEL_VERSION=$npm_package_version tsc",
     "dev": "cross-env TIXYEL_VERSION=$npm_package_version tsc --watch",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "bun test"
   },
   "dependencies": {
     "autoprefixer": "^10.4.22",
@@ -72,6 +73,7 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "@types/bun": "^1.3.5",
     "@types/html-minifier": "^4.0.6",
     "@types/html-minifier-terser": "^7.0.2",
     "@types/inquirer": "^9.0.9",

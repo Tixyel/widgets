@@ -487,7 +487,7 @@ export async function processBuild(widget: WidgetInfo, workspaceConfig: Workspac
               const transpiled = transformSync(content, {
                 loader: 'ts',
                 target: 'es2021',
-                format: 'iife',
+                format: 'cjs',
               });
 
               mergedTS += transpiled.code + '\n';
