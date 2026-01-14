@@ -86,6 +86,14 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
       },
     });
 
+    // or simple use
+    new modules.Button({
+      field: 'test events',
+      run() {
+        // logic here...
+      },
+    });
+
     // comfyJs is integrated to the script
     if (client.details.provider !== 'twitch') {
       new modules.useComfyJs(
