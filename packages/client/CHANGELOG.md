@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.5.1
+
+### Patch Changes
+
+- b7d7c09: Update permission verification logic to allow wildcard access
+
 ## 4.5.0
 
 ### Minor Changes
