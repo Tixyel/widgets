@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.3.1
+
+### Patch Changes
+
+- 27ab4a6: Add isMock property to event types and enhance YoutubeEvents structure
+
 ## 4.3.0
 
 ### Minor Changes
