@@ -66,12 +66,13 @@ export class Command {
     }
 
     if (this.permissions === true || typeof this.permissions === 'undefined' || (Array.isArray(this.permissions) && !this.permissions.length)) {
-      return false;
+      return true;
     }
 
     if (
       Array.isArray(this.permissions) &&
-      this.permissions.some((p) => nickname.toLowerCase() === p.toLowerCase() || roles.map((r) => r.toLowerCase()).includes(p.toLowerCase()))
+      (this.permissions.some((p) => nickname.toLowerCase() === p.toLowerCase() || roles.map((r) => r.toLowerCase()).includes(p.toLowerCase())) ||
+        this.permissions.includes('*'))
     ) {
       return true;
     }
