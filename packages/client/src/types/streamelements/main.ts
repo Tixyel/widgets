@@ -613,7 +613,7 @@ export namespace StreamElements {
         _id: string;
         sessionTop: boolean;
         type: 'superchat';
-        originalEventName: 'superchat-recent';
+        originalEventName: 'superchat-latest';
       }[];
     }
 

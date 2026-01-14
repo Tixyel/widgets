@@ -1245,8 +1245,10 @@ export namespace Simulation {
         };
       },
 
-      async get(): Promise<StreamElements.Session.Data> {
+      async get(startSession?: StreamElements.Session.Data): Promise<StreamElements.Session.Data> {
         const available = this.available();
+
+        if (startSession) return startSession;
 
         const generate = (
           available: StreamElements.Session.Config.Available.Data | StreamElements.Session.Config.Available.Category | StreamElements.Session.Config.Any,
@@ -1527,7 +1529,17 @@ export namespace Simulation {
                   const name = data.event.displayName ?? data.event.name;
                   const amount = data.event.amount;
 
-                  session['superchat-latest'] = { name, amount };
+                  session['superchat-latest'] = {
+                    name: name.toLowerCase(),
+                    displayName: name,
+                    amount,
+                    _id: Simulation.rand.uuid(),
+                    sessionTop: false,
+                    type: 'superchat',
+                    originalEventName: 'superchat-latest',
+                    providerId: '',
+                    avatar: '',
+                  };
 
                   const update = (type: 'session' | 'weekly' | 'monthly' | 'alltime' | 'all') => {
                     if (type === 'all') {
@@ -1570,8 +1582,18 @@ export namespace Simulation {
                   session['superchat-total'].amount += amount;
                   session['superchat-count'].count += 1;
                   session['superchat-goal'].amount += amount;
-                  session['superchat-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
-                  session['superchat-recent'] = (session['superchat-recent'] || []).sort(orderByDateDesc);
+                  session['superchat-recent'].unshift({
+                    name: name.toLowerCase(),
+                    displayName: name,
+                    amount: amount,
+                    _id: Simulation.rand.uuid(),
+                    sessionTop: false,
+                    type: 'superchat',
+                    originalEventName: 'superchat-latest',
+                    avatar: '',
+                    providerId: '',
+                  });
+                  // session['superchat-recent'] = (session['superchat-recent'] || []).sort(orderByDateDesc);
 
                   break;
                 }
@@ -2452,6 +2474,7 @@ export namespace Simulation {
   export async function start(
     fieldsFile: string[] = ['fields.json', 'cf.json', 'field.json', 'customfields.json'],
     dataFiles: string[] = ['data.json', 'fielddata.json', 'fd.json', 'DATA.json'],
+    session?: StreamElements.Session.Data,
   ) {
     const localFiles = {
       fields: fieldsFile.find((file) => {
@@ -2498,7 +2521,7 @@ export namespace Simulation {
             } as Record<string, StreamElements.CustomField.Value>,
           );
 
-        const load = await Simulation.generate.event.onWidgetLoad(fields, await Simulation.generate.session.get());
+        const load = await Simulation.generate.event.onWidgetLoad(fields, await Simulation.generate.session.get(session));
 
         window.dispatchEvent(new CustomEvent('onWidgetLoad', { detail: load }));
       });
