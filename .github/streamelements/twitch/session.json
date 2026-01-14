@@ -1,0 +1,1834 @@
+{
+  "follower-latest": {
+    "name": "urie_s2"
+  },
+  "follower-session": {
+    "count": 106
+  },
+  "follower-week": {
+    "count": 429
+  },
+  "follower-month": {
+    "count": 2898
+  },
+  "follower-goal": {
+    "amount": 3437
+  },
+  "follower-total": {
+    "count": 9760
+  },
+  "subscriber-latest": {
+    "name": "beniarts",
+    "amount": 18,
+    "tier": "1000",
+    "message": "Hello!"
+  },
+  "subscriber-new-latest": {
+    "name": "tixyel",
+    "amount": 30,
+    "message": "Hello!"
+  },
+  "subscriber-resub-latest": {
+    "name": "itzzcatt",
+    "amount": 20,
+    "message": "Have fun!"
+  },
+  "subscriber-gifted-latest": {
+    "name": "beniarts",
+    "amount": 15,
+    "message": "Have fun!",
+    "tier": "prime",
+    "sender": "itzzcatt"
+  },
+  "subscriber-session": {
+    "count": 11
+  },
+  "subscriber-new-session": {
+    "count": 40
+  },
+  "subscriber-resub-session": {
+    "count": 37
+  },
+  "subscriber-gifted-session": {
+    "count": 29
+  },
+  "subscriber-week": {
+    "count": 68
+  },
+  "subscriber-month": {
+    "count": 200
+  },
+  "subscriber-goal": {
+    "amount": 287
+  },
+  "subscriber-total": {
+    "count": 390
+  },
+  "subscriber-points": {
+    "amount": 133
+  },
+  "subscriber-alltime-gifter": {
+    "name": "itzzcatt",
+    "amount": 395
+  },
+  "host-latest": {
+    "name": "itzzcatt",
+    "amount": 5
+  },
+  "raid-latest": {
+    "name": "tixyel",
+    "amount": 38
+  },
+  "cheer-session": {
+    "amount": 942
+  },
+  "cheer-week": {
+    "amount": 1928
+  },
+  "cheer-month": {
+    "amount": 5565
+  },
+  "cheer-total": {
+    "amount": 19154
+  },
+  "cheer-count": {
+    "count": 913
+  },
+  "cheer-goal": {
+    "amount": 13889
+  },
+  "cheer-latest": {
+    "name": "urie_s2",
+    "amount": 345,
+    "message": "Have fun!"
+  },
+  "cheer-session-top-donation": {
+    "name": "itzzcatt",
+    "amount": 283
+  },
+  "cheer-weekly-top-donation": {
+    "name": "tixyel",
+    "amount": 4919
+  },
+  "cheer-monthly-top-donation": {
+    "name": "cupidiko",
+    "amount": 10649
+  },
+  "cheer-alltime-top-donation": {
+    "name": "beniarts",
+    "amount": 13663
+  },
+  "cheer-session-top-donator": {
+    "name": "cupidiko",
+    "amount": 805
+  },
+  "cheer-weekly-top-donator": {
+    "name": "tixyel",
+    "amount": 1827
+  },
+  "cheer-monthly-top-donator": {
+    "name": "beniarts",
+    "amount": 5774
+  },
+  "cheer-alltime-top-donator": {
+    "name": "urie_s2",
+    "amount": 17896
+  },
+  "tip-latest": {
+    "name": "itzzcatt",
+    "amount": 131
+  },
+  "tip-session-top-donation": {
+    "name": "tixyel",
+    "amount": 297
+  },
+  "tip-weekly-top-donation": {
+    "name": "itzzcatt",
+    "amount": 833
+  },
+  "tip-monthly-top-donation": {
+    "name": "beniarts",
+    "amount": 1802
+  },
+  "tip-alltime-top-donation": {
+    "name": "beniarts",
+    "amount": 2116
+  },
+  "tip-session-top-donator": {
+    "name": "itzzcatt",
+    "amount": 101
+  },
+  "tip-weekly-top-donator": {
+    "name": "urie_s2",
+    "amount": 642
+  },
+  "tip-monthly-top-donator": {
+    "name": "tixyel",
+    "amount": 1025
+  },
+  "tip-alltime-top-donator": {
+    "name": "tixyel",
+    "amount": 2031
+  },
+  "tip-session": {
+    "amount": 153
+  },
+  "tip-week": {
+    "amount": 977
+  },
+  "tip-month": {
+    "amount": 1019
+  },
+  "tip-total": {
+    "amount": 2472
+  },
+  "tip-count": {
+    "count": 406
+  },
+  "tip-goal": {
+    "amount": 2221
+  },
+  "merch-goal-orders": {
+    "amount": 17
+  },
+  "merch-goal-items": {
+    "amount": 99
+  },
+  "merch-goal-total": {
+    "amount": 6
+  },
+  "merch-latest": {
+    "name": "itzzcatt",
+    "amount": 56,
+    "items": []
+  },
+  "follower-recent": [
+    {
+      "name": "beniarts",
+      "createdAt": "2025-07-09T12:30:27.990Z",
+      "type": "follower"
+    },
+    {
+      "name": "cupidiko",
+      "createdAt": "2025-06-30T14:01:32.261Z",
+      "type": "follower"
+    },
+    {
+      "name": "itzzcatt",
+      "createdAt": "2025-06-28T14:14:37.367Z",
+      "type": "follower"
+    },
+    {
+      "name": "tixyel",
+      "createdAt": "2025-05-06T16:41:14.954Z",
+      "type": "follower"
+    },
+    {
+      "name": "beniarts",
+      "createdAt": "2025-04-24T08:20:06.157Z",
+      "type": "follower"
+    },
+    {
+      "name": "cupidiko",
+      "createdAt": "2025-04-05T00:10:43.743Z",
+      "type": "follower"
+    },
+    {
+      "name": "beniarts",
+      "createdAt": "2025-04-03T18:43:25.028Z",
+      "type": "follower"
+    },
+    {
+      "name": "itzzcatt",
+      "createdAt": "2025-03-28T04:22:22.103Z",
+      "type": "follower"
+    },
+    {
+      "name": "urie_s2",
+      "createdAt": "2025-03-07T08:05:55.976Z",
+      "type": "follower"
+    },
+    {
+      "name": "cupidiko",
+      "createdAt": "2025-03-07T01:16:38.106Z",
+      "type": "follower"
+    },
+    {
+      "name": "itzzcatt",
+      "createdAt": "2025-03-05T01:50:56.890Z",
+      "type": "follower"
+    },
+    {
+      "name": "beniarts",
+      "createdAt": "2025-02-14T00:43:44.460Z",
+      "type": "follower"
+    },
+    {
+      "name": "urie_s2",
+      "createdAt": "2025-02-10T19:53:10.291Z",
+      "type": "follower"
+    },
+    {
+      "name": "beniarts",
+      "createdAt": "2025-02-05T05:00:53.157Z",
+      "type": "follower"
+    },
+    {
+      "name": "tixyel",
+      "createdAt": "2025-01-19T01:08:35.883Z",
+      "type": "follower"
+    },
+    {
+      "name": "urie_s2",
+      "createdAt": "2025-01-15T11:31:26.279Z",
+      "type": "follower"
+    },
+    {
+      "name": "itzzcatt",
+      "createdAt": "2025-01-03T13:31:25.194Z",
+      "type": "follower"
+    },
+    {
+      "name": "beniarts",
+      "createdAt": "2024-10-08T17:48:49.272Z",
+      "type": "follower"
+    },
+    {
+      "name": "cupidiko",
+      "createdAt": "2024-09-08T05:06:57.365Z",
+      "type": "follower"
+    },
+    {
+      "name": "cupidiko",
+      "createdAt": "2024-09-02T04:29:38.575Z",
+      "type": "follower"
+    },
+    {
+      "name": "itzzcatt",
+      "createdAt": "2024-08-28T15:53:09.439Z",
+      "type": "follower"
+    },
+    {
+      "name": "itzzcatt",
+      "createdAt": "2024-08-16T04:22:14.861Z",
+      "type": "follower"
+    },
+    {
+      "name": "tixyel",
+      "createdAt": "2024-07-25T01:05:29.239Z",
+      "type": "follower"
+    },
+    {
+      "name": "cupidiko",
+      "createdAt": "2024-07-20T19:08:34.735Z",
+      "type": "follower"
+    },
+    {
+      "name": "beniarts",
+      "createdAt": "2024-06-25T03:04:23.048Z",
+      "type": "follower"
+    }
+  ],
+  "subscriber-recent": [
+    {
+      "name": "cupidiko",
+      "tier": "1000",
+      "amount": 18,
+      "createdAt": "2025-07-12T15:21:02.116Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "cupidiko",
+      "tier": "prime",
+      "amount": 16,
+      "createdAt": "2025-06-18T08:40:24.419Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "3000",
+      "amount": 14,
+      "createdAt": "2025-06-16T19:26:18.630Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "cupidiko",
+      "tier": "3000",
+      "amount": 14,
+      "createdAt": "2025-06-07T13:33:46.392Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "cupidiko",
+      "tier": "2000",
+      "amount": 27,
+      "createdAt": "2025-03-10T00:06:02.492Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "2000",
+      "amount": 26,
+      "createdAt": "2025-02-12T06:06:00.655Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "1000",
+      "amount": 28,
+      "createdAt": "2025-02-11T12:01:53.467Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "prime",
+      "amount": 19,
+      "createdAt": "2025-01-27T05:48:53.779Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "beniarts",
+      "tier": "1000",
+      "amount": 26,
+      "createdAt": "2025-01-26T01:45:49.196Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "cupidiko",
+      "tier": "prime",
+      "amount": 19,
+      "createdAt": "2024-12-31T19:44:22.687Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "urie_s2",
+      "tier": "prime",
+      "amount": 16,
+      "createdAt": "2024-12-07T14:25:44.376Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "urie_s2",
+      "tier": "prime",
+      "amount": 16,
+      "createdAt": "2024-11-15T23:10:11.863Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "3000",
+      "amount": 17,
+      "createdAt": "2024-10-15T15:29:12.106Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "2000",
+      "amount": 25,
+      "createdAt": "2024-10-13T06:06:04.280Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "beniarts",
+      "tier": "2000",
+      "amount": 11,
+      "createdAt": "2024-10-08T06:55:09.947Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "urie_s2",
+      "tier": "1000",
+      "amount": 30,
+      "createdAt": "2024-10-04T11:09:06.555Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "3000",
+      "amount": 21,
+      "createdAt": "2024-10-03T09:34:39.729Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "1000",
+      "amount": 15,
+      "createdAt": "2024-09-01T18:16:08.384Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "itzzcatt",
+      "tier": "3000",
+      "amount": 20,
+      "createdAt": "2024-08-27T22:35:00.363Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "itzzcatt",
+      "tier": "prime",
+      "amount": 15,
+      "createdAt": "2024-08-11T17:06:35.878Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "cupidiko",
+      "tier": "1000",
+      "amount": 16,
+      "createdAt": "2024-07-30T16:32:19.622Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "urie_s2",
+      "tier": "3000",
+      "amount": 17,
+      "createdAt": "2024-07-19T07:12:11.557Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "cupidiko",
+      "tier": "2000",
+      "amount": 17,
+      "createdAt": "2024-07-09T10:51:50.356Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "beniarts",
+      "tier": "1000",
+      "amount": 29,
+      "createdAt": "2024-07-03T18:35:16.324Z",
+      "type": "subscriber"
+    },
+    {
+      "name": "tixyel",
+      "tier": "2000",
+      "amount": 28,
+      "createdAt": "2024-07-03T04:59:16.853Z",
+      "type": "subscriber"
+    }
+  ],
+  "host-recent": [
+    {
+      "name": "itzzcatt",
+      "amount": 4,
+      "createdAt": "2025-06-16T08:16:35.876Z",
+      "type": "host"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 6,
+      "createdAt": "2025-06-12T16:53:24.195Z",
+      "type": "host"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 10,
+      "createdAt": "2025-06-01T22:44:32.295Z",
+      "type": "host"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 9,
+      "createdAt": "2025-05-30T13:06:41.792Z",
+      "type": "host"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 9,
+      "createdAt": "2025-05-20T17:51:15.903Z",
+      "type": "host"
+    },
+    {
+      "name": "beniarts",
+      "amount": 5,
+      "createdAt": "2025-04-22T01:20:55.233Z",
+      "type": "host"
+    },
+    {
+      "name": "tixyel",
+      "amount": 2,
+      "createdAt": "2025-04-10T05:16:52.877Z",
+      "type": "host"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 6,
+      "createdAt": "2025-04-06T23:15:31.705Z",
+      "type": "host"
+    },
+    {
+      "name": "beniarts",
+      "amount": 4,
+      "createdAt": "2025-03-31T23:01:38.574Z",
+      "type": "host"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 5,
+      "createdAt": "2025-03-26T18:19:54.165Z",
+      "type": "host"
+    },
+    {
+      "name": "beniarts",
+      "amount": 10,
+      "createdAt": "2025-02-21T21:50:43.600Z",
+      "type": "host"
+    },
+    {
+      "name": "tixyel",
+      "amount": 7,
+      "createdAt": "2025-02-12T04:50:05.621Z",
+      "type": "host"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 10,
+      "createdAt": "2025-01-23T18:17:44.117Z",
+      "type": "host"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 4,
+      "createdAt": "2025-01-14T02:29:17.021Z",
+      "type": "host"
+    },
+    {
+      "name": "tixyel",
+      "amount": 10,
+      "createdAt": "2024-12-27T16:27:08.808Z",
+      "type": "host"
+    },
+    {
+      "name": "tixyel",
+      "amount": 10,
+      "createdAt": "2024-10-11T17:15:40.626Z",
+      "type": "host"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 3,
+      "createdAt": "2024-09-18T00:38:42.242Z",
+      "type": "host"
+    },
+    {
+      "name": "beniarts",
+      "amount": 1,
+      "createdAt": "2024-09-15T03:29:37.338Z",
+      "type": "host"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 4,
+      "createdAt": "2024-09-06T22:58:36.172Z",
+      "type": "host"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 6,
+      "createdAt": "2024-09-02T02:48:33.157Z",
+      "type": "host"
+    },
+    {
+      "name": "beniarts",
+      "amount": 2,
+      "createdAt": "2024-08-21T14:03:30.794Z",
+      "type": "host"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 2,
+      "createdAt": "2024-08-18T19:57:13.120Z",
+      "type": "host"
+    },
+    {
+      "name": "beniarts",
+      "amount": 4,
+      "createdAt": "2024-08-02T21:48:16.033Z",
+      "type": "host"
+    },
+    {
+      "name": "tixyel",
+      "amount": 6,
+      "createdAt": "2024-06-28T17:25:02.747Z",
+      "type": "host"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 2,
+      "createdAt": "2024-06-21T16:33:37.810Z",
+      "type": "host"
+    }
+  ],
+  "raid-recent": [
+    {
+      "name": "itzzcatt",
+      "amount": 38,
+      "createdAt": "2025-07-24T10:17:57.085Z",
+      "type": "raid"
+    },
+    {
+      "name": "tixyel",
+      "amount": 91,
+      "createdAt": "2025-06-19T03:11:20.445Z",
+      "type": "raid"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 36,
+      "createdAt": "2025-06-12T19:50:06.953Z",
+      "type": "raid"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 90,
+      "createdAt": "2025-05-25T14:57:56.694Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 9,
+      "createdAt": "2025-05-15T01:46:22.891Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 99,
+      "createdAt": "2025-05-14T16:15:51.523Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 17,
+      "createdAt": "2025-05-12T02:32:39.637Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 72,
+      "createdAt": "2025-04-07T12:35:56.574Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 61,
+      "createdAt": "2025-03-03T04:40:32.227Z",
+      "type": "raid"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 93,
+      "createdAt": "2025-01-06T15:06:50.148Z",
+      "type": "raid"
+    },
+    {
+      "name": "tixyel",
+      "amount": 85,
+      "createdAt": "2024-12-01T16:53:28.822Z",
+      "type": "raid"
+    },
+    {
+      "name": "tixyel",
+      "amount": 58,
+      "createdAt": "2024-11-30T19:18:39.870Z",
+      "type": "raid"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 86,
+      "createdAt": "2024-11-18T20:30:15.646Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 63,
+      "createdAt": "2024-11-13T13:54:03.782Z",
+      "type": "raid"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 0,
+      "createdAt": "2024-11-13T12:38:32.726Z",
+      "type": "raid"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 27,
+      "createdAt": "2024-11-03T16:52:31.798Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 23,
+      "createdAt": "2024-10-16T10:27:44.220Z",
+      "type": "raid"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 97,
+      "createdAt": "2024-10-14T16:21:35.012Z",
+      "type": "raid"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 1,
+      "createdAt": "2024-10-04T04:26:14.870Z",
+      "type": "raid"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 77,
+      "createdAt": "2024-09-29T22:38:33.660Z",
+      "type": "raid"
+    },
+    {
+      "name": "tixyel",
+      "amount": 28,
+      "createdAt": "2024-09-27T21:16:04.517Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 48,
+      "createdAt": "2024-09-25T14:10:19.802Z",
+      "type": "raid"
+    },
+    {
+      "name": "beniarts",
+      "amount": 75,
+      "createdAt": "2024-07-20T02:33:32.479Z",
+      "type": "raid"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 75,
+      "createdAt": "2024-07-10T13:28:53.394Z",
+      "type": "raid"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 75,
+      "createdAt": "2024-07-08T01:59:39.940Z",
+      "type": "raid"
+    }
+  ],
+  "cheer-recent": [
+    {
+      "name": "urie_s2",
+      "amount": 641,
+      "createdAt": "2025-07-12T11:04:45.197Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 207,
+      "createdAt": "2025-06-13T20:41:19.038Z",
+      "type": "cheer"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 380,
+      "createdAt": "2025-05-10T21:05:00.766Z",
+      "type": "cheer"
+    },
+    {
+      "name": "tixyel",
+      "amount": 751,
+      "createdAt": "2025-04-11T08:44:43.286Z",
+      "type": "cheer"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 764,
+      "createdAt": "2025-04-10T23:08:07.507Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 273,
+      "createdAt": "2025-03-26T09:26:49.983Z",
+      "type": "cheer"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 341,
+      "createdAt": "2025-03-23T10:06:01.029Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 681,
+      "createdAt": "2025-03-12T10:07:58.714Z",
+      "type": "cheer"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 519,
+      "createdAt": "2025-01-31T13:24:25.787Z",
+      "type": "cheer"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 222,
+      "createdAt": "2025-01-26T06:36:00.551Z",
+      "type": "cheer"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 742,
+      "createdAt": "2025-01-14T20:31:38.414Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 453,
+      "createdAt": "2024-11-12T13:57:59.937Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 668,
+      "createdAt": "2024-09-30T12:12:03.378Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 639,
+      "createdAt": "2024-09-26T16:07:42.502Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 420,
+      "createdAt": "2024-09-23T13:47:53.376Z",
+      "type": "cheer"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 712,
+      "createdAt": "2024-09-13T19:44:02.884Z",
+      "type": "cheer"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 730,
+      "createdAt": "2024-09-13T00:01:53.395Z",
+      "type": "cheer"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 351,
+      "createdAt": "2024-09-10T09:33:08.267Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 249,
+      "createdAt": "2024-09-08T03:35:16.574Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 697,
+      "createdAt": "2024-09-04T02:03:42.292Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 353,
+      "createdAt": "2024-08-27T23:23:05.711Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 482,
+      "createdAt": "2024-08-27T14:29:36.795Z",
+      "type": "cheer"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 538,
+      "createdAt": "2024-08-16T21:31:19.462Z",
+      "type": "cheer"
+    },
+    {
+      "name": "beniarts",
+      "amount": 227,
+      "createdAt": "2024-07-15T20:58:34.848Z",
+      "type": "cheer"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 708,
+      "createdAt": "2024-07-02T13:59:36.768Z",
+      "type": "cheer"
+    }
+  ],
+  "tip-recent": [
+    {
+      "name": "tixyel",
+      "amount": 160,
+      "createdAt": "2025-07-16T23:06:18.764Z",
+      "type": "tip"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 219,
+      "createdAt": "2025-07-13T10:24:37.510Z",
+      "type": "tip"
+    },
+    {
+      "name": "tixyel",
+      "amount": 165,
+      "createdAt": "2025-07-13T04:33:40.157Z",
+      "type": "tip"
+    },
+    {
+      "name": "beniarts",
+      "amount": 277,
+      "createdAt": "2025-07-02T07:42:48.569Z",
+      "type": "tip"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 250,
+      "createdAt": "2025-06-16T10:13:45.400Z",
+      "type": "tip"
+    },
+    {
+      "name": "tixyel",
+      "amount": 390,
+      "createdAt": "2025-05-26T14:28:47.841Z",
+      "type": "tip"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 306,
+      "createdAt": "2025-05-21T23:53:20.879Z",
+      "type": "tip"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 212,
+      "createdAt": "2025-04-25T17:38:01.029Z",
+      "type": "tip"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 169,
+      "createdAt": "2025-03-05T20:16:26.098Z",
+      "type": "tip"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 140,
+      "createdAt": "2025-03-05T12:49:20.826Z",
+      "type": "tip"
+    },
+    {
+      "name": "beniarts",
+      "amount": 386,
+      "createdAt": "2025-02-25T00:36:48.698Z",
+      "type": "tip"
+    },
+    {
+      "name": "tixyel",
+      "amount": 159,
+      "createdAt": "2025-02-22T20:01:11.408Z",
+      "type": "tip"
+    },
+    {
+      "name": "beniarts",
+      "amount": 219,
+      "createdAt": "2025-02-15T03:31:58.669Z",
+      "type": "tip"
+    },
+    {
+      "name": "beniarts",
+      "amount": 388,
+      "createdAt": "2025-01-25T23:49:28.695Z",
+      "type": "tip"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 347,
+      "createdAt": "2025-01-18T22:39:38.320Z",
+      "type": "tip"
+    },
+    {
+      "name": "tixyel",
+      "amount": 357,
+      "createdAt": "2025-01-05T00:36:03.403Z",
+      "type": "tip"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 135,
+      "createdAt": "2025-01-03T09:12:31.985Z",
+      "type": "tip"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 140,
+      "createdAt": "2024-11-26T11:35:36.241Z",
+      "type": "tip"
+    },
+    {
+      "name": "tixyel",
+      "amount": 400,
+      "createdAt": "2024-10-26T12:35:41.187Z",
+      "type": "tip"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 368,
+      "createdAt": "2024-10-24T20:05:12.713Z",
+      "type": "tip"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 190,
+      "createdAt": "2024-10-23T10:03:35.064Z",
+      "type": "tip"
+    },
+    {
+      "name": "tixyel",
+      "amount": 125,
+      "createdAt": "2024-10-23T02:21:36.602Z",
+      "type": "tip"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 312,
+      "createdAt": "2024-08-25T11:49:19.787Z",
+      "type": "tip"
+    },
+    {
+      "name": "beniarts",
+      "amount": 183,
+      "createdAt": "2024-08-25T00:42:57.976Z",
+      "type": "tip"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 375,
+      "createdAt": "2024-08-05T13:00:00.072Z",
+      "type": "tip"
+    }
+  ],
+  "merch-recent": [
+    {
+      "name": "beniarts"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "cupidiko"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "beniarts"
+    },
+    {
+      "name": "tixyel"
+    },
+    {
+      "name": "cupidiko"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "itzzcatt"
+    },
+    {
+      "name": "cupidiko"
+    },
+    {
+      "name": "cupidiko"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "itzzcatt"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "itzzcatt"
+    },
+    {
+      "name": "beniarts"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "tixyel"
+    },
+    {
+      "name": "tixyel"
+    },
+    {
+      "name": "tixyel"
+    },
+    {
+      "name": "beniarts"
+    },
+    {
+      "name": "urie_s2"
+    },
+    {
+      "name": "beniarts"
+    }
+  ],
+  "purchase-latest": {
+    "name": "itzzcatt",
+    "amount": 33,
+    "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+    "message": "Good luck!",
+    "items": []
+  },
+  "charityCampaignDonation-alltime-top-donation": {
+    "name": "cupidiko",
+    "amount": 975
+  },
+  "charityCampaignDonation-alltime-top-donator": {
+    "name": "urie_s2",
+    "amount": 829
+  },
+  "charityCampaignDonation-latest": {
+    "name": "itzzcatt",
+    "amount": 150
+  },
+  "charityCampaignDonation-monthly-top-donation": {
+    "name": "beniarts",
+    "amount": 572
+  },
+  "charityCampaignDonation-monthly-top-donator": {
+    "name": "tixyel",
+    "amount": 655
+  },
+  "charityCampaignDonation-recent": [
+    {
+      "name": "cupidiko",
+      "amount": 73,
+      "createdAt": "2025-07-20T19:52:43.953Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 91,
+      "createdAt": "2025-07-06T06:25:47.867Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 62,
+      "createdAt": "2025-06-11T14:32:50.955Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 76,
+      "createdAt": "2025-06-09T04:40:03.429Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 83,
+      "createdAt": "2025-04-30T18:41:22.966Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 129,
+      "createdAt": "2025-04-23T04:23:58.220Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 94,
+      "createdAt": "2025-03-22T09:42:17.549Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 75,
+      "createdAt": "2025-02-09T11:19:24.709Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 129,
+      "createdAt": "2025-02-06T02:46:17.889Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 109,
+      "createdAt": "2025-01-27T01:01:46.905Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 123,
+      "createdAt": "2025-01-19T21:35:55.684Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 133,
+      "createdAt": "2025-01-15T21:47:29.565Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 64,
+      "createdAt": "2025-01-15T01:15:43.955Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 129,
+      "createdAt": "2025-01-14T07:27:46.896Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 60,
+      "createdAt": "2025-01-02T14:51:06.588Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 103,
+      "createdAt": "2025-01-02T03:15:08.809Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 105,
+      "createdAt": "2024-12-20T11:35:52.388Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 84,
+      "createdAt": "2024-11-26T12:24:52.476Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 80,
+      "createdAt": "2024-11-24T20:50:39.716Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 100,
+      "createdAt": "2024-11-20T19:19:31.694Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 75,
+      "createdAt": "2024-10-14T12:38:49.629Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 66,
+      "createdAt": "2024-10-07T23:22:04.805Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 117,
+      "createdAt": "2024-08-28T03:18:34.635Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 108,
+      "createdAt": "2024-08-14T10:28:17.253Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 136,
+      "createdAt": "2024-07-09T15:29:13.699Z"
+    }
+  ],
+  "charityCampaignDonation-weekly-top-donation": {
+    "name": "beniarts",
+    "amount": 231
+  },
+  "charityCampaignDonation-weekly-top-donator": {
+    "name": "urie_s2",
+    "amount": 228
+  },
+  "cheerPurchase-alltime-top-donation": {
+    "name": "urie_s2",
+    "amount": 1823
+  },
+  "cheerPurchase-alltime-top-donator": {
+    "name": "cupidiko",
+    "amount": 1759
+  },
+  "cheerPurchase-latest": {
+    "name": "tixyel",
+    "amount": 311
+  },
+  "cheerPurchase-monthly-top-donation": {
+    "name": "tixyel",
+    "amount": 1159
+  },
+  "cheerPurchase-monthly-top-donator": {
+    "name": "tixyel",
+    "amount": 1196
+  },
+  "cheerPurchase-recent": [
+    {
+      "name": "beniarts",
+      "amount": 219,
+      "createdAt": "2025-07-20T01:36:44.199Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 358,
+      "createdAt": "2025-07-10T23:56:42.223Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 204,
+      "createdAt": "2025-07-10T06:57:21.672Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 374,
+      "createdAt": "2025-06-18T17:46:46.908Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 387,
+      "createdAt": "2025-05-25T16:08:12.875Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 377,
+      "createdAt": "2025-05-24T15:48:09.454Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 253,
+      "createdAt": "2025-05-22T16:00:49.370Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 334,
+      "createdAt": "2025-04-27T03:21:42.183Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 246,
+      "createdAt": "2025-04-23T23:17:16.897Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 249,
+      "createdAt": "2025-03-18T08:51:31.545Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 398,
+      "createdAt": "2025-02-28T11:12:28.911Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 265,
+      "createdAt": "2025-02-25T21:00:10.432Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 364,
+      "createdAt": "2025-02-01T18:13:41.267Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 303,
+      "createdAt": "2025-01-28T22:07:25.845Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 293,
+      "createdAt": "2025-01-14T23:28:58.540Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 235,
+      "createdAt": "2024-12-22T07:13:10.758Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 257,
+      "createdAt": "2024-11-13T23:35:45.796Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 268,
+      "createdAt": "2024-11-13T02:24:22.785Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 342,
+      "createdAt": "2024-11-09T12:02:40.238Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 346,
+      "createdAt": "2024-10-20T12:36:39.933Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 328,
+      "createdAt": "2024-09-29T23:17:25.833Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 269,
+      "createdAt": "2024-09-18T05:14:13.210Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 308,
+      "createdAt": "2024-08-23T17:25:32.998Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 272,
+      "createdAt": "2024-08-11T20:11:20.891Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 268,
+      "createdAt": "2024-07-03T10:50:47.874Z"
+    }
+  ],
+  "cheerPurchase-weekly-top-donation": {
+    "name": "itzzcatt",
+    "amount": 539
+  },
+  "cheerPurchase-weekly-top-donator": {
+    "name": "itzzcatt",
+    "amount": 548
+  },
+  "superchat-alltime-top-donation": {
+    "name": "urie_s2",
+    "amount": 2314
+  },
+  "superchat-alltime-top-donator": {
+    "name": "urie_s2",
+    "amount": 2289
+  },
+  "superchat-count": {
+    "count": 385
+  },
+  "superchat-goal": {
+    "amount": 2263
+  },
+  "superchat-latest": {
+    "name": "cupidiko",
+    "amount": 120
+  },
+  "superchat-month": {
+    "amount": 1687
+  },
+  "superchat-monthly-top-donation": {
+    "name": "urie_s2",
+    "amount": 1769
+  },
+  "superchat-monthly-top-donator": {
+    "name": "tixyel",
+    "amount": 1586
+  },
+  "superchat-recent": [
+    {
+      "name": "itzzcatt",
+      "amount": 225,
+      "createdAt": "2025-07-11T09:40:41.972Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 295,
+      "createdAt": "2025-05-08T14:26:26.767Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 398,
+      "createdAt": "2025-05-08T09:25:40.783Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 293,
+      "createdAt": "2025-03-21T01:51:36.571Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 181,
+      "createdAt": "2025-03-19T16:43:32.712Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 284,
+      "createdAt": "2025-03-15T09:22:01.097Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 241,
+      "createdAt": "2025-02-17T19:44:03.512Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 335,
+      "createdAt": "2025-02-16T10:32:38.238Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 189,
+      "createdAt": "2025-02-04T17:22:05.258Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 307,
+      "createdAt": "2025-01-18T05:40:01.591Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 180,
+      "createdAt": "2025-01-11T19:17:43.637Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 380,
+      "createdAt": "2024-12-06T02:09:00.939Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 204,
+      "createdAt": "2024-12-03T07:44:09.831Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 106,
+      "createdAt": "2024-11-28T01:07:34.049Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 278,
+      "createdAt": "2024-10-23T15:06:02.894Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 221,
+      "createdAt": "2024-10-13T17:24:14.027Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 218,
+      "createdAt": "2024-10-11T09:28:52.925Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 224,
+      "createdAt": "2024-10-10T12:38:49.042Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 203,
+      "createdAt": "2024-09-30T11:42:04.569Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 178,
+      "createdAt": "2024-09-27T05:24:52.884Z"
+    },
+    {
+      "name": "cupidiko",
+      "amount": 242,
+      "createdAt": "2024-09-12T19:30:40.567Z"
+    },
+    {
+      "name": "tixyel",
+      "amount": 168,
+      "createdAt": "2024-08-24T17:07:45.780Z"
+    },
+    {
+      "name": "urie_s2",
+      "amount": 241,
+      "createdAt": "2024-07-29T23:22:49.829Z"
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 323,
+      "createdAt": "2024-07-28T03:38:42.705Z"
+    },
+    {
+      "name": "beniarts",
+      "amount": 312,
+      "createdAt": "2024-07-12T18:16:50.121Z"
+    }
+  ],
+  "superchat-session": {
+    "amount": 340
+  },
+  "superchat-total": {
+    "amount": 2375
+  },
+  "superchat-week": {
+    "amount": 651
+  },
+  "superchat-weekly-top-donation": {
+    "name": "urie_s2",
+    "amount": 845
+  },
+  "superchat-weekly-top-donator": {
+    "name": "tixyel",
+    "amount": 820
+  },
+  "charityCampaignDonation-session-top-donation": {
+    "name": "urie_s2",
+    "amount": 99
+  },
+  "charityCampaignDonation-session-top-donator": {
+    "name": "cupidiko",
+    "amount": 119
+  },
+  "cheerPurchase-session-top-donation": {
+    "name": "tixyel",
+    "amount": 230
+  },
+  "cheerPurchase-session-top-donator": {
+    "name": "urie_s2",
+    "amount": 370
+  },
+  "hypetrain-latest": {
+    "amount": 12,
+    "active": 0,
+    "level": 5,
+    "levelChanged": 1,
+    "name": "cupidiko",
+    "type": "subscriber"
+  },
+  "hypetrain-latest-top-contributors": [
+    {
+      "name": "cupidiko",
+      "amount": 0
+    },
+    {
+      "name": "cupidiko",
+      "amount": 0
+    },
+    {
+      "name": "beniarts",
+      "amount": 0
+    },
+    {
+      "name": "tixyel",
+      "amount": 0
+    },
+    {
+      "name": "urie_s2",
+      "amount": 0
+    },
+    {
+      "name": "cupidiko",
+      "amount": 0
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 0
+    },
+    {
+      "name": "cupidiko",
+      "amount": 0
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 0
+    },
+    {
+      "name": "urie_s2",
+      "amount": 0
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 0
+    },
+    {
+      "name": "cupidiko",
+      "amount": 0
+    },
+    {
+      "name": "urie_s2",
+      "amount": 0
+    },
+    {
+      "name": "urie_s2",
+      "amount": 0
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 0
+    },
+    {
+      "name": "urie_s2",
+      "amount": 0
+    },
+    {
+      "name": "beniarts",
+      "amount": 0
+    },
+    {
+      "name": "itzzcatt",
+      "amount": 0
+    },
+    {
+      "name": "tixyel",
+      "amount": 0
+    },
+    {
+      "name": "beniarts",
+      "amount": 0
+    },
+    {
+      "name": "cupidiko",
+      "amount": 0
+    },
+    {
+      "name": "urie_s2",
+      "amount": 0
+    },
+    {
+      "name": "cupidiko",
+      "amount": 0
+    },
+    {
+      "name": "tixyel",
+      "amount": 0
+    },
+    {
+      "name": "urie_s2",
+      "amount": 0
+    }
+  ],
+  "hypetrain-level-goal": {
+    "amount": 5
+  },
+  "hypetrain-level-progress": {
+    "amount": 24,
+    "percent": 80
+  },
+  "hypetrain-total": {
+    "amount": 35
+  },
+  "superchat-session-top-donation": {
+    "name": "itzzcatt",
+    "amount": 347
+  },
+  "superchat-session-top-donator": {
+    "name": "tixyel",
+    "amount": 183
+  },
+  "channel-points-latest": {
+    "name": "beniarts",
+    "amount": 52,
+    "message": "Good luck!",
+    "redemption": "Reward 2"
+  }
+}

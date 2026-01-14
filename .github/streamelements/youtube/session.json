@@ -1,0 +1,330 @@
+{
+  "subscriber-latest": {
+    "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+    "displayName": "Genvieve",
+    "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+    "name": "genvieve",
+    "_id": "6967d3968d22e5579acde6d2",
+    "sessionTop": false,
+    "type": "subscriber",
+    "originalEventName": "subscriber-latest"
+  },
+  "subscriber-session": {
+    "count": 0
+  },
+  "subscriber-week": {
+    "count": 0
+  },
+  "subscriber-month": {
+    "count": 0
+  },
+  "subscriber-goal": {
+    "amount": 0
+  },
+  "subscriber-total": {
+    "count": 53
+  },
+  "sponsor-latest": {
+    "amount": 3,
+    "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+    "displayName": "Adrienne",
+    "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+    "name": "adrienne",
+    "_id": "6967d36356425505eb7d456e",
+    "sessionTop": false,
+    "type": "sponsor",
+    "originalEventName": "sponsor-latest"
+  },
+  "sponsor-session": {
+    "count": 0
+  },
+  "sponsor-week": {
+    "count": 0
+  },
+  "sponsor-month": {
+    "count": 0
+  },
+  "sponsor-goal": {
+    "amount": 0
+  },
+  "sponsor-total": {
+    "count": 0
+  },
+  "superchat-latest": {
+    "amount": 50,
+    "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+    "displayName": "Carmelia",
+    "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+    "name": "carmelia",
+    "_id": "6967d39c004339ccf995d8f1",
+    "sessionTop": false,
+    "type": "superchat",
+    "originalEventName": "superchat-latest"
+  },
+  "superchat-session-top-donation": {
+    "amount": 50,
+    "_id": "6967d18b7c8e5cd5d5763432",
+    "name": "superchat-session-top-donation"
+  },
+  "superchat-weekly-top-donation": {
+    "name": "",
+    "amount": 0
+  },
+  "superchat-monthly-top-donation": {
+    "name": "",
+    "amount": 0
+  },
+  "superchat-alltime-top-donation": {
+    "amount": 0,
+    "name": ""
+  },
+  "superchat-session-top-donator": {
+    "name": "",
+    "amount": 0
+  },
+  "superchat-weekly-top-donator": {
+    "name": "",
+    "amount": 0
+  },
+  "superchat-monthly-top-donator": {
+    "name": "",
+    "amount": 0
+  },
+  "superchat-alltime-top-donator": {
+    "amount": 0,
+    "name": ""
+  },
+  "superchat-session": {
+    "amount": 0
+  },
+  "superchat-week": {
+    "amount": 0
+  },
+  "superchat-month": {
+    "amount": 0
+  },
+  "superchat-total": {
+    "amount": 0
+  },
+  "superchat-count": {
+    "count": 0
+  },
+  "superchat-goal": {
+    "amount": 0
+  },
+  "tip-latest": {
+    "amount": 22,
+    "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+    "displayName": "Essie",
+    "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+    "name": "essie",
+    "_id": "6967d200d8f52730ef2706e2",
+    "sessionTop": false,
+    "type": "tip",
+    "originalEventName": "tip-latest"
+  },
+  "tip-session-top-donation": {
+    "amount": 50,
+    "_id": "6967d1881a61cb7d94ee9cd0",
+    "name": "tip-session-top-donation"
+  },
+  "tip-weekly-top-donation": {
+    "amount": 0,
+    "name": ""
+  },
+  "tip-monthly-top-donation": {
+    "amount": 0,
+    "name": ""
+  },
+  "tip-alltime-top-donation": {
+    "amount": 0,
+    "name": ""
+  },
+  "tip-session-top-donator": {
+    "name": "",
+    "amount": 0
+  },
+  "tip-weekly-top-donator": {
+    "amount": 0,
+    "name": ""
+  },
+  "tip-monthly-top-donator": {
+    "amount": 0,
+    "name": ""
+  },
+  "tip-alltime-top-donator": {
+    "amount": 0,
+    "name": ""
+  },
+  "tip-session": {
+    "amount": 0
+  },
+  "tip-week": {
+    "amount": 0
+  },
+  "tip-month": {
+    "amount": 0
+  },
+  "tip-total": {
+    "amount": 0
+  },
+  "tip-count": {
+    "count": 0
+  },
+  "tip-goal": {
+    "amount": 0
+  },
+  "merch-goal-orders": {
+    "amount": 0
+  },
+  "merch-goal-items": {
+    "amount": 0
+  },
+  "merch-goal-total": {
+    "amount": 0
+  },
+  "merch-latest": {
+    "name": "",
+    "amount": 0,
+    "items": []
+  },
+  "sponsor-gifted-session": {
+    "count": 0
+  },
+  "sponsor-gifted-latest": {
+    "name": "",
+    "amount": 0,
+    "tier": "",
+    "message": "",
+    "sender": ""
+  },
+  "purchase-latest": {
+    "name": "",
+    "amount": 0,
+    "avatar": "",
+    "message": "",
+    "items": []
+  },
+  "subscriber-recent": [
+    {
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Genvieve",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "name": "genvieve",
+      "_id": "6967d3968d22e5579acde6d2",
+      "sessionTop": false,
+      "type": "subscriber",
+      "originalEventName": "subscriber-latest"
+    },
+    {
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Clemmy",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "name": "clemmy",
+      "_id": "6967d1b456425505eb7d272f",
+      "sessionTop": false,
+      "type": "subscriber",
+      "originalEventName": "subscriber-latest"
+    }
+  ],
+  "sponsor-recent": [
+    {
+      "amount": 3,
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Adrienne",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "name": "adrienne",
+      "_id": "6967d36356425505eb7d456e",
+      "sessionTop": false,
+      "type": "sponsor",
+      "originalEventName": "sponsor-latest"
+    },
+    {
+      "amount": 1,
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Rasla",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "sender": "rasla",
+      "gifted": true,
+      "name": "rasla",
+      "_id": "6967d2c4004339ccf995c9ba",
+      "sessionTop": false,
+      "type": "sponsor",
+      "originalEventName": "sponsor-latest"
+    },
+    {
+      "amount": 1,
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Berna",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "name": "berna",
+      "_id": "6967d29e56555f66ec5a4737",
+      "sessionTop": false,
+      "type": "sponsor",
+      "originalEventName": "sponsor-latest"
+    }
+  ],
+  "superchat-recent": [
+    {
+      "amount": 50,
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Carmelia",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "name": "carmelia",
+      "_id": "6967d39c004339ccf995d8f1",
+      "sessionTop": false,
+      "type": "superchat",
+      "originalEventName": "superchat-latest"
+    },
+    {
+      "amount": 50,
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Nathalie",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "name": "nathalie",
+      "_id": "6967d18b7c8e5cd5d5763432",
+      "sessionTop": true,
+      "type": "superchat",
+      "originalEventName": "superchat-latest"
+    }
+  ],
+  "tip-recent": [
+    {
+      "amount": 22,
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Essie",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "name": "essie",
+      "_id": "6967d200d8f52730ef2706e2",
+      "sessionTop": false,
+      "type": "tip",
+      "originalEventName": "tip-latest"
+    },
+    {
+      "amount": 50,
+      "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+      "displayName": "Joellyn",
+      "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+      "name": "joellyn",
+      "_id": "6967d1881a61cb7d94ee9cd0",
+      "sessionTop": true,
+      "type": "tip",
+      "originalEventName": "tip-latest"
+    }
+  ],
+  "merch-recent": [],
+  "community-gift-latest": {
+    "amount": 0,
+    "name": "",
+    "tier": ""
+  },
+  "communityGiftPurchase-latest": {
+    "amount": 5,
+    "avatar": "https://cdn.streamelements.com/assets/dashboard/my-overlays/overlay-default-preview-2.jpg",
+    "displayName": "Dode",
+    "providerId": "UCFNUE4SqIjF0mbznuYdYNQQ",
+    "name": "dode",
+    "_id": "6967d2f31a61cb7d94eeb68d",
+    "sessionTop": false
+  }
+}
