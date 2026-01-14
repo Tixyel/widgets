@@ -203,6 +203,7 @@ export namespace StreamElementsEvents {
     updatedAt: string;
     activityId: string;
     sessionEventsCount: number;
+    isMock?: boolean;
   }
 
   export namespace Event {
@@ -219,7 +220,6 @@ export namespace StreamElementsEvents {
         amount: string;
         currency: string;
         username: string;
-        tipId: string;
         message: string;
         avatar: string;
       };

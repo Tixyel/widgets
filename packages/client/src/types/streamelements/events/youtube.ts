@@ -1,3 +1,5 @@
+import { Provider } from '../../index.js';
+
 export namespace YoutubeEvents {
   export namespace Message {
     export type Data = {
@@ -151,5 +153,90 @@ export namespace YoutubeEvents {
       bulkGifted?: false;
       isCommunityGift: true;
     };
+  }
+
+  export interface BaseEvent {
+    provider: 'youtube';
+    flagged: boolean;
+    channel: string;
+    createdAt: string;
+    _id: string;
+    expiresAt: string;
+    updatedAt: string;
+    activityId: string;
+    sessionEventsCount: number;
+    isMock?: boolean;
+  }
+
+  export namespace Event {
+    export type Data = {
+      listener: 'event';
+      event: Event;
+    };
+
+    export type Event = Superchat;
+
+    export interface Superchat extends BaseEvent {
+      type: 'superchat';
+      data: {
+        amount: string;
+        username: string;
+        message: string;
+        avatar: string;
+        providerId: string;
+      };
+    }
+
+    export interface Subscriber extends BaseEvent {
+      type: 'subscriber';
+      data: {
+        avatar: string;
+        displayName: string;
+        username: string;
+        providerId: string;
+      };
+    }
+
+    export interface Sponsor extends BaseEvent {
+      type: 'sponsor';
+      data: FirstTimeSponsor | Resubscribe | GiftedSponsor;
+    }
+
+    export type FirstTimeSponsor = {
+      amount: number;
+      username: string;
+      displayName: string;
+      providerId: string;
+      avatar: string;
+    };
+
+    export type Resubscribe = {
+      amount: number;
+      username: string;
+      displayName: string;
+      providerId: string;
+      avatar: string;
+    };
+
+    export type GiftedSponsor = {
+      amount: number;
+      username: string;
+      displayName: string;
+      providerId: string;
+      sender: string;
+      gifted: true;
+      avatar: string;
+    };
+
+    export interface CommunityGiftedSponsor extends BaseEvent {
+      type: 'communityGiftPurchase';
+      data: {
+        amount: number;
+        username: string;
+        displayName: string;
+        providerId: string;
+        avatar: string;
+      };
+    }
   }
 }

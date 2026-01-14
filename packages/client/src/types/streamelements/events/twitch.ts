@@ -212,6 +212,7 @@ export namespace TwitchEvents {
     updatedAt: string;
     activityId: string;
     sessionEventsCount: number;
+    isMock?: boolean;
   }
 
   export namespace Event {
