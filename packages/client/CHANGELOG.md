@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.5.0
+
+### Minor Changes
+
+- 958385b: Update superchat session handling
+
 ## 4.4.0
 
 ### Minor Changes
