@@ -138,7 +138,7 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
 </script>
 ```
 
-### NPM (for TypeScript/Node projects)
+### Access to types
 
 It is recommended to install the NPM package to get full type support and autocompletion in your IDE.
 
