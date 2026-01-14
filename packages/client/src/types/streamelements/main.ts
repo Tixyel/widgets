@@ -102,9 +102,10 @@ export namespace StreamElements {
 
     export namespace Provider {
       export namespace YouTube {
-        export type Events = YoutubeEvents.Message.Data | YoutubeEvents.Sponsor.Data | YoutubeEvents.Subscriber.Data | YoutubeEvents.Superchat.Data;
+        export type Events = Message | Event | Superchat | Subscriber | Sponsor;
 
         export type Message = YoutubeEvents.Message.Data;
+        export type Event = YoutubeEvents.Event.Data;
         export type Superchat = YoutubeEvents.Superchat.Data;
         export type Subscriber = YoutubeEvents.Subscriber.Data;
         export type Sponsor = YoutubeEvents.Sponsor.Data;
@@ -114,14 +115,7 @@ export namespace StreamElements {
       }
 
       export namespace StreamElements {
-        export type Events =
-          | StreamElementsEvents.Tip.Data
-          | StreamElementsEvents.Event.Data
-          | StreamElementsEvents.KVStore.Data
-          | StreamElementsEvents.EventSkip.Data
-          | StreamElementsEvents.EventTest.Data
-          | StreamElementsEvents.BotCounter.Data
-          | StreamElementsEvents.AlertService.Data;
+        export type Events = Tip | Event | KVStore | EventSkip | EventTest | BotCounter | AlertService;
 
         export type Tip = StreamElementsEvents.Tip.Data;
         export type Event = StreamElementsEvents.Event.Data;
@@ -133,15 +127,7 @@ export namespace StreamElements {
       }
 
       export namespace Twitch {
-        export type Events =
-          | TwitchEvents.Raid.Data
-          | TwitchEvents.Event.Data
-          | TwitchEvents.Cheer.Data
-          | TwitchEvents.Message.Data
-          | TwitchEvents.Follower.Data
-          | TwitchEvents.Subscriber.Data
-          | TwitchEvents.DeleteMessage.Data
-          | TwitchEvents.DeleteMessages.Data;
+        export type Events = Raid | Event | Cheer | Message | Follower | Subscriber | DeleteMessage | DeleteMessages;
 
         export type SubscriberTier = TwitchEvents.Subscriber.SubscriberTier;
 

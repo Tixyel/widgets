@@ -174,7 +174,7 @@ export namespace YoutubeEvents {
       event: Event;
     };
 
-    export type Event = Superchat;
+    export type Event = Superchat | Subscriber | Sponsor | CommunityGiftedSponsor;
 
     export interface Superchat extends BaseEvent {
       type: 'superchat';
