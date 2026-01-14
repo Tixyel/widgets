@@ -146,6 +146,12 @@ It is recommended to install the NPM package to get full type support and autoco
 npm install -D @tixyel/streamelements
 ```
 
+or use bun
+
+```sh
+bun add -d @tixyel/streamelements
+```
+
 ## Why use?
 
 - **Faster widget prototyping**
