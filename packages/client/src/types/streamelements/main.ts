@@ -166,6 +166,7 @@ export namespace StreamElements {
       Follower &
       Hypetrain &
       Superchat &
+      Sponsor &
       Subscriber &
       CheerPurchase &
       ChannelPoints &
@@ -206,6 +207,73 @@ export namespace StreamElements {
         export type Data = Record<string, Category | undefined>;
       }
     }
+
+    export type Sponsor = {
+      'sponsor-latest': {
+        amount: string;
+        avatar: string;
+        displayName: string;
+        providerId: string;
+        name: string;
+        _id: string;
+        sessionTop: boolean;
+        type: 'sponsor';
+        originalEventName: 'sponsor-latest';
+      };
+      'sponsor-session': {
+        count: number;
+      };
+      'sponsor-week': {
+        count: number;
+      };
+      'sponsor-month': {
+        count: number;
+      };
+      'sponsor-goal': {
+        amount: number;
+      };
+      'sponsor-total': {
+        count: number;
+      };
+      'sponsor-gifted-session': {
+        count: number;
+      };
+      'sponsor-gifted-latest': {
+        name: string;
+        amount: number;
+        tier: string;
+        message: string;
+        sender: string;
+      };
+      'sponsor-recent': {
+        amount: number;
+        avatar: string;
+        displayName: string;
+        providerId: string;
+        name: string;
+        _id: string;
+        sessionTop: boolean;
+        type: 'sponsor';
+        originalEventName: 'sponsor-recent';
+      }[];
+    };
+
+    export type SponsorCommunityGift = {
+      'community-gift-latest': {
+        amount: number;
+        name: string;
+        tier: string;
+      };
+      'communityGiftPurchase-latest': {
+        amount: number;
+        avatar: string;
+        displayName: string;
+        providerId: string;
+        name: string;
+        _id: string;
+        sessionTop: boolean;
+      };
+    };
 
     export type Follower = {
       'follower-latest': {
@@ -475,12 +543,20 @@ export namespace StreamElements {
 
     export interface Superchat {
       'superchat-latest': {
-        name: string;
         amount: number;
+        avatar: string;
+        displayName: string;
+        providerId: string;
+        name: string;
+        _id: string;
+        sessionTop: boolean;
+        type: 'superchat';
+        originalEventName: 'superchat-latest';
       };
       'superchat-session-top-donation': {
         name: string;
         amount: number;
+        _id: string;
       };
       'superchat-weekly-top-donation': {
         name: string;
@@ -529,9 +605,15 @@ export namespace StreamElements {
         amount: number;
       };
       'superchat-recent': {
-        name: string;
         amount: number;
-        createdAt: string;
+        avatar: string;
+        displayName: string;
+        providerId: string;
+        name: string;
+        _id: string;
+        sessionTop: boolean;
+        type: 'superchat';
+        originalEventName: 'superchat-recent';
       }[];
     }
 
