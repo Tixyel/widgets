@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.4.0
+
+### Minor Changes
+
+- 71169d4: Add Sponsor and SponsorCommunityGift event types to StreamElements
+
 ## 4.3.2
 
 ### Patch Changes
