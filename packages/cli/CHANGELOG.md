@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.6.7
+
+### Patch Changes
+
+- 5f43359: Update option flag for version bump type in build command
+
 ## 2.6.6
 
 ### Patch Changes
