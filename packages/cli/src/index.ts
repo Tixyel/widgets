@@ -230,7 +230,7 @@ program
   .option('-p --parallel', 'Build widgets in parallel')
   .option('-v --verbose', 'Show verbose output')
   .option('-w --widgets <names>', 'Widget names or paths to build (comma-separated, or * for all)')
-  .option('--bump <type>', 'Version bump type (none, patch, minor, major)')
+  .option('-b --bump <type>', 'Version bump type (none, patch, minor, major)')
   .action(async (options: { depth?: string; parallel?: boolean; verbose?: boolean; widgets?: string; bump?: string } = {}) => {
     try {
       const { validateWorkspace, loadWorkspace } = await import('./workspace.js');
