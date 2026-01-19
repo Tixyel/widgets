@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.5.2
+
+### Patch Changes
+
+- fca0156: Export additional types
+
 ## 4.5.1
 
 ### Patch Changes
