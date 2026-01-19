@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.6.0
+
+### Minor Changes
+
+- 5a51377: Add scaling and text fitting functions to element module
+
 ## 4.5.6
 
 ### Patch Changes
