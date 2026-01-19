@@ -1,4 +1,4 @@
-import { Simulation } from '../simulation/simulation.js';
+import { css_color_names } from '../simulation/data/css.js';
 
 /**
  * Parse a color string to RGBA components
@@ -195,7 +195,7 @@ export function hslToRgb(h: number, s: number, l: number): { r: number; g: numbe
  * @returns Closest CSS color name
  */
 export function findClosestColorName(r: number, g: number, b: number): string {
-  const cssColors = Simulation.data.css_color_names;
+  const cssColors = css_color_names;
 
   let closestColor = cssColors[0];
   let minDistance = Infinity;
