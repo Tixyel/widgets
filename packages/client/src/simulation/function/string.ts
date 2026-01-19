@@ -128,20 +128,20 @@ export const string = {
     var amount = parseFloat(flatten?.amount ?? flatten?.count ?? 0);
 
     const HTML_MODIFIERS: Record<string, Modifier> = {
-      COLOR: (value, param) => span(param && !!color.validate(param) ? `color: ${param}` : '', value),
-      WEIGHT: (value, param) => span(param && !isNaN(parseInt(param)) ? `font-weight: ${param}` : '', value),
-      BOLD: (value) => span('font-weight: bold', value),
-      LIGHT: (value) => span('font-weight: lighter', value),
-      STRONG: (value) => span('font-weight: bolder', value),
-      ITALIC: (value) => span('font-style: italic', value),
-      UNDERLINE: (value) => span('text-decoration: underline', value),
-      STRIKETHROUGH: (value) => span('text-decoration: line-through', value),
-      SUB: (value) => span('vertical-align: sub', value),
-      SUP: (value) => span('vertical-align: super', value),
-      LARGER: (value) => span('font-size: larger', value),
-      SMALL: (value) => span('font-size: smaller', value),
-      SHADOW: (value, param) => span(`text-shadow: ${param}`, value),
-      SIZE: (value, param) => span(param ? `font-size: ${param}` : '', value),
+      COLOR: (value, param) => span(param && !!color.validate(param) ? `color: ${param}` : '', value, 'color'),
+      WEIGHT: (value, param) => span(param && !isNaN(parseInt(param)) ? `font-weight: ${param}` : '', value, 'weight'),
+      BOLD: (value) => span('font-weight: bold', value, 'bold'),
+      LIGHT: (value) => span('font-weight: lighter', value, 'light'),
+      STRONG: (value) => span('font-weight: bolder', value, 'strong'),
+      ITALIC: (value) => span('font-style: italic', value, 'italic'),
+      UNDERLINE: (value) => span('text-decoration: underline', value, 'underline'),
+      STRIKETHROUGH: (value) => span('text-decoration: line-through', value, 'strikethrough'),
+      SUB: (value) => span('vertical-align: sub', value, 'sub'),
+      SUP: (value) => span('vertical-align: super', value, 'sup'),
+      LARGER: (value) => span('font-size: larger', value, 'larger'),
+      SMALL: (value) => span('font-size: smaller', value, 'small'),
+      SHADOW: (value, param) => span(`text-shadow: ${param}`, value, 'shadow'),
+      SIZE: (value, param) => span(param ? `font-size: ${param}` : '', value, 'size'),
     };
 
     const STRING_MODIFIERS: Record<string, Modifier> = {

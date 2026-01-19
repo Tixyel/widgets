@@ -14,17 +14,28 @@ export const element = {
     const match = innerHTML.match(/^<span(?: class="[^"]*")? style="([^"]*)">(.*)<\/span>$/s);
 
     if (match) {
-      const className = match[1];
-      const innerStyle = match[2];
-      const content = match[3];
+      const innerStyle = match[1];
+      const content = match[2];
+      const innerClass = match[0].match(/class="([^"]*)"/)?.[1] || '';
 
-      const mergedStyle = [innerStyle, outerStyle]
-        .filter(Boolean)
+      var mergedStyle = [innerStyle, outerStyle]
+        .filter((a) => a.length)
+        .map((s) => {
+          if (s.endsWith(';')) {
+            return s.slice(0, -1);
+          } else {
+            return s;
+          }
+        })
         .join('; ')
         .replace(/\s*;\s*/g, '; ')
         .trim();
 
-      return `<span${className ? ` class="${className}"` : ''}${mergedStyle ? ` style="${mergedStyle}"` : ''}>${content}</span>`;
+      if (!mergedStyle.endsWith(';')) {
+        mergedStyle += ';';
+      }
+
+      return `<span${innerClass ? ` class="${innerClass} ${className ?? ''}"` : ''}${mergedStyle ? ` style="${mergedStyle}"` : ''}>${content}</span>`;
     } else {
       return `<span${className ? ` class="${className}"` : ''}${outerStyle ? ` style="${outerStyle}"` : ''}>${innerHTML}</span>`;
     }
