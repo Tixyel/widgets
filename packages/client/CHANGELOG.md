@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.5.5
+
+### Patch Changes
+
+- 33eb043: Move simulation functions to it's own files and add unit tests
+
 ## 4.5.4
 
 ### Patch Changes
