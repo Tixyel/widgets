@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.5.4
+
+### Patch Changes
+
+- a53a7c0: Update JSON types for improved clarity and consistency
+
 ## 4.5.3
 
 ### Patch Changes
