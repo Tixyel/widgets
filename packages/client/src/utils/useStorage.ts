@@ -2,7 +2,7 @@ import { StreamElements } from '../types/streamelements/main.js';
 import { EventProvider } from './EventProvider.js';
 import { USE_SE_API } from '../index.js';
 import { PathValue } from './helpers.js';
-import type { JSON } from '../types/json.js';
+import type { JSONObject } from '../types/json.js';
 
 type UseStorageEvents<T> = {
   load: [T | null];
@@ -16,7 +16,7 @@ type UseStorageOptions<T> = {
 
 export var usedStorages: Array<useStorage<any>> = [];
 
-export class useStorage<T extends JSON> extends EventProvider<UseStorageEvents<T>> {
+export class useStorage<T extends JSONObject> extends EventProvider<UseStorageEvents<T>> {
   /**
    * The unique identifier for the storage instance.
    */

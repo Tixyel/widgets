@@ -1,7 +1,7 @@
-export type JSONValue = string | number | boolean | null | JSON | JSONArray;
+export type JSONPrimitive = string | number | boolean | null;
 
-export type JSONArray = JSONValue[];
+export type JSONSerializable = JSONPrimitive | JSONSerializable[] | { [k: string]: JSONSerializable | undefined };
 
-export type JSON = {
-  [key: string]: JSONValue;
+export type JSONObject = {
+  [key: string]: JSONSerializable | undefined;
 };
