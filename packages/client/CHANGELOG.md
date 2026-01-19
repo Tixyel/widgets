@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.5.6
+
+### Patch Changes
+
+- feea3b1: Improve style merging logic in element and add test for color template
+
 ## 4.5.5
 
 ### Patch Changes
