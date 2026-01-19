@@ -281,7 +281,7 @@ export const element = {
   },
 };
 
-interface ScaleOptions<T extends HTMLElement> {
+export interface ScaleOptions<T extends HTMLElement> {
   /**
    * The parent element to use for scaling calculations. If not provided, the element's parent will be used.
    */
