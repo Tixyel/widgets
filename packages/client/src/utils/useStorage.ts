@@ -2,6 +2,7 @@ import { StreamElements } from '../types/streamelements/main.js';
 import { EventProvider } from './EventProvider.js';
 import { USE_SE_API } from '../index.js';
 import { PathValue } from './helpers.js';
+import type { JSON } from '../types/json.js';
 
 type UseStorageEvents<T> = {
   load: [T | null];
@@ -15,7 +16,7 @@ type UseStorageOptions<T> = {
 
 export var usedStorages: Array<useStorage<any>> = [];
 
-export class useStorage<T extends Record<string, any>> extends EventProvider<UseStorageEvents<T>> {
+export class useStorage<T extends JSON> extends EventProvider<UseStorageEvents<T>> {
   /**
    * The unique identifier for the storage instance.
    */
@@ -61,10 +62,6 @@ export class useStorage<T extends Record<string, any>> extends EventProvider<Use
           this.emit('load', this.data);
         });
     });
-
-    // if (!USE_SE_API || !USE_SE_API.store) {
-    //   throw new Error('SE_API.store is not available');
-    // }
   }
 
   /**
@@ -73,11 +70,13 @@ export class useStorage<T extends Record<string, any>> extends EventProvider<Use
    */
   private save(data: T = this.data): void {
     if (this.loaded && this.SE_API) {
-      this.data = data;
+      if (JSON.stringify(this.data) !== JSON.stringify(data)) {
+        this.data = data;
 
-      this.SE_API.store.set<T>(this.id, this.data);
+        this.SE_API.store.set<T>(this.id, this.data);
 
-      this.emit('update', this.data);
+        this.emit('update', this.data);
+      }
     }
   }
 
@@ -87,9 +86,9 @@ export class useStorage<T extends Record<string, any>> extends EventProvider<Use
    */
   public update(data: T = this.data): void {
     if (this.loaded && JSON.stringify(this.data) !== JSON.stringify(data)) {
-      this.data = { ...this.data, ...data };
+      const newData = { ...this.data, ...data };
 
-      this.save(this.data);
+      this.save(newData);
     }
   }
 
