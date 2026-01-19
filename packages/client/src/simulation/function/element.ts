@@ -18,25 +18,22 @@ export const element = {
       const content = match[2];
       const innerClass = match[0].match(/class="([^"]*)"/)?.[1] || '';
 
-      var mergedStyle = [innerStyle, outerStyle]
+      let mergedStyle = [innerStyle, outerStyle]
         .filter((a) => a.length)
         .map((s) => {
-          if (s.endsWith(';')) {
-            return s.slice(0, -1);
-          } else {
-            return s;
-          }
+          if (s.endsWith(';')) return s.slice(0, -1);
+          else return s;
         })
         .join('; ')
         .replace(/\s*;\s*/g, '; ')
         .trim();
 
-      if (!mergedStyle.endsWith(';')) {
-        mergedStyle += ';';
-      }
+      if (!mergedStyle.endsWith(';')) mergedStyle += ';';
 
       return `<span${innerClass ? ` class="${innerClass} ${className ?? ''}"` : ''}${mergedStyle ? ` style="${mergedStyle}"` : ''}>${content}</span>`;
     } else {
+      if (outerStyle && outerStyle.length && !outerStyle.endsWith(';')) outerStyle += ';';
+
       return `<span${className ? ` class="${className}"` : ''}${outerStyle ? ` style="${outerStyle}"` : ''}>${innerHTML}</span>`;
     }
   },
