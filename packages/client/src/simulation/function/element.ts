@@ -1,3 +1,5 @@
+import { number } from './number.js';
+
 export const element = {
   /**
    * Merges outer span styles with inner span styles in the provided HTML string.
@@ -63,7 +65,6 @@ export const element = {
 
     if (!parent) {
       throw new Error('No parent element found for scaling');
-      return;
     }
 
     const parentRect = parent.getBoundingClientRect();
@@ -107,6 +108,105 @@ export const element = {
   },
 
   /**
+   * Scales an HTML element to fit within its parent element based on specified options.
+   * @param element - The HTML element to be scaled.
+   * @param options - Optional settings for scaling.
+   * @returns The scale factor applied to the element.
+   * @example
+   * ```javascript
+   * const element = document.getElementById('myElement');
+   * const scaleFactor = element.scalev2(element, {
+   *   min: 0.5,
+   *   max: 1,
+   *   prefer: 'width',
+   *   apply: (scale, el) => el.style.transform = `scale(${scale})`
+   * });
+   * console.log(`Element scaled by a factor of ${scaleFactor}`);
+   * ```
+   */
+  scalev2<T extends HTMLElement>(element: T, options: ScaleOptions<T> = {}): number {
+    const { parent = element.parentElement, prefer = 'auto', min = 0, max = 1, apply = () => {} } = options;
+
+    if (!parent) {
+      throw new Error('No parent element found for scaling');
+    }
+
+    const parentClientRect = parent.getBoundingClientRect();
+    const elementClientRect = element.getBoundingClientRect();
+
+    const parentWidth = parentClientRect.width;
+    const parentHeight = parentClientRect.height;
+
+    const elementWidth = elementClientRect.width;
+    const elementHeight = elementClientRect.height;
+
+    let scaleXmin = (parentWidth * min) / elementWidth;
+    let scaleYmin = (parentHeight * min) / elementHeight;
+
+    let scaleXmax = (parentWidth * max) / elementWidth;
+    let scaleYmax = (parentHeight * max) / elementHeight;
+
+    let scaleValue = Math.min(scaleXmax, scaleYmax);
+
+    const minScale = Math.max(scaleXmin, scaleYmin);
+    scaleValue = Math.max(scaleValue, minScale);
+
+    const finalScaleX = elementWidth * scaleValue;
+    const finalScaleY = elementHeight * scaleValue;
+
+    if (prefer === 'width') {
+      scaleValue = Math.max(scaleXmin, Math.min(scaleXmax, parentWidth / elementWidth));
+    } else if (prefer === 'height') {
+      scaleValue = Math.max(scaleYmin, Math.min(scaleYmax, parentHeight / elementHeight));
+    } else {
+      if (finalScaleX > parentWidth) {
+        scaleValue = Math.max(scaleXmin, Math.min(scaleXmax, parentWidth / elementWidth));
+      } else if (finalScaleY > parentHeight) {
+        scaleValue = Math.max(scaleYmin, Math.min(scaleYmax, parentHeight / elementHeight));
+      }
+    }
+
+    apply.apply(element, [scaleValue, element]);
+
+    return scaleValue;
+  },
+
+  fitText(
+    element: HTMLElement,
+    compressor: number = 1,
+    options: {
+      minFontSize?: number;
+      maxFontSize?: number;
+      parent?: HTMLElement;
+    } = {},
+  ) {
+    const fontSize = parseFloat(getComputedStyle(element).getPropertyValue('font-size'));
+
+    const settings = {
+      minFontSize: options?.minFontSize ?? 0,
+      maxFontSize: options?.maxFontSize ?? fontSize,
+    };
+
+    const parent = options?.parent || element.parentElement;
+
+    if (!parent) {
+      throw new Error('No parent element found for fitting text');
+    }
+
+    const parentWidth = parent.clientWidth * compressor;
+    const elWidth = element.offsetWidth;
+
+    const ratio = parentWidth / elWidth;
+    const value = fontSize * ratio;
+
+    const result = number.balance(value, settings.minFontSize, settings.maxFontSize);
+
+    element.style.fontSize = result + 'px';
+
+    return element;
+  },
+
+  /**
    * Splits the text content of an HTML string into individual characters wrapped in span elements with a data-index attribute.
    * @param htmlString - The input HTML string to be processed.
    * @param startIndex - The starting index for the data-index attribute (default is 0).
@@ -128,11 +228,12 @@ export const element = {
       if (node.nodeType === Node.TEXT_NODE) {
         const text = node.textContent;
 
-        const chars = text?.split('').map((char) => {
+        const chars = text?.split('').map((char, index) => {
           const span = document.createElement('span');
 
           span.className = 'char';
-          span.dataset.index = String(charIndex++);
+          span.dataset.index = String(charIndex);
+          span.dataset.exclusivityIndex = String(index);
 
           span.textContent = char;
 
@@ -179,3 +280,30 @@ export const element = {
     return processed.innerHTML;
   },
 };
+
+interface ScaleOptions<T extends HTMLElement> {
+  /**
+   * The parent element to use for scaling calculations. If not provided, the element's parent will be used.
+   */
+  parent?: HTMLElement;
+  /**
+   * The preferred dimension to base the scaling on. Can be 'width', 'height', or 'auto' (default).
+   */
+  prefer?: 'width' | 'height' | 'auto';
+  /**
+   * The minimum percentage of the parent size to scale to. Default is 0.
+   */
+  min?: number;
+  /**
+   * The maximum percentage of the parent size to scale to. Default is 1 (100%).
+   */
+  max?: number;
+  /**
+   * A callback function that is called after scaling is applied.
+   * @param this - The HTML element being scaled.
+   * @param number - The scale factor applied to the element.
+   * @param element - The HTML element being scaled.
+   * @returns void
+   */
+  apply?: (this: T, number: number, element: T) => void;
+}
