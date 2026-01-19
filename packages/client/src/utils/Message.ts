@@ -3,7 +3,7 @@ import { Simulation } from '../simulation/simulation.js';
 import { Provider } from '../types/client.js';
 import { Twitch } from '../types/twitch.js';
 
-type Emote = TwitchEmote | BttvEmote | SeventvEmote;
+export type Emote = TwitchEmote | BttvEmote | SeventvEmote;
 
 /**
  * Finds emotes in a given text.

@@ -17,6 +17,8 @@ import { parseProvider } from './client/listener.js';
 
 export type * from './types/index.js';
 export type * from './utils/alejo.js';
+export type * from './utils/Message.js';
+export type { Button, Command, EventProvider, useComfyJs, useStorage, useQueue, Logger };
 
 export const USE_SE_API: Promise<StreamElements.SE_API> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
 

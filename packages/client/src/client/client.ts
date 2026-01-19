@@ -24,14 +24,14 @@ export type ClientStorageOptions<T> = {
   expire: number;
 };
 
-type ClientStorage = {
+export type ClientStorage = {
   user: Record<string, ClientStorageOptions<string>>;
   avatar: Record<string, ClientStorageOptions<string>>;
   pronoun: Record<string, ClientStorageOptions<Alejo.Pronouns.name>>;
   emote: Record<string, ClientStorageOptions<string>>;
 };
 
-type ClientOptions = {
+export type ClientOptions = {
   id?: string;
   debug?: boolean | (() => boolean);
 };
@@ -53,7 +53,7 @@ export class Client extends EventProvider<ClientEvents> {
 
     this.id = options.id || this.id;
 
-    this.storage = new useStorage({
+    this.storage = new useStorage<ClientStorage>({
       id: this.id,
       data: {
         user: {},
