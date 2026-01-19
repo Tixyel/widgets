@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.5.3
+
+### Patch Changes
+
+- c09b0d2: Update useStorage to use JSON type and improve data handling
+
 ## 4.5.2
 
 ### Patch Changes
