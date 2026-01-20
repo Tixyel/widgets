@@ -386,7 +386,7 @@ program
   .aliases(['upgrade', 'u'])
   .description('Update Tixyel packages to the latest version.')
   .option('-f --force', 'Force update even if already on latest version', false)
-  .option('-nc --no-cache', 'Disable package manager cache during installation', false)
+  .option('-n --no-cache', 'Disable package manager cache during installation', false)
   .action(async (options: { force: boolean; noCache: boolean }) => {
     const root = process.cwd();
 
