@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.7.1
+
+### Patch Changes
+
+- d6acac9: Correct option flag for no-cache in update command
+
 ## 2.7.0
 
 ### Minor Changes
