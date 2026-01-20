@@ -381,4 +381,109 @@ program
     }
   });
 
+program
+  .command('update')
+  .aliases(['upgrade', 'u'])
+  .description('Update Tixyel packages to the latest version.')
+  .option('-f --force', 'Force update even if already on latest version', false)
+  .option('-nc --no-cache', 'Disable package manager cache during installation', false)
+  .action(async (options: { force: boolean; noCache: boolean }) => {
+    const root = process.cwd();
+
+    const inquirer = (await import('inquirer')).default;
+    const { exec } = await import('child_process');
+    const util = await import('util');
+    const execPromise = util.promisify(exec);
+
+    const availablesManagers: string[] = [];
+
+    // check if npm is available
+    const checkManager = async (manager: string) => {
+      try {
+        await execPromise(`${manager} --version`);
+        availablesManagers.push(manager);
+      } catch {
+        // not available
+      }
+    };
+
+    await Promise.all(['npm', 'yarn', 'pnpm', 'bun'].map((mgr) => checkManager(mgr)));
+
+    var packageManager: string | undefined;
+
+    if (availablesManagers.length === 0) {
+      console.error('❌ No package managers found (npm, yarn, pnpm, bun). Please install one and try again.');
+      return;
+    } else if (availablesManagers.length === 1) {
+      packageManager = availablesManagers[0];
+    } else {
+      const response = await inquirer.prompt([
+        {
+          type: 'select',
+          name: 'packageManager',
+          message: 'Select your package manager:',
+          choices: availablesManagers,
+          default: 'npm',
+        },
+      ]);
+
+      packageManager = response.packageManager;
+    }
+
+    console.log(`📦 Installing packages using ${packageManager} ...`);
+
+    let installCommand = '';
+
+    const packages = ['@tixyel/cli@latest', '@tixyel/streamelements@latest'];
+
+    switch (packageManager) {
+      case 'npm': {
+        installCommand = `npm install ${packages.join(' ')}`;
+
+        if (options.noCache) installCommand += ' --no-cache';
+        if (options.force) installCommand += ' --force';
+
+        break;
+      }
+      case 'yarn': {
+        installCommand = `yarn add ${packages.join(' ')}`;
+
+        if (options.noCache) installCommand += ' --no-cache';
+        if (options.force) installCommand += ' --force';
+
+        break;
+      }
+      case 'pnpm': {
+        installCommand = `pnpm add ${packages.join(' ')}`;
+
+        if (options.noCache) installCommand += ' --no-cache';
+        if (options.force) installCommand += ' --force';
+
+        break;
+      }
+      case 'bun': {
+        installCommand = `bun add ${packages.join(' ')}`;
+
+        if (options.noCache) installCommand += ' --no-cache';
+        if (options.force) installCommand += ' --force';
+
+        break;
+      }
+    }
+
+    if (!installCommand) {
+      console.error('❌ Invalid package manager selected.');
+      return;
+    }
+
+    try {
+      const { stdout, stderr } = await execPromise(installCommand, { cwd: root });
+      if (stdout) process.stdout.write(stdout);
+      if (stderr) process.stderr.write(stderr);
+      console.log('✅ Packages updated successfully.');
+    } catch (error) {
+      console.error('❌ Error installing packages:', error);
+    }
+  });
+
 program.parse();
