@@ -1,6 +1,6 @@
 {
   "name": "@tixyel/cli",
-  "version": "2.6.7",
+  "version": "2.7.0",
   "description": "CLI tool for streamelements widgets",
   "keywords": [
     "cli",
