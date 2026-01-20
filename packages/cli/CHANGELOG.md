@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 2.7.0
+
+### Minor Changes
+
+- 233a57a: Add update command for package management in CLI
+
 ## 2.6.7
 
 ### Patch Changes
