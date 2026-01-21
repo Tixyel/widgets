@@ -1,5 +1,13 @@
 # @tixyel/streamelements
 
+## 5.0.0
+
+### Major Changes
+
+- ca1a58d: Reorganize modules and rename "Simulation" to "Local" to better understanding
+  Add sounds functions to the helper module
+  Add tests for some functions
+
 ## 4.6.1
 
 ### Patch Changes
