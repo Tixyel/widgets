@@ -14,7 +14,7 @@ interface Options {
 
 type LogMethod = (...args: unknown[]) => void;
 
-export class Logger {
+export class useLogger {
   public enabled: boolean;
   public prefix: string | (() => string);
 

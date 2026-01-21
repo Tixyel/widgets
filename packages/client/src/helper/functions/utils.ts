@@ -1,0 +1,51 @@
+const functions = {
+  /**
+   * Delays execution for a specified number of milliseconds.
+   * @param ms - The number of milliseconds to delay.
+   * @returns A Promise that resolves after the specified delay.
+   */
+  delay<R extends any, M extends number>(ms: M, callback?: () => R): Promise<R | null> {
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        if (callback) {
+          const result = callback();
+          resolve(result ?? null);
+        } else resolve(null);
+      }, ms),
+    );
+  },
+
+  /**
+   * Returns typed entries of an object.
+   * @param obj - The object to get entries from.
+   * @returns An array of key-value pairs from the object.
+   */
+  typedEntries<K extends string, V>(obj: Record<K, V>): [K, V][] {
+    return Object.entries(obj) as [K, V][];
+  },
+
+  /**
+   * Selects an item based on weighted probabilities.
+   * @param items - An object where keys are items and values are their weights.
+   * @returns A randomly selected item based on the given probabilities.
+   */
+  probability<K extends string, V extends number>(items: Record<K, V>): K | undefined {
+    const total = (Object.values(items) as number[]).reduce((acc, val) => acc + val, 0);
+    const sorted = functions.typedEntries(items).sort((a, b) => b[1] - a[1]);
+    const rand = Math.random() * total;
+
+    let cumulative = 0;
+
+    for (const [item, weight] of sorted) {
+      cumulative += weight;
+
+      if (rand < cumulative) {
+        return item;
+      }
+    }
+
+    return undefined;
+  },
+};
+
+export default functions;

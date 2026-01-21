@@ -43,19 +43,23 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE.md"
+    "LICENSE.md",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
     "build": "vite build && rollup -c rollup.config.js",
-    "dev": "concurrently \"vite build --watch\" \"rollup -c rollup.config.js --watch\""
+    "dev": "concurrently \"vite build --watch\" \"rollup -c rollup.config.js --watch\"",
+    "check-types": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/tmi.js": "^1.8.6",
     "comfy.js": "^1.1.29",
+    "rollup-plugin-dts": "^6.3.0",
     "tmi.js": "^1.8.5",
     "typescript": "^5.9.3",
     "vite": "^7.1.5"
   },
+  "dependencies": {},
   "engines": {
     "node": ">=18.0.0"
   },

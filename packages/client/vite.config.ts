@@ -10,10 +10,5 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
       formats: ['umd', 'es'],
     },
-    rollupOptions: {
-      output: {
-        globals: {},
-      },
-    },
   },
 });

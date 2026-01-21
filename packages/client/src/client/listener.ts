@@ -1,22 +1,22 @@
-import { ClientEvents, Provider } from '../types/client.js';
 import { Client, ClientStorageOptions } from './client.js';
 import { usedStorages } from '../utils/useStorage.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
-import { logger, StreamElements } from '../index.js';
-import { Simulation } from '../simulation/simulation.js';
+import { logger } from '../main.js';
+import { Local } from '../local/index.js';
 import { useQueue } from '../utils/useQueue.js';
+import { Helper } from '../helper/index.js';
 
 if (typeof window !== undefined) {
   window.addEventListener('load', () => {
     if (window.client instanceof Client) {
-      Simulation.queue = new useQueue({
+      Local.queue = new useQueue({
         duration: 'client',
         processor: async function processor(received) {
           window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
 
           if (received.listener === 'onEventReceived' && received.session) {
-            const sessionEvent = await Simulation.generate.event.onSessionUpdate(client.session, parseProvider(received.data));
+            const sessionEvent = await Local.generate.event.onSessionUpdate(client.session, Helper.event.parseProvider(received.data));
 
             window.dispatchEvent(new CustomEvent('onSessionUpdate', { detail: sessionEvent }));
           }
@@ -131,7 +131,7 @@ if (typeof window !== undefined) {
 
   window.addEventListener('onEventReceived', ({ detail }) => {
     if (window.client instanceof Client) {
-      const received = parseProvider(detail);
+      const received = Helper.event.parseProvider(detail);
 
       switch (received.provider) {
         case 'streamelements': {
@@ -333,24 +333,4 @@ if (typeof window !== undefined) {
       }
     }
   });
-}
-
-export function parseProvider(detail: StreamElements.Event.onEventReceived) {
-  // @ts-ignore
-  var provider: Provider = detail.event?.provider || detail.event?.service || detail.event?.data?.provider || window.client.details.provider;
-
-  const actAsStreamElements = [
-    'kvstore:update',
-    'bot:counter',
-    'alertService:toggleSound',
-    'tip-latest',
-    'event:test',
-    'event:skip',
-  ] as StreamElements.Event.onEventReceived['listener'][];
-
-  if (actAsStreamElements.some((l) => l === detail.listener)) provider = 'streamelements';
-
-  const received = { provider: provider, data: detail } as ClientEvents;
-
-  return received;
 }

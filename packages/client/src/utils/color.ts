@@ -1,4 +1,4 @@
-import { css_color_names } from '../simulation/data/css.js';
+import { css_color_names } from '../data/collection/css.js';
 
 /**
  * Parse a color string to RGBA components
@@ -194,20 +194,23 @@ export function hslToRgb(h: number, s: number, l: number): { r: number; g: numbe
  * @param b - Blue component (0-255)
  * @returns Closest CSS color name
  */
-export function findClosestColorName(r: number, g: number, b: number): string {
+export async function findClosestColorName(r: number, g: number, b: number): Promise<string> {
   const cssColors = css_color_names;
 
   let closestColor = cssColors[0];
   let minDistance = Infinity;
 
-  for (const colorName of cssColors) {
+  for await (const colorName of cssColors) {
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = 1;
+
     const ctx = canvas.getContext('2d');
+
     if (!ctx) continue;
 
     ctx.fillStyle = colorName;
     ctx.fillRect(0, 0, 1, 1);
+
     const [cr, cg, cb] = ctx.getImageData(0, 0, 1, 1).data;
 
     const distance = Math.sqrt(Math.pow(r - cr, 2) + Math.pow(g - cg, 2) + Math.pow(b - cb, 2));

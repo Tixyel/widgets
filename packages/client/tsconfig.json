@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "es2022",
+    "target": "es2020",
     "module": "NodeNext",
     "declaration": true,
     "declarationDir": "dist",

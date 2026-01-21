@@ -1,66 +1,23 @@
-import { findEmotesInText, generateBadges, replaceEmotesWithHTML, replaceYoutubeEmotesWithHTML } from './utils/Message.js';
-import { StreamElements } from './types/streamelements/main.js';
-import { initializeLocalSEAPI } from './streamelements/api.js';
-import { EventProvider } from './utils/EventProvider.js';
-import { Simulation } from './simulation/simulation.js';
-import { usedStorages, useStorage } from './utils/useStorage.js';
+import { main } from './main.js';
+
 import type { ComfyJSInstance } from 'comfy.js';
-import { useComfyJs } from './utils/comfyJs.js';
-import { Command } from './actions/command.js';
-import { useQueue } from './utils/useQueue.js';
-import { Button } from './actions/button.js';
-import { Client } from './client/client.js';
-import { Logger } from './utils/Logger.js';
-import { Alejo } from './utils/alejo.js';
-import './client/listener.js';
-import { parseProvider } from './client/listener.js';
+import type { StreamElements } from './types/index.js';
+
+export type { Button } from './actions/button.js';
+export type { useLogger } from './utils/Logger.js';
+export type { Command } from './actions/command.js';
+export type { useQueue } from './utils/useQueue.js';
+export type { useStorage } from './utils/useStorage.js';
+export type { useComfyJs } from './multistream/comfyJs.js';
+export type { EventProvider } from './utils/EventProvider.js';
 
 export type * from './types/index.js';
 export type * from './utils/alejo.js';
-export type * from './utils/Message.js';
-export type { Button, Command, EventProvider, useComfyJs, useStorage, useQueue, Logger };
-
-export const USE_SE_API: Promise<StreamElements.SE_API> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
-
-export const logger = new Logger();
-
-export const Tixyel = {
-  Client,
-
-  USE_SE_API,
-  Simulation,
-  logger,
-  Alejo,
-
-  utils: {
-    findEmotesInText,
-    replaceEmotesWithHTML,
-    replaceYoutubeEmotesWithHTML,
-    generateBadges,
-    parseProvider,
-  },
-
-  modules: {
-    Button,
-    Command,
-    EventProvider,
-    useComfyJs,
-    useStorage,
-    useQueue,
-    Logger,
-  },
-
-  data: {
-    usedStorages,
-  },
-} as const;
-
-type Main = typeof Tixyel;
 
 declare global {
   interface Window {
-    Tixyel: Main;
-    client: Client;
+    Tixyel: typeof main;
+    client: InstanceType<typeof main.Client>;
     ComfyJS?: ComfyJSInstance;
   }
 
@@ -70,12 +27,10 @@ declare global {
     onEventReceived: CustomEvent<StreamElements.Event.onEventReceived>;
   }
 
-  const Tixyel: Main;
-  var client: Client;
+  const Tixyel: typeof main;
+  let client: InstanceType<typeof main.Client>;
 
   const SE_API: StreamElements.SE_API;
 }
 
-if (typeof window !== 'undefined') {
-  window.Tixyel = Tixyel;
-}
+export default main;

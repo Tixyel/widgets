@@ -1,4 +1,4 @@
-import { MapNumberValuesToString } from '../../../utils/helpers.js';
+import { MapNumberValuesToString } from '../../path.js';
 import { Twitch } from '../../twitch.js';
 import { StreamElements } from '../main.js';
 

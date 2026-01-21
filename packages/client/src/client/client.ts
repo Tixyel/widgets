@@ -1,4 +1,4 @@
-import { ClientEvents as events, Provider } from '../types/client.js';
+import { Provider } from '../types/client.js';
 import { StreamElements } from '../types/streamelements/main.js';
 import { EventProvider } from '../utils/EventProvider.js';
 import { useStorage } from '../utils/useStorage.js';

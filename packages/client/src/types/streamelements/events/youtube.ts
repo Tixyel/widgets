@@ -1,5 +1,3 @@
-import { Provider } from '../../index.js';
-
 export namespace YoutubeEvents {
   export namespace Message {
     export type Data = {

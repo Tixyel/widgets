@@ -1,5 +1,5 @@
 import { Client } from '../client/client.js';
-import { logger } from '../index.js';
+import { logger } from '../main.js';
 
 interface ButtonOptions {
   field: string | ((field: string, value: string | boolean | number) => boolean);

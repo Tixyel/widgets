@@ -1,0 +1,50 @@
+import { test, expect } from 'bun:test';
+import object from './object.js';
+
+test('Flatten nested objects with stringify=true', () => {
+  const nestedObject = {
+    user: {
+      name: 'Alice',
+      address: { street: '123 Main St', city: 'Wonderland' },
+    },
+    age: 30,
+    tags: ['friend', 'colleague', true, 99],
+  };
+
+  const flattened = object.flatten(nestedObject, true);
+
+  expect(flattened).toEqual({
+    'user.name': 'Alice',
+    'user.address.street': '123 Main St',
+    'user.address.city': 'Wonderland',
+    'age': '30',
+    'tags:0': 'friend',
+    'tags:1': 'colleague',
+    'tags:2': 'true',
+    'tags:3': '99',
+  });
+});
+
+test('Flatten nested objects with stringify=false', () => {
+  const nestedObject = {
+    user: {
+      name: 'Alice',
+      address: { street: '123 Main St', city: 'Wonderland' },
+    },
+    age: 30,
+    tags: ['friend', 'colleague', true, 99],
+  };
+
+  const flattened = object.flatten(nestedObject, false);
+
+  expect(flattened).toEqual({
+    'user.name': 'Alice',
+    'user.address.street': '123 Main St',
+    'user.address.city': 'Wonderland',
+    'age': 30,
+    'tags:0': 'friend',
+    'tags:1': 'colleague',
+    'tags:2': true,
+    'tags:3': 99,
+  });
+});

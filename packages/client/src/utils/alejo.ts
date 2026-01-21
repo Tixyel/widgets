@@ -49,6 +49,7 @@ export namespace Alejo {
       itits = 'It/Its',
     }
   }
+
   export async function list(): Promise<typeof Pronouns.map> {
     try {
       const data = (await fetch('https://pronouns.alejo.io/api/pronouns').then((res) => res.json())) as {

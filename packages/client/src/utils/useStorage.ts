@@ -1,7 +1,7 @@
 import { StreamElements } from '../types/streamelements/main.js';
 import { EventProvider } from './EventProvider.js';
-import { USE_SE_API } from '../index.js';
-import { PathValue } from './helpers.js';
+import { USE_SE_API } from '../main.js';
+import { PathValue } from '../types/path.js';
 import type { JSONObject } from '../types/json.js';
 
 type UseStorageEvents<T> = {
