@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 4.6.1
+
+### Patch Changes
+
+- 3ed74c2: Enhance Logger class with improved prefix handling
+
 ## 4.6.0
 
 ### Minor Changes
