@@ -13,12 +13,7 @@ const config = {
  */
 `.trimStart(),
   },
-  plugins: [
-    dts({
-      includeExternal: ['comfy.js'],
-      respectExternal: true,
-    }),
-  ],
+  plugins: [dts({})],
 };
 
 export default config;

@@ -1,4 +1,3 @@
-import type { ComfyJSInstance, OnChatModeHandler } from 'comfy.js';
 import { EventProvider } from '../utils/EventProvider.js';
 import { logger } from '../main.js';
 
@@ -21,6 +20,8 @@ import type {
   OnRewardHandler,
   OnConnectedHandler,
   OnReconnectHandler,
+  OnChatModeHandler,
+  ComfyJSInstance,
 } from 'comfy.js';
 import { Local } from '../local/index.js';
 import { BadgeOptions } from '../helper/functions/message.js';
