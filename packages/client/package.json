@@ -47,9 +47,9 @@
     "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
-    "build": "vite build && rollup -c rollup.config.js",
-    "dev": "concurrently \"vite build --watch\" \"rollup -c rollup.config.js --watch\"",
-    "check-types": "tsc --noEmit"
+    "build": "bunx --bun vite build && bunx --bun rollup -c rollup.config.js",
+    "dev": "concurrently \"bunx --bun vite build --watch\" \"bunx --bun rollup -c rollup.config.js --watch\"",
+    "check-types": "bunx --bun tsc --noEmit"
   },
   "devDependencies": {
     "@types/tmi.js": "^1.8.6",
