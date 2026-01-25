@@ -213,15 +213,16 @@ const functions = {
   },
 
   /**
-   * Splits the text content of an HTML string into individual characters wrapped in span elements with a data-index attribute.
-   * @param htmlString - The input HTML string to be processed.
+   * Wraps formatted HTML text with containers and splits characters into indexed spans.
+   * Adds 'container' class and data-index to all parent elements, and wraps each character in a span with class 'char' and data-index.
+   * @param htmlString - The input HTML string containing formatted text elements (span, strong, em, etc).
    * @param startIndex - The starting index for the data-index attribute (default is 0).
-   * @returns - A new HTML string with each character wrapped in a span element.
+   * @returns - A new HTML string with containers and character-level indexing.
    * @example
    * ```javascript
-   * const result = splitTextToChars("<p>Hello</p>", 0);
+   * const result = splitTextToChars('<span>TesTe</span> <strong>bold</strong>', 0);
    * console.log(result);
-   * // Output: '<p><span class="char" data-index="0">H</span><span class="char" data-index="1">e</span><span class="char" data-index="2">l</span><span class="char" data-index="3">l</span><span class="char" data-index="4">o</span></p>'
+   * // Output: '<span class="container" data-index="0"><span class="char" data-index="0">T</span><span class="char" data-index="1">e</span>...'
    * ```
    */
   splitTextToChars(htmlString: string, startIndex: number = 0): string {
@@ -230,39 +231,51 @@ const functions = {
 
     let charIndex = startIndex;
 
-    function processNode(node: Node) {
+    function processNode(node: Node): Node | DocumentFragment {
       if (node.nodeType === Node.TEXT_NODE) {
-        const text = node.textContent;
+        const text = node.textContent || '';
 
-        const chars = text?.split('').map((char, index) => {
+        // Split only non-whitespace or preserve whitespace if it's significant
+        const chars = text.split('').map((char, index) => {
           const span = document.createElement('span');
 
-          span.className = 'char';
+          span.classList.add('char');
           span.dataset.index = String(charIndex);
-          span.dataset.exclusivityIndex = String(index);
+          span.dataset.exclusivityIndex = String(charIndex);
+          span.style.setProperty('--char-index', String(charIndex));
+          span.style.setProperty('--exclusivity-index', String(charIndex));
+
+          if (char === ' ' || char === '\n' || char === '\t') {
+            span.style.whiteSpace = 'pre-wrap';
+          }
 
           span.textContent = char;
 
           charIndex++;
 
-          return span.outerHTML;
+          return span;
         });
 
-        const wrapper = document.createElement('span');
+        const fragment = document.createDocumentFragment();
+        chars.forEach((char) => fragment.appendChild(char));
 
-        wrapper.innerHTML = chars?.join('') ?? '';
-
-        return wrapper;
+        return fragment;
       } else if (node.nodeType === Node.ELEMENT_NODE) {
-        const clone = node.cloneNode(false);
+        const clone = node.cloneNode(false) as HTMLElement;
 
+        // Add container class and data-index to parent elements
+        clone.classList.add('container');
+        clone.dataset.index = String(charIndex);
+        clone.style.setProperty('--char-index', String(charIndex));
+
+        // Process child nodes
         node.childNodes.forEach((child) => {
           const processed = processNode(child);
 
-          if (processed instanceof Node) {
-            Array.from(processed.childNodes).forEach((childNode) => {
-              clone.appendChild(childNode);
-            });
+          if (processed instanceof DocumentFragment) {
+            clone.appendChild(processed);
+          } else if (processed instanceof Node) {
+            clone.appendChild(processed);
           }
         });
 
@@ -276,14 +289,31 @@ const functions = {
     const processed = document.createElement('div');
 
     body.childNodes.forEach((node) => {
+      // Skip empty text nodes at the root level
+      if (node.nodeType === Node.TEXT_NODE && !node.textContent?.trim()) {
+        return;
+      }
+
       const result = processNode(node);
 
-      if (result instanceof Node) {
+      if (result instanceof DocumentFragment) {
+        processed.appendChild(result);
+      } else if (result instanceof Node) {
         processed.appendChild(result);
       }
     });
 
-    return processed.innerHTML;
+    // Join root-level text nodes and elements while preserving spacing
+    let html = '';
+    Array.from(processed.childNodes).forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        html += node.textContent;
+      } else {
+        html += (node as HTMLElement).outerHTML;
+      }
+    });
+
+    return html;
   },
 };
 
