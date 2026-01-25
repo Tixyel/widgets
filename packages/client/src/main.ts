@@ -13,6 +13,7 @@ import { useLogger } from './utils/Logger.js';
 import { useQueue } from './utils/useQueue.js';
 import { usedStorages, useStorage } from './utils/useStorage.js';
 import { Helper } from './helper/index.js';
+import { Data } from './data/index.js';
 
 export const USE_SE_API: Promise<StreamElements.SE_API> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
 
@@ -24,6 +25,7 @@ export const main = {
   Client,
   Helper,
   Local,
+  Data,
   logger,
 
   modules: { EventProvider, useStorage, useQueue, useLogger },
