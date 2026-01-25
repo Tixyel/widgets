@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 5.0.1
+
+### Patch Changes
+
+- 888b023: Export Data object
+
 ## 5.0.0
 
 ### Major Changes
