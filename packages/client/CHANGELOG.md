@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 5.1.0
+
+### Minor Changes
+
+- 816446a: Enhance splitTextToChars to wrap HTML with containers and index characters
+
 ## 5.0.1
 
 ### Patch Changes
