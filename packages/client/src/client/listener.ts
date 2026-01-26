@@ -62,6 +62,14 @@ if (typeof window !== undefined) {
 
       client.emit('load', detail);
 
+      if (client.debug) {
+        logger.received('Widget loaded!', data.detail);
+
+        const fieldData = data.detail.fieldData;
+
+        if (Object.keys(fieldData).length) logger.received('Field data:', fieldData);
+      }
+
       client.loaded = true;
 
       client.storage.on('load', (data) => {

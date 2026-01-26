@@ -98,6 +98,7 @@ export namespace StreamElements {
 
     export type onSessionUpdate = {
       session: StreamElements.Session.Data;
+      emulated?: boolean;
     };
 
     export namespace Provider {
@@ -153,7 +154,7 @@ export namespace StreamElements {
       }
     }
 
-    export type onEventReceived = Provider.Twitch.Events | Provider.YouTube.Events | Provider.StreamElements.Events;
+    export type onEventReceived = (Provider.Twitch.Events | Provider.YouTube.Events | Provider.StreamElements.Events) & { emulated?: boolean };
   }
 
   export namespace Session {

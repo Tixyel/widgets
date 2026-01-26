@@ -693,7 +693,7 @@ export namespace Local {
           }
         }
 
-        return { session };
+        return { session, emulated: true };
       },
       /**
        * Simulates the onEventReceived event for a widget.
@@ -798,6 +798,8 @@ export namespace Local {
                     },
                     renderedText: renderedText,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -824,6 +826,8 @@ export namespace Local {
                     originalEventName: 'cheer-latest',
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -846,6 +850,8 @@ export namespace Local {
                     originalEventName: 'follower-latest',
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -870,6 +876,8 @@ export namespace Local {
                     originalEventName: 'raid-latest',
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -927,6 +935,8 @@ export namespace Local {
                     originalEventName: 'subscriber-latest',
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -938,6 +948,8 @@ export namespace Local {
                     msgId: (options?.id as string) ?? Helper.random.uuid(),
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -949,6 +961,8 @@ export namespace Local {
                     userId: (options?.id as string) ?? Helper.random.number(10000000, 99999999).toString(),
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -984,6 +998,8 @@ export namespace Local {
                     originalEventName: 'tip-latest',
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -998,6 +1014,8 @@ export namespace Local {
                     },
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -1010,6 +1028,8 @@ export namespace Local {
                     value: (options?.value as number) ?? Helper.random.number(0, 100),
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -1025,6 +1045,8 @@ export namespace Local {
                     muted,
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -1036,6 +1058,8 @@ export namespace Local {
                   event: {
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -1111,6 +1135,8 @@ export namespace Local {
                     },
                     renderedText: message,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -1133,6 +1159,8 @@ export namespace Local {
                     originalEventName: 'subscriber-latest',
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -1157,6 +1185,8 @@ export namespace Local {
                     originalEventName: 'superchat-latest',
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
@@ -1213,6 +1243,8 @@ export namespace Local {
                     originalEventName: 'sponsor-latest',
                     provider,
                   },
+                  // @ts-ignore
+                  emulated: true,
                 };
 
                 return event;
