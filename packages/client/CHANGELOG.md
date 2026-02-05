@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 5.2.0
+
+### Minor Changes
+
+- 5e215e0: Update capitalize return type to use Capitalize utility type and modify update method to accept Partial<T>
+
 ## 5.1.1
 
 ### Patch Changes

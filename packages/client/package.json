@@ -1,6 +1,6 @@
 {
   "name": "@tixyel/streamelements",
-  "version": "5.1.1",
+  "version": "5.2.0",
   "description": "TypeScript/JavaScript helper library for StreamElements custom widgets with type safety and local development support",
   "keywords": [
     "streamelements",
