@@ -84,7 +84,7 @@ export class useStorage<T extends JSONObject> extends EventProvider<UseStorageEv
    * Updates the storage data and emits an update event
    * @param data Data to update (defaults to current)
    */
-  public update(data: T = this.data): void {
+  public update(data: Partial<T> = this.data): void {
     if (this.loaded && JSON.stringify(this.data) !== JSON.stringify(data)) {
       const newData = { ...this.data, ...data };
 

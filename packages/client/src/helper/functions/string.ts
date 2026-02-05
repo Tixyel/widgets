@@ -45,8 +45,8 @@ const functions = {
    * console.log(result); // Output: "Hello world"
    * ```
    */
-  capitalize(string: string): string {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  capitalize(string: string): Capitalize<string> {
+    return (string.charAt(0).toUpperCase() + string.slice(1)) as Capitalize<string>;
   },
 
   /**
