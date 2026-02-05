@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 5.1.1
+
+### Patch Changes
+
+- 4ccad83: Add emulated flag to session updates and event received types
+
 ## 5.1.0
 
 ### Minor Changes
