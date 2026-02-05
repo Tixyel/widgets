@@ -3,7 +3,7 @@
  * This class allows you to register event listeners, emit events, and manage event subscriptions.
  * @example
  * ```typescript
- * interface TestEvents {
+ * type TestEvents = {
  *   load: [event: { type: 'load' }];
  *   event: [event: { type: 'event' }];
  * };
