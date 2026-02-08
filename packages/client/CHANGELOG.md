@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 5.4.0
+
+### Minor Changes
+
+- 23e054e: Fix jsdoc exporting with rollup
+
 ## 5.3.0
 
 ### Minor Changes
