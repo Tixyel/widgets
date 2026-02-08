@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 5.3.0
+
+### Minor Changes
+
+- f926636: Enhance Button class with additional options and generate method; add typedValues and typedKeys utilities
+
 ## 5.2.0
 
 ### Minor Changes
