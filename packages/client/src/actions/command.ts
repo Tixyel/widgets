@@ -27,7 +27,7 @@ export class Command {
 
   arguments: boolean = false;
 
-  test: string = `${this.prefix}${this.name} arg1 arg2`;
+  test: string | (() => string) = `${this.prefix}${this.name} arg1 arg2`;
 
   aliases: string[] = [];
   permissions?: string[] | boolean = undefined;
@@ -124,6 +124,15 @@ export class Command {
           .filter(([k, v]) => k.startsWith('is') && v)
           .map(([k]) => rMap[k as keyof typeof rMap])
           .filter(Boolean);
+
+        if (roles.includes('sponsor')) {
+          roles.push('premium');
+          roles.push('prime');
+        }
+        if (roles.includes('owner')) {
+          roles.push('moderator');
+          roles.push('broadcaster');
+        }
 
         break;
       }

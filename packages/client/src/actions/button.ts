@@ -1,16 +1,45 @@
 import { Client } from '../client/client.js';
+import functions from '../helper/functions/utils.js';
+import { Helper } from '../helper/index.js';
 import { logger } from '../main.js';
+import { StreamElements } from '../types/index.js';
 
 interface ButtonOptions {
   field: string | ((field: string, value: string | boolean | number) => boolean);
   template?: string;
+  name?: string;
+  value?: string;
   run: (field: string, value: string | boolean | number) => void;
 }
 
+/**
+ * Represents a button action that can be triggered by custom fields in StreamElements.
+ * The button can be configured with a template and a name, and it will execute a specified function when triggered.
+ * @example
+ * ```javascript
+ * const button = new Button({
+ *   field: (field, value) => field.startsWith('message-') && field.split('-')[1],
+ *   template: 'message-{role}',
+ *   // name: '[CAP={role}] role message',
+ *   name: 'Generate {role} message',
+ *   run(field, value) {
+ *     console.log(`Button ${field} was clicked with value: ${value}`);
+ *   }
+ * })
+ *
+ * const field = button.generate([{ role: 'broadcaster' }, { role: 'moderator' }]);
+ * // This will create buttons with fields "message-broadcaster" and "message-moderator" and names "Generate broadcaster message" and "Generate moderator message".
+ * // field['message-broadcaster'] => { type: 'button', label: 'Generate broadcaster message' }
+ * // field['message-moderator'] => { type: 'button', label: 'Generate moderator message' }
+ *
+ * // When a custom field with the name "message-broadcaster" or "message-moderator" is triggered, the run function will be called with the field and value.
+ * ```
+ */
 export class Button {
   field: ButtonOptions['field'] = 'button';
-
   template: string = 'button';
+  name: string = 'Button';
+  value: string = '';
 
   run!: ButtonOptions['run'];
 
@@ -19,13 +48,45 @@ export class Button {
 
     this.field = options.field ?? this.field;
     this.template = options.template ?? this.template;
-
+    this.name = options.name ?? this.name;
+    this.value = options.value ?? this.value;
     this.run = options.run;
 
     // Register the button in the client actions
     window.client.actions.buttons.push(this);
 
     window.client.emit('action', this, 'created');
+  }
+
+  generate(values: Array<Record<string, string | number>>) {
+    const fields = functions.typedValues(values).reduce(
+      (acc, values, index) => {
+        const key = Helper.string.compose(this.template, { index, ...values }, { html: false });
+        const name = Helper.string.compose(this.name, { index, ...values }, { html: false });
+
+        acc[key] = {
+          type: 'button',
+          label: name,
+        };
+
+        let value: string | number | boolean = Helper.string.compose(String(this.value), { index, ...values }, { html: false });
+
+        if (!isNaN(Number(value))) value = Number(value);
+        else if (value.toLowerCase() === 'true') value = true;
+        else if (value.toLowerCase() === 'false') value = false;
+
+        if (typeof value !== 'undefined' && !!value && (typeof value === 'string' ? value.length : true)) {
+          acc[key].value = value;
+        }
+
+        return acc;
+      },
+      {} as Record<string, StreamElements.CustomField.Schema>,
+    );
+
+    // let result = Helper.string.compose(this.template, values, { html: false });
+
+    return fields;
   }
 
   parse(field: string, value: string | boolean | number): Button {

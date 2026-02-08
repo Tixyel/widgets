@@ -20,8 +20,26 @@ const functions = {
    * @param obj - The object to get entries from.
    * @returns An array of key-value pairs from the object.
    */
-  typedEntries<K extends string, V>(obj: Record<K, V>): [K, V][] {
+  typedEntries<K extends string, V>(obj: Record<K, V> | Array<V>): [K, V][] {
     return Object.entries(obj) as [K, V][];
+  },
+
+  /**
+   * Returns typed values of an object.
+   * @param obj - The object to get values from.
+   * @returns An array of values from the object.
+   */
+  typedValues<K extends string, V>(obj: Record<K, V> | Array<V>): V[] {
+    return Object.values(obj) as V[];
+  },
+
+  /**
+   * Returns typed keys of an object.
+   * @param obj - The object to get keys from.
+   * @returns An array of keys from the object.
+   */
+  typedKeys<K extends string, V>(obj: Record<K, V> | Array<V>): K[] {
+    return Object.keys(obj) as K[];
   },
 
   /**
