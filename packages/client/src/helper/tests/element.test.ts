@@ -1,5 +1,7 @@
 import { it, expect } from 'bun:test';
-import element from './element.js';
+import { Helper } from '../index.js';
+
+const { element } = Helper;
 
 it('splitTextToChars adds container class to parent elements', () => {
   const html = '<span>Test</span>';

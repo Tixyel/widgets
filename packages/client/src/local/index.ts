@@ -4,7 +4,6 @@ import { logger } from '../main.js';
 import { useQueue } from '../utils/useQueue.js';
 import { Helper } from '../helper/index.js';
 import { Data } from '../data/index.js';
-import { BadgeOptions } from '../helper/functions/message.js';
 
 export namespace Local {
   type Queue = useQueue<
@@ -744,7 +743,7 @@ export namespace Local {
                 var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
                 var message = (options?.message as string) ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
 
-                var badges = await Helper.message.generateBadges((options?.badges as BadgeOptions) ?? [], provider);
+                var badges = await Helper.message.generateBadges((options?.badges as Helper.message.BadgeOptions) ?? [], provider);
 
                 var emotes = Helper.message.findEmotesInText(message);
                 var renderedText = Helper.message.replaceEmotesWithHTML(message, emotes);
@@ -1079,7 +1078,7 @@ export namespace Local {
                 var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
                 var message = (options?.message as string) ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
 
-                const badges = await Helper.message.generateBadges((options?.badges as BadgeOptions) ?? [], provider);
+                const badges = await Helper.message.generateBadges((options?.badges as Helper.message.BadgeOptions) ?? [], provider);
 
                 var emotes = Helper.message.findEmotesInText(message);
                 var renderedText = Helper.message.replaceEmotesWithHTML(message, emotes);
@@ -1262,7 +1261,7 @@ export namespace Local {
         data: Partial<{
           name: string;
           message: string;
-          badges: BadgeOptions;
+          badges: Helper.message.BadgeOptions;
           color: string;
           userId: string;
           msgId: string;
@@ -1377,7 +1376,7 @@ export namespace Local {
         data: Partial<{
           name: string;
           message: string;
-          badges: BadgeOptions;
+          badges: Helper.message.BadgeOptions;
           color: string;
           userId: string;
           msgId: string;

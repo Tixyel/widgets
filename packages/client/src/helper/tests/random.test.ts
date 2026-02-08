@@ -1,5 +1,7 @@
 import { test, expect } from 'bun:test';
-import random from './random.js';
+import { Helper } from '../index.js';
+
+const { random } = Helper;
 
 test('Random number generation within specified range', () => {
   const min = 5;

@@ -1,5 +1,4 @@
 import { Client } from '../client/client.js';
-import functions from '../helper/functions/utils.js';
 import { Helper } from '../helper/index.js';
 import { logger } from '../main.js';
 import { StreamElements } from '../types/index.js';
@@ -59,7 +58,7 @@ export class Button {
   }
 
   generate(values: Array<Record<string, string | number>>) {
-    const fields = functions.typedValues(values).reduce(
+    const fields = Helper.utils.typedValues(values).reduce(
       (acc, values, index) => {
         const key = Helper.string.compose(this.template, { index, ...values }, { html: false });
         const name = Helper.string.compose(this.name, { index, ...values }, { html: false });

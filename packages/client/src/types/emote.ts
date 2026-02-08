@@ -31,3 +31,5 @@ export type BttvEmote = {
   end: number;
   coords: { x: number; y: number; width: number; height: number };
 };
+
+export type Emote = TwitchEmote | BttvEmote | SeventvEmote;

@@ -24,7 +24,7 @@ import type {
   ComfyJSInstance,
 } from 'comfy.js';
 import { Local } from '../local/index.js';
-import { BadgeOptions } from '../helper/functions/message.js';
+import { Helper } from '../helper/index.js';
 
 type ComfyEvents = {
   load: [instance: ComfyJSInstance];
@@ -146,7 +146,7 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
           message: `!${command} ${message}`,
           badges: Object.entries(roles)
             .map(([role, hasRole]) => (hasRole ? role : null))
-            .filter(Boolean) as BadgeOptions,
+            .filter(Boolean) as Helper.message.BadgeOptions,
           color: extra.userColor,
           time: new Date(extra.timestamp).getTime(),
           userId: extra.userId,
@@ -178,7 +178,7 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
           message: message,
           badges: Object.entries(roles)
             .map(([role, hasRole]) => (hasRole ? role : null))
-            .filter(Boolean) as BadgeOptions,
+            .filter(Boolean) as Helper.message.BadgeOptions,
           color: extra.userColor,
           time: new Date(extra.timestamp).getTime(),
           userId: extra.userId,

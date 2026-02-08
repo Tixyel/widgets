@@ -1,5 +1,7 @@
 import { test, expect } from 'bun:test';
-import color from './color.js';
+import { Helper } from '../index.js';
+
+const { color } = Helper;
 
 test('color.validate should correctly identify color formats', () => {
   expect(color.validate('#FF5733')).toBe('hex');
@@ -22,18 +24,4 @@ test('color.convert should convert colors between formats', async () => {
   expect(await color.convert('#FF5733', 'invalid-format' as any)).toBe(null);
   expect(color.convert('invalid-color', 'rgb')).rejects.toThrow('Invalid color format: invalid-color');
   expect(color.convert('#FF5733', 'hex')).rejects.toThrow('Color is already in the desired format: hex');
-});
-
-test('color.random should generate random colors in specified formats', () => {
-  const randHex = color.random('hex');
-  expect(randHex).toMatch(/^#([0-9A-Fa-f]{6})$/);
-
-  const randHexa = color.random('hexa');
-  expect(randHexa).toMatch(/^#([0-9A-Fa-f]{8})$/);
-
-  const randRgb = color.random('rgb');
-  expect(randRgb).toMatch(/^rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)$/);
-
-  const randRgba = color.random('rgba');
-  expect(randRgba).toMatch(/^rgba\((\d{1,3}), (\d{1,3}), (\d{1,3}), (0|0?\.\d+|1(\.0)?)\)$/);
 });

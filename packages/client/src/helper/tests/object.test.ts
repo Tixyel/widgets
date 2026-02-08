@@ -1,5 +1,7 @@
 import { test, expect } from 'bun:test';
-import object from './object.js';
+import { Helper } from '../index.js';
+
+const { object } = Helper;
 
 test('Flatten nested objects with stringify=true', () => {
   const nestedObject = {

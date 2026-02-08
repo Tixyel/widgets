@@ -1,5 +1,7 @@
 import { test, expect } from 'bun:test';
-import number from './number.js';
+import { Helper } from '../index.js';
+
+const { number } = Helper;
 
 test('Convert numbers to cardinal words correctly', () => {
   expect(number.translate(0, 'cardinal')).toBe('zero');

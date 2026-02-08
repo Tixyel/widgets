@@ -1,5 +1,7 @@
 import { test, it, expect } from 'bun:test';
-import string from './string.js';
+import { Helper } from '../index.js';
+
+const { string } = Helper;
 
 it('Generate string template correctly', async () => {
   const template = '[TEST=abc] [UPC={username}]';

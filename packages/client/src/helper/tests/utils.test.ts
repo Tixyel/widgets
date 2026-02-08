@@ -1,6 +1,7 @@
 import { test, expect } from 'bun:test';
-import utils from './utils.js';
+import { Helper } from '../index.js';
 
+const { utils } = Helper;
 const { delay, typedEntries, probability } = utils;
 
 test('delay should wait for the specified time', async () => {

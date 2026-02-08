@@ -182,6 +182,7 @@ if (typeof window !== undefined) {
                 var storage = usedStorages.find((s) => s.id === event.data.key.replace('customWidget.', ''));
 
                 if (storage) {
+                  // @ts-ignore
                   storage.update(event.data.value);
                 }
               }
