@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.0.1
+
+### Patch Changes
+
+- 81813cb: Improve enqueue method to handle multiple items and enhance processor function syntax
+
 ## 6.0.0
 
 ### Major Changes
