@@ -143,4 +143,107 @@ describe('string functions', () => {
 
     expect(result).toBe('Many');
   });
+
+  it('Generate string template with IF logical AND correctly', async () => {
+    const template = '[IF=vip && status === "live"?VIP Live|Not VIP Live]';
+
+    const data = { status: 'live', vip: true };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result).toBe('VIP Live');
+  });
+
+  it('Generate string template with IF logical OR correctly', async () => {
+    const template = '[IF=vip || status === "live"?Highlighted|Normal]';
+
+    const data = { status: 'offline', vip: true };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result).toBe('Highlighted');
+  });
+
+  it('Generate string template with pluralization based on amount correctly', async () => {
+    const template = '[PLURAL=message|messages]';
+
+    const data = { amount: 1 };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result).toBe('message');
+  });
+
+  it('Generate string template with pluralization based on count correctly', async () => {
+    const template = '[PLURAL=message|messages]';
+
+    const data = { count: 5 };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result).toBe('messages');
+  });
+
+  it('Generate string template with pluralization using explicit key correctly', async () => {
+    const template = '[PLURAL:items=item|items]';
+
+    const data = { items: 2 };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result).toBe('items');
+  });
+
+  it('Generate string template with number formatting correctly', async () => {
+    const template = '[NUMBER:2=amount]';
+
+    const data = { amount: 1234.5 };
+
+    const result = string.compose(template, data, { html: false });
+
+    // Locale-dependent grouping, but must include two decimals
+    expect(result.endsWith('34.50') || result.endsWith('34,50')).toBe(true);
+  });
+
+  it('Generate string template with date formatting correctly', async () => {
+    const template = '[DATE:iso=createdAt]';
+
+    const data = { createdAt: new Date('2020-01-02T03:04:05.000Z') };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result.startsWith('2020-01-02')).toBe(true);
+  });
+
+  it('Generate string template with map/switch correctly', async () => {
+    const template = '[MAP:status=live:Online|offline:Offline|default:Unknown]';
+
+    const data = { status: 'offline' };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result).toBe('Offline');
+  });
+
+  it('Generate string template with HTML escaping correctly', async () => {
+    const template = '[ESCAPE={message}]';
+
+    const data = { message: '<b>Test & "message"</b>' };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result).toBe('&lt;b&gt;Test &amp; &quot;message&quot;&lt;/b&gt;');
+  });
+
+  it('Generate string template with PRESET correctly', async () => {
+    const template = '[PRESET:alert={username}]';
+
+    Helper.string.PRESETS['alert'] = 'BOLD';
+
+    const data = { username: 'user' };
+
+    const result = string.compose(template, data, { html: false });
+
+    expect(result).toBe('user');
+  });
 });
