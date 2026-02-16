@@ -993,7 +993,7 @@ export namespace Helper {
 
       const REGEX = {
         PLACEHOLDERS: /{([^}]+)}/g,
-        MODIFIERS: /\[(\w+)(:[^=]+)?=([^\]]+)\]/g,
+        MODIFIERS: /\[([^\]=]+)=([^\]]+)\]/g,
       };
 
       var amount = parseFloat(flatten?.amount ?? flatten?.count ?? 0);
@@ -1079,9 +1079,22 @@ export namespace Helper {
         let match;
 
         while ((match = REGEX.MODIFIERS.exec(str)) !== null) {
-          const [fullMatch, modifier, param, value] = match;
+          const [fullMatch, modifierGroup, value] = match;
 
-          const newValue = applyModifier(replaceAll(value), modifier, param);
+          const modifiers = modifierGroup
+            .split(',')
+            .map((part) => part.trim())
+            .filter((part) => part.length)
+            .map((part) => {
+              const [name, param] = part.split(':');
+              return { name: name.trim(), param: param?.trim() ?? null };
+            });
+
+          let newValue = replaceAll(value);
+
+          for (const { name, param } of modifiers) {
+            newValue = applyModifier(newValue, name, param);
+          }
 
           str = str.replace(fullMatch, newValue ?? '');
 
@@ -1119,18 +1132,39 @@ export namespace Helper {
 
         function parseModifier(): string {
           i++;
-          let name = '';
-          while (i < len && /[A-Za-z0-9]/.test(str[i])) name += str[i++];
-          let param: string | null = null;
-          if (str[i] === ':') {
-            i++;
-            const paramStart = i;
-            while (i < len && str[i] !== '=') i++;
-            param = str.slice(paramStart, i);
+          const modifiers: { name: string; param: string | null }[] = [];
+
+          while (i < len && str[i] !== '=') {
+            if (str[i] === ',') {
+              i++;
+              continue;
+            }
+
+            let name = '';
+            while (i < len && /[A-Za-z0-9]/.test(str[i])) name += str[i++];
+
+            let param: string | null = null;
+            if (str[i] === ':') {
+              i++;
+              const paramStart = i;
+              while (i < len && str[i] !== ',' && str[i] !== '=') i++;
+              param = str.slice(paramStart, i);
+            }
+
+            if (name.length) {
+              modifiers.push({ name, param });
+            }
+
+            if (str[i] === ',') {
+              i++;
+            }
           }
+
           if (str[i] === '=') i++;
+
           const value = parseText(']');
-          return applyModifier(value, name, param);
+
+          return modifiers.reduce((val, { name, param }) => applyModifier(val, name, param), value);
         }
 
         return parseText();

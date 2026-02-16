@@ -54,10 +54,10 @@
   "devDependencies": {
     "@types/tmi.js": "^1.8.6",
     "comfy.js": "^1.1.29",
-    "rollup-plugin-dts": "^6.3.0",
+    "rollup-plugin-dts": "catalog:build",
     "tmi.js": "^1.8.5",
     "typescript": "^5.9.3",
-    "vite": "^7.1.5"
+    "vite": "catalog:build"
   },
   "dependencies": {},
   "engines": {

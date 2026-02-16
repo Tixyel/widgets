@@ -179,7 +179,7 @@ if (typeof window !== undefined) {
               const event = data.event;
 
               if (usedStorages.length) {
-                var storage = usedStorages.find((s) => s.id === event.data.key.replace('customWidget.', ''));
+                var storage = usedStorages.find((s) => s.id === event.data.key.replace('customWidget.', '') || s.id === event.data.key);
 
                 if (storage) {
                   // @ts-ignore
