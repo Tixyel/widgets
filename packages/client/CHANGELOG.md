@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.0.0
+
+### Major Changes
+
+- f5800b6: Enhance string template functionality with new modifiers and presets
+
 ## 5.5.0
 
 ### Minor Changes
