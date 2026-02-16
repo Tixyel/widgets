@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 5.5.0
+
+### Minor Changes
+
+- b18b45b: Enhance string template parsing and testing with multiple modifiers
+
 ## 5.4.0
 
 ### Minor Changes
