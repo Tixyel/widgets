@@ -940,11 +940,13 @@ export namespace Helper {
       options: {
         method?: 'loop' | 'index';
         html?: boolean;
+        debug?: boolean;
         modifiers?: Record<string, Modifier>;
         aliases?: Record<string, string[]>;
       } = {
         method: 'index',
         html: false,
+        debug: false,
         modifiers: {},
         aliases: {},
       },
@@ -959,10 +961,28 @@ export namespace Helper {
         }
       };
 
-      values.skip = '<br/>';
-      values.newline = '<br/>';
+      const baseValues = {
+        skip: '<br/>',
+        newline: '<br/>',
+        ...values,
+      };
 
-      const flatten: Record<string, string> = Object.entries(object.flatten(values)).reduce(
+      let defaultCurrency = '$';
+      let defaultCurrencyCode = 'USD';
+
+      if (typeof window !== 'undefined') {
+        try {
+          const client: any = (window as any).client;
+          const currency = client?.details?.currency;
+
+          if (currency?.symbol) defaultCurrency = String(currency.symbol);
+          if (currency?.code) defaultCurrencyCode = String(currency.code);
+        } catch {
+          // ignore – fall back to defaults
+        }
+      }
+
+      const flatten: Record<string, string> = Object.entries(object.flatten(baseValues)).reduce(
         (acc, [k, v]) => {
           acc[k] = String(v);
 
@@ -983,8 +1003,8 @@ export namespace Helper {
             acc['count'] = String(acc?.count || acc?.amount || v);
           }
 
-          acc['currency'] = acc.currency || window?.client?.details.currency.symbol || '$';
-          acc['currencyCode'] = acc.currencyCode || window?.client?.details.currency.code || 'USD';
+          acc['currency'] = acc.currency || defaultCurrency;
+          acc['currencyCode'] = acc.currencyCode || defaultCurrencyCode;
 
           return acc;
         },
@@ -998,10 +1018,124 @@ export namespace Helper {
 
       var amount = parseFloat(flatten?.amount ?? flatten?.count ?? 0);
 
+      function parseLiteralOrValue(token: string, valuesMap: Record<string, string>): any {
+        let trimmed = token.trim();
+
+        if (!trimmed.length) return undefined;
+
+        const firstChar = trimmed[0];
+        const lastChar = trimmed[trimmed.length - 1];
+
+        if ((firstChar === '"' && lastChar === '"') || (firstChar === "'" && lastChar === "'")) {
+          return trimmed.slice(1, -1);
+        }
+
+        const lowered = trimmed.toLowerCase();
+        if (lowered === 'true') return true;
+        if (lowered === 'false') return false;
+
+        if (/^-?\d+(\.\d+)?$/.test(trimmed)) return parseFloat(trimmed);
+
+        const fromValues = valuesMap?.[trimmed];
+        if (fromValues === undefined) return trimmed;
+
+        const fromValuesStr = String(fromValues).trim();
+        const fromValuesLower = fromValuesStr.toLowerCase();
+
+        if (fromValuesLower === 'true') return true;
+        if (fromValuesLower === 'false') return false;
+
+        if (/^-?\d+(\.\d+)?$/.test(fromValuesStr)) return parseFloat(fromValuesStr);
+
+        return fromValues;
+      }
+
+      function coerceToBoolean(value: any): boolean {
+        if (typeof value === 'boolean') return value;
+        if (value === null || value === undefined) return false;
+
+        const str = String(value).trim().toLowerCase();
+        if (!str.length) return false;
+
+        if (['false', '0', 'no', 'off', 'null', 'undefined', 'nan'].includes(str)) return false;
+
+        return true;
+      }
+
+      function evaluateConditionExpression(expression: string, valuesMap: Record<string, string>): boolean {
+        let expr = expression.trim();
+        if (!expr.length) return false;
+
+        let invert = false;
+        while (expr.startsWith('!')) {
+          invert = !invert;
+          expr = expr.slice(1).trim();
+        }
+
+        const operators = ['===', '!==', '==', '!=', '>=', '<=', '>', '<'];
+        let op: string | null = null;
+        let left = expr;
+        let right = '';
+
+        for (const candidate of operators) {
+          const idx = expr.indexOf(candidate);
+          if (idx !== -1) {
+            op = candidate;
+            left = expr.slice(0, idx);
+            right = expr.slice(idx + candidate.length);
+            break;
+          }
+        }
+
+        let result: boolean;
+
+        if (!op) {
+          const value = parseLiteralOrValue(left, valuesMap);
+          result = coerceToBoolean(value);
+        } else {
+          const leftVal = parseLiteralOrValue(left, valuesMap);
+          const rightVal = parseLiteralOrValue(right, valuesMap);
+
+          switch (op) {
+            case '===':
+              result = leftVal === rightVal;
+              break;
+            case '!==':
+              result = leftVal !== rightVal;
+              break;
+            case '==':
+              result = (leftVal as any) == (rightVal as any);
+              break;
+            case '!=':
+              result = (leftVal as any) != (rightVal as any);
+              break;
+            case '>=':
+              result = (leftVal as any) >= (rightVal as any);
+              break;
+            case '<=':
+              result = (leftVal as any) <= (rightVal as any);
+              break;
+            case '>':
+              result = (leftVal as any) > (rightVal as any);
+              break;
+            case '<':
+              result = (leftVal as any) < (rightVal as any);
+              break;
+            default:
+              result = false;
+              break;
+          }
+        }
+
+        return invert ? !result : result;
+      }
+
       const HTML_MODIFIERS: Record<string, Modifier> = {
         COLOR: (value, param) => span(param && !!color.validate(param) ? `color: ${param}` : '', value, 'color'),
         WEIGHT: (value, param) => span(param && !isNaN(parseInt(param)) ? `font-weight: ${param}` : '', value, 'weight'),
+        SEMIBOLD: (value) => span('font-weight: 600', value, 'semibold'),
         BOLD: (value) => span('font-weight: bold', value, 'bold'),
+        BLACK: (value) => span('font-weight: 900', value, 'black'),
         LIGHT: (value) => span('font-weight: lighter', value, 'light'),
         STRONG: (value) => span('font-weight: bolder', value, 'strong'),
         ITALIC: (value) => span('font-style: italic', value, 'italic'),
@@ -1024,6 +1158,18 @@ export namespace Helper {
         LOW: (value) => value.toLowerCase(),
         REV: (value) => value.split('').reverse().join(''),
         CAP: (value) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase(),
+        IF: (value, _param, valuesMap) => {
+          const text = value ?? '';
+
+          const [rawCondition, rest] = text.split('?', 2);
+          if (!rest) return text;
+
+          const [whenTrue, whenFalse = ''] = rest.split('|', 2);
+
+          const condition = evaluateConditionExpression(rawCondition, valuesMap as Record<string, string>);
+
+          return condition ? whenTrue : whenFalse;
+        },
         FALLBACK: (value, param) => (value.length ? value : (param ?? value)),
       };
 
@@ -1054,6 +1200,7 @@ export namespace Helper {
         SMALL: ['SMALLER', 'SM'],
         SHADOW: ['SHADOW', 'SHD'],
         FALLBACK: ['FALLBACK', 'FB'],
+        IF: ['IF', 'COND', 'CONDITION'],
         ...(options.aliases ?? {}),
       };
 
@@ -1070,6 +1217,9 @@ export namespace Helper {
           else if (options?.html) return span('', value, use.toLowerCase());
           else return value;
         } catch (error) {
+          if (options?.debug && typeof console !== 'undefined' && typeof console.error === 'function') {
+            console.error('[Helper.string.compose] Modifier error', { name, param, error });
+          }
           return value;
         }
       }
