@@ -10,7 +10,7 @@ interface CommandOptions {
   run: (this: Client, args: string[], event: CommandEvent) => void;
   test?: string;
   aliases?: string[];
-  permissions?: string[];
+  permissions?: string[] | boolean;
   admins?: string[];
 }
 

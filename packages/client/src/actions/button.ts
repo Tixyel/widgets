@@ -46,7 +46,7 @@ export class Button {
     if (!(window.client instanceof Client)) return;
 
     this.field = options.field ?? this.field;
-    this.template = options.template ?? this.template;
+    this.template = options.template ?? (typeof this.field === 'string' ? this.field : this.template);
     this.name = options.name ?? this.name;
     this.value = options.value ?? this.value;
     this.run = options.run;
