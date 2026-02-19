@@ -82,6 +82,8 @@ export default defineConfig({
       'fields.txt': 'fields',
     },
 
+    htmlRegex: /<body[^>]*>([\\s\\S]*?)<\\/body>/i,
+
     obfuscation: {
       javascript: {
         compact: true,

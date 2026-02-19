@@ -6,6 +6,7 @@ export const WORKSPACE_SEARCH_LIMIT = 50;
 export const WORKSPACE_DEFAULT_WIDGET_DIRS = {
   entry: 'development',
   output: 'finished',
+  shared: 'shared',
   extension: 'widgetIO',
 } as const;
 
@@ -79,13 +80,74 @@ export const WORKSPACE_DEFAULT_SCAFFOLD: WorkspaceScaffold.Item[] = [
   },
 ];
 
+export const WORKSPACE_DEFAULT_MULTIPLE_SCAFFOLD: WorkspaceScaffold.Item[] = [
+  {
+    name: 'development',
+    type: 'folder',
+    content: [
+      {
+        name: 'index.html',
+        type: 'file',
+        content: '',
+      },
+      {
+        name: 'style.css',
+        type: 'file',
+        content: '',
+      },
+      {
+        name: 'script.js',
+        type: 'file',
+        content: '',
+      },
+      {
+        name: 'fields.json',
+        type: 'file',
+        content: '{}',
+      },
+      {
+        name: 'data.json',
+        type: 'file',
+        content: '{}',
+      },
+    ],
+  },
+  {
+    name: 'shared',
+    type: 'folder',
+    content: [
+      {
+        name: 'style.css',
+        type: 'file',
+        content: '',
+      },
+      {
+        name: 'script.js',
+        type: 'file',
+        content: '',
+      },
+    ],
+  },
+  {
+    name: 'finished',
+    type: 'folder',
+  },
+  {
+    name: 'widgetIO',
+    type: 'folder',
+  },
+];
+
 export const DEFAULT_WORKSPACE_CONFIG: WorkspaceConfig = {
   search: {
     maxDepth: WORKSPACE_DEFAULT_MAX_DEPTH,
     ignore: WORKSPACE_DEFAULT_IGNORE_PATTERNS as unknown as string[],
   },
   dirs: WORKSPACE_DEFAULT_WIDGET_DIRS,
-  scaffold: WORKSPACE_DEFAULT_SCAFFOLD,
+  scaffold: {
+    single: WORKSPACE_DEFAULT_SCAFFOLD,
+    multiple: WORKSPACE_DEFAULT_SCAFFOLD,
+  },
   build: {
     parallel: true,
     verbose: false,
@@ -118,5 +180,6 @@ export const DEFAULT_WORKSPACE_CONFIG: WorkspaceConfig = {
       },
       javascript: {},
     },
+    htmlRegex: /<body[^>]*>([\s\S]*?)<\/body>/i,
   },
 };

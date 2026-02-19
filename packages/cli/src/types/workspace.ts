@@ -67,6 +67,10 @@ export interface WorkspaceConfig<Find extends BuildFindMap = BuildFindMap> {
      */
     output?: string;
     /**
+     * Directory where shared files for multiple widgets will be located, supports glob patterns
+     */
+    shared?: string;
+    /**
      * Directory where compacted widget files will be output, supports glob patterns
      */
     extension?: string;
@@ -75,7 +79,10 @@ export interface WorkspaceConfig<Find extends BuildFindMap = BuildFindMap> {
   /**
    * Scaffold structure to create when generating a new widget, defines the files and folders to create with their content (string or JSX.Element)
    */
-  scaffold?: WorkspaceScaffold.Item[];
+  scaffold?: {
+    single?: WorkspaceScaffold.Item[];
+    multiple?: WorkspaceScaffold.Item[];
+  };
 
   /**
    * Build configuration for widget builds, including options for parallel builds, verbose logging, file finding patterns, build results mapping, and obfuscation settings for JavaScript, CSS, and HTML
@@ -94,6 +101,10 @@ export interface WorkspaceConfig<Find extends BuildFindMap = BuildFindMap> {
      * Patterns for finding widget files to build, defined as a mapping of build names to glob patterns or arrays of glob patterns that specify the location of widget files in the workspace
      */
     find?: Find;
+    /**
+     * Directory for shared files used in multiple widget builds, allowing for common assets or code to be shared across widgets without duplication in each widget's build output
+     */
+    shared?: Find;
     /**
      * Mapping of output files to find keys, defines how the found widget files should be mapped to output file names, allowing for flexible naming conventions and organization of built widget files
      */
@@ -133,5 +144,11 @@ export interface WorkspaceConfig<Find extends BuildFindMap = BuildFindMap> {
        */
       javascript?: ObfuscatorOptions;
     };
+
+    /**
+     * Optional regular expression for matching HTML files during the build process, allowing for more flexible identification of HTML files beyond just file extensions, such as matching specific naming conventions or patterns in the file names to determine which files should be treated as HTML during the build
+     * The result should be match[1] containing the HTML content to be processed, typically by extracting the content within the <body> tags for further processing and building of the widget
+     */
+    htmlRegex?: RegExp;
   };
 }

@@ -4,7 +4,7 @@ import { Workspace } from '../lib/workspace';
 import ora from 'ora';
 import cliSpinners from 'cli-spinners';
 import inquirer from 'inquirer';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { Widget } from '../lib/widget';
 import path, { relative } from 'path';
@@ -36,12 +36,12 @@ export const buildCommand: Command = program
         text: 'Loading workspace configuration...',
         color: 'magenta',
         spinner: cliSpinners.dotsCircle,
-      }).start();
+      });
 
       const workspace = new Workspace.Service({ spinner });
 
-      if (existsSync('.tixyel')) {
-        const data = JSON.parse(await readFile('.tixyel', 'utf-8'));
+      if (existsSync('.tixyel') && !existsSync('.tixyel/')) {
+        const data = JSON.parse(readFileSync('.tixyel', 'utf-8'));
 
         const widget = new Widget.Service({
           relativePath: relative(process.cwd(), data.path),
@@ -49,8 +49,6 @@ export const buildCommand: Command = program
           path: process.cwd(),
           workspace,
         });
-
-        console.log('ahadsfuihauidbhwa');
 
         if (!widget.config.config) {
           spinner.fail('Invalid widget configuration found in .tixyel file');
@@ -63,6 +61,8 @@ export const buildCommand: Command = program
 
         spinner.succeed('Loaded widget configuration from .tixyel file');
       }
+
+      spinner.start();
 
       const config = await workspace.loadConfig().catch((error) => {
         console.error('Failed to load workspace configuration:', error);
@@ -93,7 +93,7 @@ export const buildCommand: Command = program
 
       // Handle --widgets option
 
-      if (options.widgets && !!options.widgets && typeof options.widgets !== 'undefined') {
+      if (options.widgets?.length && !!options.widgets && typeof options.widgets !== 'undefined') {
         if (options.widgets === '*') {
           selectedPaths = widgets.map((widget) => widget.path);
 
@@ -185,7 +185,7 @@ export const buildCommand: Command = program
 
         versionBump = options.bump as Bump;
 
-        spinner.succeed(`📌 Version bump: ${versionBump}`);
+        spinner.succeed(`Version bump: ${versionBump}`);
       } else {
         spinner.stop();
 
@@ -222,7 +222,7 @@ export const buildCommand: Command = program
 
                 if (widget)
                   await widget.build(verbose, versionBump).catch((error) => {
-                    spinner.fail(`Failed to build widget at ${path}: ${error}`);
+                    spinner.fail(`Failed to build widget at '${path}': ${error}`);
                   });
 
                 resolve(widget);
@@ -238,7 +238,7 @@ export const buildCommand: Command = program
             spinner.text = `🚀 Building widget: ${widget.config.name} (${widget.relativePath})...`;
 
             await widget.build(verbose, versionBump).catch((error) => {
-              spinner.fail(`Failed to build widget at ${widgetPath}: ${error}`);
+              spinner.fail(`Failed to build widget at '${widgetPath}': ${error}`);
             });
           }
         }

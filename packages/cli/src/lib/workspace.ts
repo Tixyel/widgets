@@ -6,7 +6,7 @@ import { transform } from 'esbuild';
 import { mkdir, writeFile } from 'fs/promises';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { Ora } from 'ora';
-import { DotTixyel } from '../types/widget';
+import { DotTixyel, WidgetType } from '../types/widget';
 import { isValidElement } from 'react';
 import { Widget } from './widget';
 import FastGlob from 'fast-glob';
@@ -105,15 +105,27 @@ export namespace Workspace {
       }
     }
 
-    public async createWidget(path: string, metadata?: Partial<WorkspaceConfig['metadata']>) {
+    public async createWidget(
+      path: string,
+      metadata?: Partial<WorkspaceConfig['metadata']>,
+      options?: {
+        type?: WidgetType;
+        widgets?: string[];
+      },
+    ) {
       try {
         await mkdir(path, { recursive: true });
-
-        // if (this.spinner?.isSpinning )
 
         const workspaceConfigPath = relative(path, this.config.path).replace(/\\/g, '/');
 
         const dotTixyel: DotTixyel = {
+          type: options?.type ?? 'single',
+          widgets:
+            options?.type === 'multiple'
+              ? (options?.widgets ?? [])
+                  .map((widget) => widget.trim())
+                  .filter((widget) => !!widget.length)
+              : undefined,
           name: metadata?.name as string,
           description: metadata?.description as string,
           version: '0.0.0',
@@ -129,6 +141,7 @@ export namespace Workspace {
           dirs: this.config.data.dirs ?? {
             entry: 'development',
             output: 'finished',
+            shared: 'shared',
             extension: 'widgetIO',
           },
         };
@@ -136,42 +149,63 @@ export namespace Workspace {
         await writeFile(resolve(path, '.tixyel'), JSON.stringify(dotTixyel, null, 2), 'utf-8');
 
         // Create scaffold files from the workspace config
-        const scaffold = this.config.data.scaffold ?? [];
+        const {
+          single: singleScaffold = this.config.data.scaffold?.single ?? [],
+          multiple: multipleScaffold = this.config.data.scaffold?.multiple ?? [],
+        } = this.config.data.scaffold ?? {};
 
         let created = { files: 0, folders: 0 };
-
-        async function serializeContent(
-          content: WorkspaceScaffold.Item['content'],
-        ): Promise<string> {
-          if (content === undefined || typeof content === 'undefined' || !content) return '';
-          if (typeof content === 'string') return content;
-
-          if (isValidElement(content)) return renderToStaticMarkup(content);
-
-          return String(content ?? '');
-        }
 
         async function processItem(item: WorkspaceScaffold.Item, currentPath: string) {
           const fullPath = resolve(currentPath, item.name);
 
           if (item.type === 'folder') {
             await mkdir(fullPath, { recursive: true });
-
             created.folders++;
 
-            if (item.content && Array.isArray(item.content) && item.content.length) {
+            if (!item.content || !Array.isArray(item.content) || !item.content.length) return;
+
+            if (
+              dotTixyel.type === 'multiple' &&
+              item.name === (dotTixyel.dirs?.entry ?? 'development') &&
+              dotTixyel.widgets?.length
+            ) {
+              await Promise.all(
+                dotTixyel.widgets.map((subWidget) => {
+                  return new Promise(async (res) => {
+                    const subWidgetPath = resolve(fullPath, subWidget);
+
+                    await mkdir(subWidgetPath, { recursive: true });
+                    created.folders++;
+
+                    await Promise.all(
+                      item.content!.map((child) => processItem(child, subWidgetPath)),
+                    );
+
+                    res(subWidgetPath);
+                  });
+                }),
+              );
+            } else {
               await Promise.all(item.content.map((child) => processItem(child, fullPath)));
             }
           } else if (item.type === 'file') {
-            const content = await serializeContent(item.content);
+            let content = item.content;
 
-            await writeFile(fullPath, content, 'utf-8');
+            if (content === undefined || typeof content === 'undefined' || !content) content = '';
+            else if (typeof content === 'string') content = content;
+            else if (isValidElement(content)) content = renderToStaticMarkup(content);
 
+            await writeFile(fullPath, String(content ?? ''), 'utf-8');
             created.files++;
           }
         }
 
-        await Promise.all(scaffold.map((item) => processItem(item, path)));
+        await Promise.all(
+          (dotTixyel.type === 'single' ? singleScaffold : multipleScaffold).map((item) =>
+            processItem(item, path),
+          ),
+        );
 
         return new Widget.Service({
           relativePath: relative(this.root, path),
@@ -243,7 +277,10 @@ export namespace Workspace {
           ...defaultConfig.dirs,
           ...(config?.dirs || {}),
         },
-        scaffold: config?.scaffold || defaultConfig.scaffold,
+        scaffold: {
+          ...defaultConfig.scaffold,
+          ...config?.scaffold,
+        },
         build: {
           ...defaultConfig.build,
           ...(config?.build || {}),

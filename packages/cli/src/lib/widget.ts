@@ -1,6 +1,6 @@
-import { join, resolve } from 'path';
+import { basename, join, resolve } from 'path';
 import { DotTixyel } from '../types/widget';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import { parse } from 'jsonc-parser';
 import { readFile, writeFile } from 'fs/promises';
 import { Workspace } from './workspace';
@@ -14,6 +14,7 @@ import { transformSync } from 'esbuild';
 import autoprefixer from 'autoprefixer';
 import { minify as minifyHTML } from 'html-minifier-terser';
 import JavaScriptObfuscator from 'javascript-obfuscator';
+import { DEFAULT_WORKSPACE_CONFIG } from './constants.workspace';
 
 export namespace Widget {
   export type WidgetOptions = {
@@ -47,6 +48,10 @@ export namespace Widget {
     ) {
       if (versionBump !== 'none') {
         const newVersion = await this.bumpVersion(versionBump);
+
+        if (this.spinner && this.spinner.isSpinning && verbose) {
+          this.spinner.text = `Building widget ${this.config.name} (version bumped to ${newVersion})...`;
+        }
       }
 
       try {
@@ -58,6 +63,10 @@ export namespace Widget {
           this.path,
           this.config.dirs?.output ?? this.workspace.config.data.dirs?.output ?? 'finished',
         );
+        const sharedDir = join(
+          this.path,
+          this.config.dirs?.shared ?? this.workspace.config.data.dirs?.shared ?? 'shared',
+        );
         const extDir = join(
           this.path,
           this.config.dirs?.extension ?? this.workspace.config.data.dirs?.extension ?? 'widgetIO',
@@ -68,29 +77,27 @@ export namespace Widget {
         }
 
         mkdirSync(outDir, { recursive: true });
+        mkdirSync(extDir, { recursive: true });
 
-        const findPatterns = this.config.build?.find ??
-          this.workspace.config.data.build?.find ?? {
-            html: ['index.html'],
-            script: ['script.js'],
-            typescript: ['script.ts'],
-            css: ['styles.css'],
-            fields: ['fields.json'],
-          };
-        const resultMapping = this.config.build?.result ??
-          this.workspace.config.data.build?.result ?? {
-            'HTML.html': 'html',
-            'SCRIPT.js': 'script',
-            'CSS.css': 'css',
-            'FIELDS.json': 'fields',
-          };
-        const extensionMap = this.config.build?.widgetIO ??
-          this.workspace.config.data.build?.widgetIO ?? {
-            'html.txt': 'html',
-            'js.txt': 'script',
-            'css.txt': 'css',
-            'fields.txt': 'fields',
-          };
+        const findPatterns =
+          this.config.build?.find ??
+          this.workspace.config.data.build?.find ??
+          DEFAULT_WORKSPACE_CONFIG.build?.find!;
+
+        const sharedPatterns =
+          this.config.build?.shared ??
+          this.workspace.config.data.build?.shared ??
+          DEFAULT_WORKSPACE_CONFIG.build?.shared!;
+
+        const resultMapping =
+          this.config.build?.result ??
+          this.workspace.config.data.build?.result ??
+          DEFAULT_WORKSPACE_CONFIG.build?.result!;
+
+        const extensionMap =
+          this.config.build?.widgetIO ??
+          this.workspace.config.data.build?.widgetIO ??
+          DEFAULT_WORKSPACE_CONFIG.build?.widgetIO!;
 
         const normalizeList = (value?: string[]): string[] =>
           Array.isArray(value) ? value.filter(Boolean) : [];
@@ -110,305 +117,407 @@ export namespace Widget {
           return contents;
         };
 
-        const usedWatermarks = new Set<string>();
-        const processedFiles = new Set<string>();
+        // const shared = findAndRead(sharedDir, Object.values(sharedMap).flat());
+        const shared = Object.entries(sharedPatterns).reduce(
+          (acc, [key, patterns]) => {
+            acc[key] = patterns.map((pattern) => `../../${basename(sharedDir)}/${pattern}`);
+
+            return acc;
+          },
+          {} as Record<string, string[]>,
+        );
 
         /**
          * Find all files based on patterns and process them according to their type (html, css, script, fields)
          * Group results based on resultMapping and extensionMap
          * Compact/minify where applicable
          */
-        const results: Record<keyof typeof findPatterns, string> = Object.fromEntries(
-          await Promise.all(
-            Object.entries(findPatterns).map(async ([key, patterns]) => {
-              let result = '';
+        const buildTarget = async (entryDir: string, targetOutDir: string, zipName: string) => {
+          const usedWatermarks = new Set<string>();
+          const processedFiles = new Set<string>();
 
-              let list = normalizeList(patterns.filter((p) => !processedFiles.has(p)));
+          const results: Record<string, string> = Object.fromEntries(
+            await Promise.all(
+              Object.entries({ ...findPatterns, ...shared }).map(async ([key, patterns]) => {
+                let result = '';
 
-              if (!list.length) return [key, ''];
+                let list = normalizeList(patterns.filter((p) => !processedFiles.has(p)));
 
-              const check = (keys: string | string[], formats: string | string[]) => {
-                !Array.isArray(keys) && (keys = [keys]);
-                !Array.isArray(formats) && (formats = [formats]);
+                if (!list.length) return [key, ''];
 
-                return (
-                  // check keys
-                  keys.some((k) => key.toLowerCase() === k.toLowerCase()) ||
-                  // check formats
-                  list.some((p) => formats.some((f) => p.toLowerCase().endsWith(f.toLowerCase())))
-                );
-              };
+                const check = (keys: string | string[], formats: string | string[]) => {
+                  !Array.isArray(keys) && (keys = [keys]);
+                  !Array.isArray(formats) && (formats = [formats]);
 
-              const processed = new Set<string>();
-
-              // Process HTML
-              if (check('html', '.html')) {
-                if (!usedWatermarks.has('html')) result += watermark.html(this) + '\n';
-                usedWatermarks.add('html');
-
-                const fileList = list.filter((e) => e.endsWith('.html') && !processedFiles.has(e));
-
-                if (verbose)
-                  console.log(
-                    `  - Processing HTML for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
+                  return (
+                    // check keys
+                    keys.some((k) => key.toLowerCase().includes(k.toLowerCase())) ||
+                    // check formats
+                    list.some((p) => formats.some((f) => p.toLowerCase().endsWith(f.toLowerCase())))
                   );
-                const files = findAndRead(entryDir, fileList);
+                };
 
-                let mergedHTML = '';
+                const processed = new Set<string>();
 
-                for await (const [pattern, fileContent] of Object.entries(files)) {
-                  // Extract body content
-                  const bodyMatch = fileContent.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-                  if (bodyMatch && bodyMatch[1]) {
-                    mergedHTML += bodyMatch[1].trim() + '\n';
+                // Process HTML
+                if (check('html', '.html')) {
+                  const fileList = list.filter(
+                    (e) => e.endsWith('.html') && !processedFiles.has(e),
+                  );
 
-                    processedFiles.add(pattern);
+                  if (fileList.length) {
+                    if (verbose)
+                      console.log(
+                        `  - Processing HTML for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
+                      );
+
+                    const files = findAndRead(entryDir, fileList);
+
+                    let mergedHTML = '';
+
+                    for await (const [pattern, fileContent] of Object.entries(files)) {
+                      // Extract body content
+                      const bodyMatch = fileContent.match(
+                        this.workspace.config.data.build?.htmlRegex ??
+                          DEFAULT_WORKSPACE_CONFIG.build?.htmlRegex!,
+                      );
+                      if (bodyMatch && bodyMatch[1]) {
+                        mergedHTML += bodyMatch[1].trim() + '\n';
+
+                        processedFiles.add(pattern);
+                      }
+                    }
+
+                    const minified = await minifyHTML(
+                      mergedHTML,
+                      this.workspace.config.data.build?.obfuscation?.html,
+                    );
+
+                    result += minified.trim();
+
+                    processed.add('html');
                   }
                 }
 
-                const minified = await minifyHTML(
-                  mergedHTML,
-                  this.workspace.config.data.build?.obfuscation?.html,
-                );
+                if (check(['css', 'style', 'styles'], '.css')) {
+                  const fileList = list.filter((e) => e.endsWith('.css') && !processedFiles.has(e));
 
-                result += minified.trim();
+                  if (fileList.length) {
+                    if (verbose) {
+                      console.log(
+                        `  - Processing CSS for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
+                      );
+                    }
 
-                processed.add('html');
-              }
+                    const files = findAndRead(entryDir, fileList);
 
-              if (check(['css', 'style', 'styles'], '.css')) {
-                if (!usedWatermarks.has('css')) result += watermark.css(this) + '\n';
-                usedWatermarks.add('css');
+                    const cssContents = Object.values(files).filter(Boolean);
 
-                const fileList = list.filter((e) => e.endsWith('.css') && !processedFiles.has(e));
+                    let mergedCSS = '';
 
-                if (verbose)
-                  console.log(
-                    `  - Processing CSS for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
-                  );
-                const files = findAndRead(entryDir, fileList);
+                    for await (const content of cssContents) {
+                      const plugin: postcss.AcceptedPlugin[] = [
+                        autoprefixer({
+                          overrideBrowserslist: ['Chrome 127'],
+                          ...this.workspace.config.data.build?.obfuscation?.css?.autoprefixer,
+                        }),
+                        cssnano(this.workspace.config.data.build?.obfuscation?.css?.cssnano),
+                      ];
 
-                let mergedCSS = '';
+                      if (this.workspace.config.data.build?.obfuscation?.css?.removeNesting) {
+                        plugin.unshift(nested());
+                      }
 
-                for await (const [pattern, content] of Object.entries(files)) {
-                  const plugin: postcss.AcceptedPlugin[] = [
-                    autoprefixer({
-                      overrideBrowserslist: ['Chrome 127'],
-                      ...this.workspace.config.data.build?.obfuscation?.css?.autoprefixer,
-                    }),
-                    cssnano(this.workspace.config.data.build?.obfuscation?.css?.cssnano),
-                  ];
+                      const processed = await postcss(plugin).process(content, { from: undefined });
 
-                  if (this.workspace.config.data.build?.obfuscation?.css?.removeNesting) {
-                    plugin.unshift(nested());
-                  }
+                      mergedCSS += processed.css + '\n';
+                    }
 
-                  const processed = await postcss(plugin).process(content, { from: undefined });
+                    for (const pattern of Object.keys(files)) {
+                      processedFiles.add(pattern);
+                    }
 
-                  mergedCSS += processed.css + '\n';
+                    if (processed.has('html')) {
+                      result = result += `<style>${mergedCSS.trim()}</style>`;
+                    } else result += mergedCSS.trim();
 
-                  processedFiles.add(pattern);
-                }
-
-                if (processed.has('html')) {
-                  result = result += `<style>${mergedCSS.trim()}</style>`;
-                } else result += mergedCSS.trim();
-
-                processed.add('css');
-              }
-
-              if (check(['typescript', 'ts'], '.ts')) {
-                if (!usedWatermarks.has('script')) result += watermark.script(this) + '\n';
-
-                usedWatermarks.add('script');
-
-                const fileList = list.filter((e) => e.endsWith('.ts') && !processedFiles.has(e));
-
-                if (verbose)
-                  console.log(
-                    `  - Processing TypeScript for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
-                  );
-                const files = findAndRead(entryDir, fileList);
-
-                let mergedTS = '';
-
-                for await (const [pattern, content] of Object.entries(files)) {
-                  try {
-                    const transpiled = transformSync(content, {
-                      loader: 'ts',
-                      target: 'es2020',
-                      format: 'cjs',
-                    });
-
-                    mergedTS += transpiled.code + '\n';
-                  } catch (error) {
-                    console.warn(`   ⚠️  Failed to compile TypeScript: ${error}`);
-                    throw error;
-                  } finally {
-                    processedFiles.add(pattern);
+                    processed.add('css');
                   }
                 }
 
-                // Obfuscate the compiled JavaScript
-                const obfuscated = JavaScriptObfuscator.obfuscate(
-                  mergedTS.trim(),
-                  this.workspace.config.data.build?.obfuscation?.javascript,
-                );
+                if (check(['typescript', 'ts'], ['.ts', '.tsx', '.cts', '.mts'])) {
+                  const fileList = list.filter((e) => e.endsWith('.ts') && !processedFiles.has(e));
 
-                if (processed.has('html')) {
-                  result = result += `<script>${obfuscated.getObfuscatedCode()}</script>\n`;
-                } else result += obfuscated.getObfuscatedCode() + '\n';
+                  if (fileList.length) {
+                    if (verbose)
+                      console.log(
+                        `  - Processing TypeScript for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
+                      );
+                    const files = findAndRead(entryDir, fileList);
 
-                processed.add('typescript');
-              }
+                    let mergedTS = '';
 
-              if (check(['script', 'js', 'javascript'], '.js')) {
-                if (!usedWatermarks.has('script')) result += watermark.script(this) + '\n';
-                usedWatermarks.add('script');
+                    for await (const [pattern, content] of Object.entries(files)) {
+                      try {
+                        const transpiled = transformSync(content, {
+                          loader: 'ts',
+                          target: 'es2020',
+                          format: 'cjs',
+                        });
 
-                const fileList = list.filter((e) => e.endsWith('.js') && !processedFiles.has(e));
+                        mergedTS += transpiled.code + '\n';
+                      } catch (error) {
+                        console.warn(`   ⚠️  Failed to compile TypeScript: ${error}`);
+                        throw error;
+                      } finally {
+                        processedFiles.add(pattern);
+                      }
+                    }
 
-                if (verbose)
-                  console.log(
-                    `  - Processing JavaScript for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
-                  );
-                const files = findAndRead(entryDir, fileList);
+                    // Obfuscate the compiled JavaScript
+                    const obfuscated = JavaScriptObfuscator.obfuscate(
+                      mergedTS.trim(),
+                      this.workspace.config.data.build?.obfuscation?.javascript,
+                    );
 
-                let mergedJS = '';
+                    if (processed.has('html')) {
+                      result = result += `<script>${obfuscated.getObfuscatedCode()}</script>\n`;
+                    } else result += obfuscated.getObfuscatedCode() + '\n';
 
-                for await (const [pattern, content] of Object.entries(files)) {
-                  const obfuscated = JavaScriptObfuscator.obfuscate(
-                    content,
-                    this.workspace.config.data.build?.obfuscation?.javascript,
-                  );
-
-                  mergedJS += obfuscated.getObfuscatedCode() + '\n';
-
-                  processedFiles.add(pattern);
-                }
-
-                if (processed.has('html')) {
-                  result = result += `<script>${mergedJS.trim()}</script>`;
-                } else result += mergedJS.trim();
-
-                processed.add('script');
-              }
-
-              if (check(['fields', 'fielddata', 'fieldData', 'cf', 'customfields'], '.json')) {
-                const fileList = list.filter((e) => e.endsWith('.json') && !processedFiles.has(e));
-
-                if (verbose)
-                  console.log(
-                    `  - Processing JSON for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
-                  );
-                const files = findAndRead(entryDir, fileList);
-
-                let mergedFields = {};
-
-                for await (const [pattern, content] of Object.entries(files)) {
-                  try {
-                    const noComments = parse(content);
-                    const parsed = JSON.parse(JSON.stringify(noComments));
-
-                    Object.assign(mergedFields, parsed);
-                  } catch (error) {
-                    console.warn(`   ⚠️  Failed to parse fields JSON: ${error}`);
-                    throw error;
+                    processed.add('typescript');
                   }
                 }
 
-                if (!processed.size) result += JSON.stringify(mergedFields, null, 2);
+                if (check(['script', 'js', 'javascript'], ['.js', '.mjs', '.cjs', '.jsx'])) {
+                  // if (!usedWatermarks.has('script')) result += watermark.script(this) + '\n';
+                  // usedWatermarks.add('script');
 
-                processed.add('fields');
-              }
+                  const fileList = list.filter((e) => e.endsWith('.js') && !processedFiles.has(e));
 
-              if (!result.length) {
-                if (verbose)
-                  console.log(
-                    `  - Unknown build key: ${key}, the available keys are html, css, script and fields.`,
+                  if (fileList.length) {
+                    if (verbose)
+                      console.log(
+                        `  - Processing JavaScript for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
+                      );
+                    const files = findAndRead(entryDir, fileList);
+
+                    let mergedJS = '';
+
+                    for await (const [pattern, content] of Object.entries(files)) {
+                      const obfuscated = JavaScriptObfuscator.obfuscate(
+                        content,
+                        this.workspace.config.data.build?.obfuscation?.javascript,
+                      );
+
+                      mergedJS += obfuscated.getObfuscatedCode() + '\n';
+
+                      processedFiles.add(pattern);
+                    }
+
+                    if (processed.has('html')) {
+                      result = result += `<script>${mergedJS.trim()}</script>`;
+                    } else result += mergedJS.trim();
+
+                    processed.add('script');
+                  }
+                }
+
+                if (
+                  check(
+                    ['fields', 'fielddata', 'fieldData', 'cf', 'customfields'],
+                    ['.json', '.jsonc'],
+                  )
+                ) {
+                  const fileList = list.filter(
+                    (e) => (e.endsWith('.json') || e.endsWith('.jsonc')) && !processedFiles.has(e),
                   );
 
-                result += '';
-              }
+                  if (fileList.length) {
+                    if (verbose)
+                      console.log(
+                        `  - Processing JSON for ${this.config.name} [${key}, ${fileList.join(', ')}]...`,
+                      );
+                    const files = findAndRead(entryDir, fileList);
 
-              return [key, result];
-            }),
-          ),
-        );
+                    let mergedFields = {};
 
-        for await (const [filename, key] of Object.entries(resultMapping)) {
-          let content = '';
-          if (typeof key === 'string') content = results[key];
-          else if (Array.isArray(key)) {
-            for await (const k of key) {
-              const part = results[k];
+                    for await (const [pattern, content] of Object.entries(files)) {
+                      try {
+                        const noComments = parse(content);
+                        const parsed = JSON.parse(JSON.stringify(noComments));
 
-              if (part) {
-                content += '\n' + part;
+                        Object.assign(mergedFields, parsed);
+                      } catch (error) {
+                        console.warn(`   ⚠️  Failed to parse fields JSON: ${error}`);
+                        throw error;
+                      }
 
-                if (verbose) console.log(`   ✓ Merged part for: ${k}`);
-              }
-            }
-          }
+                      processedFiles.add(pattern);
+                    }
 
-          if (content) {
-            const outPath = join(outDir, filename);
+                    if (!processed.has('fields') && Object.keys(mergedFields).length) {
+                      result += JSON.stringify(mergedFields, null, 2);
+                    }
 
-            writeFileSync(outPath, content, 'utf-8');
+                    processed.add('fields');
+                  }
+                }
 
-            if (verbose) console.log(`   ✓ Written: ${outPath}`);
-          }
-        }
+                if (!result.length) {
+                  if (verbose)
+                    console.log(
+                      `  - Unknown build key: ${key}, the available keys are html, css, script and fields.`,
+                    );
 
-        try {
-          const zip = new JSZip();
+                  result += '';
+                }
 
-          for await (const [filename, key] of Object.entries(extensionMap)) {
+                return [key, result];
+              }),
+            ),
+          );
+
+          for await (const [filename, key] of Object.entries(resultMapping)) {
             let content = '';
+
+            let arrrr = Array.isArray(key) ? key : [key];
+
+            if (arrrr.some((k) => k.includes('script'))) {
+              if (!usedWatermarks.has('script')) content += watermark.script(this) + '\n';
+              usedWatermarks.add('script');
+            } else if (arrrr.some((k) => k.includes('css'))) {
+              if (!usedWatermarks.has('css')) content += watermark.css(this) + '\n';
+              usedWatermarks.add('css');
+            } else if (arrrr.some((k) => k.includes('html'))) {
+              if (!usedWatermarks.has('html')) content += watermark.html(this) + '\n';
+              usedWatermarks.add('html');
+            }
 
             if (typeof key === 'string') content = results[key];
             else if (Array.isArray(key)) {
               for await (const k of key) {
                 const part = results[k];
 
-                if (part) {
-                  content += '\n' + part;
+                if (part && part.trim().length) {
+                  if (
+                    ['fields', 'customfields', 'cf', 'fielddata', 'fieldData', 'data'].some((f) =>
+                      k.toLowerCase().includes(f.toLowerCase()),
+                    )
+                  ) {
+                    let old = JSON.parse(content || '{}');
+                    let addition = JSON.parse(part);
 
-                  if (verbose) console.log(`   ✓ Merged part for ZIP: ${k}`);
+                    content = JSON.stringify({ ...old, ...addition }, null, 2);
+                  } else content += '\n' + part.trim();
+
+                  if (verbose) console.log(`   ✓ Merged part for: ${k}`);
                 }
               }
             }
 
-            if (content) {
-              zip.file(filename, content);
+            content = content.trim();
 
-              if (verbose) console.log(`   ✓ Added to ZIP: ${filename}`);
+            if (content) {
+              const outPath = join(targetOutDir, filename);
+
+              writeFileSync(outPath, content, 'utf-8');
+
+              if (verbose) console.log(`   ✓ Written: ${outPath}`);
             }
           }
 
-          zip.file(
-            'widget.ini',
-            `[HTML]\npath = "html.txt"\n\n[CSS]\npath = "css.txt"\n\n[JS]\npath = "js.txt"\n\n[FIELDS]\npath = "fields.txt"\n\n[DATA]\npath = "data.txt"`,
-          );
+          try {
+            const zip = new JSZip();
 
-          // check if data.txt exists in results, otherwise create empty
-          const dataContent = results['data'] || '{}';
-          zip.file('data.txt', dataContent);
+            for await (const [filename, key] of Object.entries(extensionMap)) {
+              let content = '';
 
-          const result = await zip
-            .generateInternalStream({ type: 'base64' })
-            .accumulate()
-            .then((data) => data);
+              if (typeof key === 'string') content = results[key];
+              else if (Array.isArray(key)) {
+                for await (const k of key) {
+                  const part = results[k];
 
-          const zipPath = join(
-            extDir + '/' + (this.config.version || '0.0.0'),
-            `${this.config.name}.zip`,
-          );
+                  if (part && part.trim().length) {
+                    content += '\n' + part.trim();
 
-          mkdirSync(extDir + '/' + (this.config.version || '0.0.0'), { recursive: true });
-          writeFileSync(zipPath, result, 'base64');
-        } catch (error) {
-          throw new Error(`Failed to create ZIP archive: ${error}`);
+                    if (verbose) console.log(`   ✓ Merged part for ZIP: ${k}`);
+                  }
+                }
+              }
+
+              if (content) {
+                zip.file(filename, content);
+
+                if (verbose) console.log(`   ✓ Added to ZIP: ${filename}`);
+              }
+            }
+
+            zip.file(
+              'widget.ini',
+              `[HTML]\npath = "html.txt"\n\n[CSS]\npath = "css.txt"\n\n[JS]\npath = "js.txt"\n\n[FIELDS]\npath = "fields.txt"\n\n[DATA]\npath = "data.txt"`,
+            );
+
+            // check if data.txt exists in results, otherwise create empty
+            const dataContent = results['data'] || '{}';
+            zip.file('data.txt', dataContent);
+
+            const result = await zip
+              .generateInternalStream({ type: 'base64' })
+              .accumulate()
+              .then((data) => data);
+
+            const zipPath = join(
+              extDir + '/' + (this.config.version || '0.0.0'),
+              `${zipName ?? this.config.name}.zip`,
+            );
+
+            mkdirSync(extDir + '/' + (this.config.version || '0.0.0'), { recursive: true });
+            writeFileSync(zipPath, result, 'base64');
+          } catch (error) {
+            throw new Error(`Failed to create ZIP archive: ${error}`);
+          }
+        };
+
+        if (this.config.type === 'multiple') {
+          const configuredWidgets = (this.config.widgets ?? []).filter(Boolean);
+
+          const folderWidgets = readdirSync(entryDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name);
+
+          const subWidgets = configuredWidgets.length ? configuredWidgets : folderWidgets;
+          if (!subWidgets.length) {
+            throw new Error(
+              `No widgets found in multiple widget entry directory: ${entryDir}. Make sure to create subfolders for each widget or configure the "widgets" property in the widget configuration with the names of the widget folders.`,
+            );
+          }
+
+          let builtWidgets = 0;
+
+          for await (const subWidget of subWidgets) {
+            const subEntryDir = join(entryDir, subWidget);
+            const subOutDir = join(outDir, subWidget);
+
+            if (!existsSync(subEntryDir) && verbose) {
+              console.warn(
+                `   ⚠️  Skipping widget "${subWidget}" because the entry directory does not exist: ${subEntryDir}`,
+              );
+              continue;
+            }
+
+            mkdirSync(subOutDir, { recursive: true });
+
+            await buildTarget(subEntryDir, subOutDir, `${this.config.name}-${subWidget}`);
+            builtWidgets++;
+          }
+
+          if (!builtWidgets) {
+            throw new Error(
+              `No valid widgets were built for multiple widget configuration. Please check the entry directory and configuration.`,
+            );
+          }
+        } else {
+          await buildTarget(entryDir, outDir, this.config.name);
         }
       } catch (error) {
         throw new Error(`Failed to build widget: ${error}`);
@@ -478,18 +587,28 @@ export namespace Widget {
     }
 
     static async mergeConfig(config: DotTixyel): Promise<DotTixyel> {
+      const widgets =
+        config.type === 'multiple'
+          ? Array.isArray(config.widgets)
+            ? config.widgets.filter(Boolean)
+            : []
+          : undefined;
+
+      const dirs = {
+        entry: config.dirs?.entry ?? 'development',
+        output: config.dirs?.output ?? 'finished',
+        shared: config.dirs?.shared ?? 'widgetIO',
+        extension: config.dirs?.extension ?? 'widgetIO',
+      };
+
       const merged: DotTixyel = {
         ...config,
+        widgets: widgets,
+        type: config.type ?? 'single',
         version: config.version ?? '0.0.0',
         description: config.description ?? '',
-        metadata: {
-          ...config.metadata,
-        },
-        dirs: {
-          entry: config.dirs?.entry ?? 'development',
-          output: config.dirs?.output ?? 'finished',
-          extension: config.dirs?.extension ?? 'widgetIO',
-        },
+        metadata: config.metadata ?? {},
+        dirs: dirs,
       };
 
       return merged;
