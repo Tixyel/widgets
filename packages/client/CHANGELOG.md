@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.0.2
+
+### Patch Changes
+
+- 598531a: Update Button template assignment to handle field type and adjust CommandOptions permissions type
+
 ## 6.0.1
 
 ### Patch Changes

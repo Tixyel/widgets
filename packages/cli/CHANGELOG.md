@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.0.0
+
+### Major Changes
+
+- f1a8b25: Add workspace and widget management features, reorganize CLI and refact
+
 ## 2.7.1
 
 ### Patch Changes
