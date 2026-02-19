@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.1.1
+
+### Patch Changes
+
+- 67ddf37: Simplify condition for processing merged fields in widget service
+
 ## 3.1.0
 
 ### Minor Changes
