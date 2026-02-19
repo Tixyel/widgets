@@ -355,7 +355,7 @@ export namespace Widget {
                       processedFiles.add(pattern);
                     }
 
-                    if (!processed.has('fields') && Object.keys(mergedFields).length) {
+                    if (!processed.has('fields')) {
                       result += JSON.stringify(mergedFields, null, 2);
                     }
 
