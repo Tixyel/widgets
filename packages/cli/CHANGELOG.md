@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.1.0
+
+### Minor Changes
+
+- 903a1f8: Add support for multiple widget types and shared directories
+
 ## 3.0.0
 
 ### Major Changes
