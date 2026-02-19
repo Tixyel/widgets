@@ -1,4 +1,4 @@
-import { WidgetInfo } from '../widget';
+import { Widget } from '../lib/widget';
 
 export var logo = `    ____    _     _                         _ 
    / __ \\  | |_  (_) __  __  _   _    ___  | |
@@ -8,7 +8,7 @@ export var logo = `    ____    _     _                         _
    \\____/                    |___/\n`;
 
 export const watermark = {
-  html(widget: WidgetInfo): string {
+  html(widget: Widget.Service): string {
     return [
       `<!---`,
       logo,
@@ -18,7 +18,9 @@ export const watermark = {
       `Description: ${widget.config.description}`,
       `Tags: ${widget.config.metadata?.tags?.join(', ')}`,
       `Made by: ${widget.config.metadata?.author}`,
-      widget.config.metadata?.clientId ? `Made for: ${widget.config.metadata?.clientId}` : undefined,
+      widget.config.metadata?.clientId
+        ? `Made for: ${widget.config.metadata?.clientId}`
+        : undefined,
       ...Object.entries(widget.config.metadata || {})
         .filter(([key]) => !['tags', 'author', 'clientId'].includes(key))
         .map(([key, value]) => `${key}: ${value}`),
@@ -30,7 +32,7 @@ export const watermark = {
       .join('\n');
   },
 
-  css(widget: WidgetInfo): string {
+  css(widget: Widget.Service): string {
     return [
       `/**`,
       logo,
@@ -40,7 +42,9 @@ export const watermark = {
       `Description: ${widget.config.description}`,
       `Tags: ${widget.config.metadata?.tags?.join(', ')}`,
       `Made by: ${widget.config.metadata?.author}`,
-      widget.config.metadata?.clientId ? `Made for: ${widget.config.metadata?.clientId}` : undefined,
+      widget.config.metadata?.clientId
+        ? `Made for: ${widget.config.metadata?.clientId}`
+        : undefined,
       ...Object.entries(widget.config.metadata || {})
         .filter(([key]) => !['tags', 'author', 'clientId'].includes(key))
         .map(([key, value]) => `${key}: ${value}`),
@@ -52,7 +56,7 @@ export const watermark = {
       .join('\n');
   },
 
-  script(widget: WidgetInfo): string {
+  script(widget: Widget.Service): string {
     return [
       `/**`,
       logo,
@@ -62,7 +66,9 @@ export const watermark = {
       `Description: ${widget.config.description}`,
       `Tags: ${widget.config.metadata?.tags?.join(', ')}`,
       `Made by: ${widget.config.metadata?.author}`,
-      widget.config.metadata?.clientId ? `Made for: ${widget.config.metadata?.clientId}` : undefined,
+      widget.config.metadata?.clientId
+        ? `Made for: ${widget.config.metadata?.clientId}`
+        : undefined,
       ...Object.entries(widget.config.metadata || {})
         .filter(([key]) => !['tags', 'author', 'clientId'].includes(key))
         .map(([key, value]) => `${key}: ${value}`),

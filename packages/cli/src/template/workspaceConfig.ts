@@ -1,7 +1,7 @@
-export const workspace_config = `
-import { defineWorkspaceConfig } from '@tixyel/cli/api';
+export const WORKSPACE_CONFIG_TEMPLATE = `
+import { defineConfig } from '@tixyel/cli/api';
 
-export default defineWorkspaceConfig({
+export default defineConfig({
   search: {
     maxDepth: 3,
     ignore: ['node_modules', 'dist', 'build', '.git'],
@@ -9,7 +9,12 @@ export default defineWorkspaceConfig({
 
   metadata: {
     author: 'Your Name',
-    clientId: 'your-client-id',
+  },
+
+  dirs: {
+    entry: 'development',
+    output: 'finished',
+    extension: 'widgetIO',
   },
 
   scaffold: [

@@ -27,20 +27,20 @@
   "type": "module",
   "private": false,
   "bin": {
-    "tixyel": "./dist/index.js"
+    "tixyel": "./dist/index.mjs"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
     },
     "./api": {
-      "types": "./dist/api.d.ts",
-      "import": "./dist/api.js",
-      "default": "./dist/api.js"
+      "types": "./dist/api.d.mts",
+      "import": "./dist/api.mjs",
+      "default": "./dist/api.mjs"
     }
   },
   "files": [
@@ -48,17 +48,19 @@
     "package.json"
   ],
   "scripts": {
-    "build": "cross-env TIXYEL_VERSION=$npm_package_version tsc",
-    "dev": "cross-env TIXYEL_VERSION=$npm_package_version tsc --watch",
+    "build": "cross-env TIXYEL_VERSION=$npm_package_version tsdown",
+    "dev": "cross-env TIXYEL_VERSION=$npm_package_version tsdown --watch",
     "check-types": "tsc --noEmit",
-    "test": "bun test"
+    "test": "bun test",
+    "cli": "cross-env TIXYEL_VERSION=$npm_package_version bun run src/index.ts"
   },
   "dependencies": {
     "autoprefixer": "^10.4.22",
+    "chokidar": "^3.6.0",
+    "cli-spinners": "^3.4.0",
     "commander": "^14.0.2",
     "cross-env": "^10.1.0",
     "cssnano": "^7.1.2",
-    "chokidar": "^3.6.0",
     "esbuild": "^0.25.12",
     "fast-glob": "^3.3.3",
     "html-minifier-terser": "^7.2.0",
@@ -66,6 +68,7 @@
     "javascript-obfuscator": "4.1.1",
     "jsonc-parser": "^3.3.1",
     "jszip": "^3.10.1",
+    "ora": "^9.3.0",
     "postcss": "^8.5.6",
     "postcss-nested": "^7.0.2",
     "react": "^19.2.1",
@@ -80,6 +83,8 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/ws": "^8.5.12",
+    "@typescript/native-preview": "^7.0.0-dev.20260216.1",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3"
   },
   "publishConfig": {

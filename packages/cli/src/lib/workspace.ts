@@ -1,0 +1,291 @@
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { WorkspaceConfig, WorkspaceScaffold } from '../types/workspace';
+import { DEFAULT_WORKSPACE_CONFIG, WORKSPACE_CONFIG_FILES } from './constants.workspace';
+import { dirname, extname, relative, resolve } from 'path';
+import { transform } from 'esbuild';
+import { mkdir, writeFile } from 'fs/promises';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { Ora } from 'ora';
+import { DotTixyel } from '../types/widget';
+import { isValidElement } from 'react';
+import { Widget } from './widget';
+import FastGlob from 'fast-glob';
+
+export namespace Workspace {
+  /**
+   * todo:
+   *  • check path for exiting workspace config files (tixyel.config.{ts,.js,.json,.jsonc})
+   *   - if yes: return the workspace config
+   *   - if no: return false
+   *  • create workspace config file with default config
+   */
+
+  export type ServiceOptions = {
+    /**
+     * Path to the workspace configuration file (tixyel.config.{ts,.js,.json,.jsonc})
+     */
+    path?: string;
+    /**
+     * Optional workspace configuration object, if not provided, the service will attempt to load the configuration from the specified path
+     */
+    config?: Config;
+    /**
+     * Optional Ora spinner instance for displaying loading states during workspace operations, allowing for visual feedback to the user when loading configurations, generating widgets, or performing other asynchronous tasks within the workspace service
+     */
+    spinner?: Ora;
+  };
+
+  export type Config = {
+    data: WorkspaceConfig;
+    path: string;
+    file: string;
+  };
+
+  export class Service {
+    public root: string;
+    public config: Config;
+    public spinner?: Ora;
+
+    constructor(options?: ServiceOptions) {
+      this.root = options?.path ?? process.cwd();
+
+      this.config = options?.config ?? {
+        data: DEFAULT_WORKSPACE_CONFIG,
+        path: this.root,
+        file: 'tixyel.config.ts',
+      };
+
+      this.spinner = options?.spinner;
+    }
+
+    public async loadConfig(): Promise<Config | null> {
+      const configFile = WORKSPACE_CONFIG_FILES.find((file) =>
+        existsSync(resolve(this.root, file)),
+      );
+
+      if (!configFile) return null;
+
+      let config: WorkspaceConfig | undefined;
+      let path = resolve(this.root, configFile);
+
+      try {
+        if (configFile.endsWith('.ts') || configFile.endsWith('.tsx')) {
+          config = await Service.loadTsConfig(this.root, path);
+        } else if (
+          configFile.endsWith('.js') ||
+          configFile.endsWith('.mjs') ||
+          configFile.endsWith('.cjs')
+        ) {
+          const mod = await import(path);
+
+          config = mod.default ?? mod.config;
+        } else if (
+          configFile.endsWith('.json') ||
+          configFile.endsWith('.jsonc') ||
+          configFile === '.tixyelrc'
+        ) {
+          const content = readFileSync(path, 'utf-8');
+
+          config = JSON.parse(content);
+        } else {
+          throw new Error(`Unsupported configuration file format: ${configFile}`);
+        }
+      } catch (error) {
+        throw new Error(`Failed to load workspace configuration: ${error}`);
+      } finally {
+        if (!config) return null;
+
+        config = Service.mergeConfig(config);
+
+        const result = { data: config, path, file: configFile };
+
+        this.config = result;
+
+        return result;
+      }
+    }
+
+    public async createWidget(path: string, metadata?: Partial<WorkspaceConfig['metadata']>) {
+      try {
+        await mkdir(path, { recursive: true });
+
+        // if (this.spinner?.isSpinning )
+
+        const workspaceConfigPath = relative(path, this.config.path).replace(/\\/g, '/');
+
+        const dotTixyel: DotTixyel = {
+          name: metadata?.name as string,
+          description: metadata?.description as string,
+          version: '0.0.0',
+          config: workspaceConfigPath.startsWith('.')
+            ? workspaceConfigPath
+            : `./${workspaceConfigPath}`,
+          metadata: {
+            ...this.config.data.metadata,
+            ...metadata,
+            name: undefined,
+            description: undefined,
+          },
+          dirs: this.config.data.dirs ?? {
+            entry: 'development',
+            output: 'finished',
+            extension: 'widgetIO',
+          },
+        };
+
+        await writeFile(resolve(path, '.tixyel'), JSON.stringify(dotTixyel, null, 2), 'utf-8');
+
+        // Create scaffold files from the workspace config
+        const scaffold = this.config.data.scaffold ?? [];
+
+        let created = { files: 0, folders: 0 };
+
+        async function serializeContent(
+          content: WorkspaceScaffold.Item['content'],
+        ): Promise<string> {
+          if (content === undefined || typeof content === 'undefined' || !content) return '';
+          if (typeof content === 'string') return content;
+
+          if (isValidElement(content)) return renderToStaticMarkup(content);
+
+          return String(content ?? '');
+        }
+
+        async function processItem(item: WorkspaceScaffold.Item, currentPath: string) {
+          const fullPath = resolve(currentPath, item.name);
+
+          if (item.type === 'folder') {
+            await mkdir(fullPath, { recursive: true });
+
+            created.folders++;
+
+            if (item.content && Array.isArray(item.content) && item.content.length) {
+              await Promise.all(item.content.map((child) => processItem(child, fullPath)));
+            }
+          } else if (item.type === 'file') {
+            const content = await serializeContent(item.content);
+
+            await writeFile(fullPath, content, 'utf-8');
+
+            created.files++;
+          }
+        }
+
+        await Promise.all(scaffold.map((item) => processItem(item, path)));
+
+        return new Widget.Service({
+          relativePath: relative(this.root, path),
+          config: dotTixyel,
+          content: created,
+          path,
+          workspace: this,
+        });
+      } catch (error) {
+        throw new Error(`Failed to create widget: ${error}`);
+      }
+    }
+
+    public async findWidgets(
+      depth: number = this.config.data.search?.maxDepth ?? 5,
+      ignore: string[] = this.config.data.search?.ignore ?? [],
+    ) {
+      // Build glob pattern with depth limit
+      const depthPattern = Array.from({ length: depth }, (_, i) => '*'.repeat(i + 1)).join(',');
+
+      const dotTixyels = await FastGlob(`{${depthPattern}}/.tixyel`, {
+        cwd: this.root,
+        absolute: true,
+        onlyFiles: true,
+        ignore: ['node_modules', '.git', 'dist', ...ignore],
+      });
+
+      const findWidgets = await Promise.all(
+        dotTixyels.map(
+          (dotTixyel) =>
+            new Promise<Widget.Service | null>(async (resolve) => {
+              const path = dirname(dotTixyel);
+              const config = await Widget.Service.readConfig(path);
+
+              if (!config || config === null) {
+                resolve(null);
+                return null;
+              }
+
+              const widget = new Widget.Service({
+                path,
+                config,
+                relativePath: relative(this.root, path),
+                workspace: this,
+              });
+              resolve(widget);
+              return widget;
+            }),
+        ),
+      );
+
+      return findWidgets.filter((widget): widget is Widget.Service => widget !== null);
+    }
+
+    static mergeConfig(config?: WorkspaceConfig): WorkspaceConfig {
+      const defaultConfig = DEFAULT_WORKSPACE_CONFIG;
+
+      const merged: WorkspaceConfig = {
+        ...(config || {}),
+        search: {
+          ...defaultConfig.search,
+          ...(config?.search || {}),
+        },
+        metadata: {
+          ...defaultConfig.metadata,
+          ...(config?.metadata || {}),
+        },
+        dirs: {
+          ...defaultConfig.dirs,
+          ...(config?.dirs || {}),
+        },
+        scaffold: config?.scaffold || defaultConfig.scaffold,
+        build: {
+          ...defaultConfig.build,
+          ...(config?.build || {}),
+          obfuscation: {
+            ...defaultConfig.build?.obfuscation,
+            ...(config?.build?.obfuscation || {}),
+          },
+        },
+      };
+
+      return merged;
+    }
+
+    static async loadTsConfig(rootPath: string, configPath: string): Promise<WorkspaceConfig> {
+      const temp = resolve(rootPath, '.temp.tixyel.config.mjs');
+      const tsContent = readFileSync(configPath, 'utf-8');
+
+      const extension = extname(configPath).toLowerCase();
+      const loader = extension === '.tsx' ? 'tsx' : extension === '.jsx' ? 'jsx' : 'ts';
+
+      const { code } = await transform(tsContent, {
+        loader,
+        format: 'esm',
+        target: 'es2022',
+        ...(loader === 'tsx' || loader === 'jsx' ? { jsx: 'automatic' as const } : {}),
+      });
+
+      writeFileSync(temp, code, 'utf-8');
+
+      try {
+        const mod = await import(`file://${temp}?t=${Date.now()}`);
+
+        try {
+          unlinkSync(temp);
+        } catch (error) {
+          throw new Error(`Failed to clean up temporary configuration file: ${error}`);
+        }
+
+        return mod.default ?? mod.config;
+      } catch (error) {
+        throw new Error(`Failed to load TypeScript workspace configuration: ${error}`);
+      }
+    }
+  }
+}

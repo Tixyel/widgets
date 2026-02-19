@@ -34,3 +34,6 @@ pnpm-debug.log*
 
 # Turbo
 .turbo/
+
+# ignore
+old/

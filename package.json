@@ -37,7 +37,8 @@
     "watch": "turbo run build --watch",
     "prettier": "prettier --write packages/",
     "version": "bunx --bun changeset version && git add --all",
-    "release": "bun run build && bunx --bun changeset publish"
+    "release": "bun run build && bunx --bun changeset publish",
+    "cli": "bun run -C packages/cli dev"
   },
   "packageManager": "bun@1.3.6"
 }
