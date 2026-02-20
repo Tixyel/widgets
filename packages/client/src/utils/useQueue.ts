@@ -5,7 +5,12 @@ import { logger } from '../main.js';
 type QueueEvents<T> = {
   load: [];
   cancel: [];
-  update: [queue: QueueItem<T>[], priorityQueue: QueueItem<T>[], history: QueueItem<T>[], timeouts: Array<ReturnType<typeof setTimeout>>];
+  update: [
+    queue: QueueItem<T>[],
+    priorityQueue: QueueItem<T>[],
+    history: QueueItem<T>[],
+    timeouts: Array<ReturnType<typeof setTimeout>>,
+  ];
   process: [item: QueueItem<T>, queue: useQueue<T>];
 };
 
@@ -65,12 +70,10 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
 
   public processor!: QueueProcessor<T>;
 
+  private readonly clientWaitRetryDelay = 50;
+
   constructor(options: QueueOptions<T>) {
     super();
-
-    if (!(window.client instanceof Client)) {
-      throw new Error('useQueue can only be instantiated after the Client is initialized.');
-    }
 
     if (!options.processor || typeof options.processor !== 'function') {
       throw new Error('A valid processor function must be provided to useQueue.');
@@ -80,8 +83,19 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
 
     if (options.duration !== 'client') this.duration = options.duration ?? 0;
 
+    this.waitForClientAndBindLoad(options.duration);
+  }
+
+  private waitForClientAndBindLoad(duration: QueueDuration | 'client' = this.duration) {
+    if (!(window?.client instanceof Client)) {
+      setTimeout(() => this.waitForClientAndBindLoad(duration), this.clientWaitRetryDelay);
+
+      return;
+    }
+
     window.client.on('load', () => {
-      if (options.duration === 'client') this.duration = (window.client.fields?.widgetDuration ?? 0) as number;
+      if (duration === 'client')
+        this.duration = (window.client.fields?.widgetDuration ?? 0) as number;
 
       this.emit('load');
 
@@ -105,7 +119,10 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
    */
   public enqueue(value: T, options?: Partial<QueueProps>): this;
   public enqueue(items: { value: T; options?: Partial<QueueProps> }[]): this;
-  public enqueue(valueOrItems: T | { value: T; options?: Partial<QueueProps> }[], options: Partial<QueueProps> = {}): this {
+  public enqueue(
+    valueOrItems: T | { value: T; options?: Partial<QueueProps> }[],
+    options: Partial<QueueProps> = {},
+  ): this {
     const hadItems = this.hasItems();
 
     const entries: { value: T; options: Partial<QueueProps> }[] = Array.isArray(valueOrItems)
@@ -159,7 +176,8 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
   }
 
   private async next() {
-    const nextItem = this.priorityQueue.length > 0 ? this.priorityQueue.shift() : this.queue.shift();
+    const nextItem =
+      this.priorityQueue.length > 0 ? this.priorityQueue.shift() : this.queue.shift();
 
     if (!nextItem) {
       this.running = false;
@@ -172,7 +190,9 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
 
       this.emit('process', nextItem, this);
     } catch (error) {
-      logger.error(`Error during item processing: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(
+        `Error during item processing: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
 
     this.history.push(nextItem);
@@ -247,7 +267,10 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
     return this.queue.length > 0 || this.priorityQueue.length > 0;
   }
 
-  public override on<K extends keyof QueueEvents<T>>(eventName: K, callback: (this: useQueue<T>, ...args: QueueEvents<T>[K]) => void): this {
+  public override on<K extends keyof QueueEvents<T>>(
+    eventName: K,
+    callback: (this: useQueue<T>, ...args: QueueEvents<T>[K]) => void,
+  ): this {
     if (eventName === 'load' && this.loaded) {
       callback.apply(this);
 

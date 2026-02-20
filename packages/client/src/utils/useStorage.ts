@@ -123,7 +123,11 @@ export class useStorage<T extends JSONObject> extends EventProvider<UseStorageEv
    * @param value The value to set
    * @returns The updated object
    */
-  static setByPath<P extends string, T extends object>(obj: T, path: P, value: PathValue<T, P>): void {
+  static setByPath<P extends string, T extends object>(
+    obj: T,
+    path: P,
+    value: PathValue<T, P>,
+  ): void {
     const keys = path.split('.');
     let current: any = obj;
 
@@ -140,7 +144,10 @@ export class useStorage<T extends JSONObject> extends EventProvider<UseStorageEv
     return current;
   }
 
-  public override on<K extends keyof UseStorageEvents<T>>(eventName: K, callback: (this: useStorage<T>, ...args: UseStorageEvents<T>[K]) => void): this {
+  public override on<K extends keyof UseStorageEvents<T>>(
+    eventName: K,
+    callback: (this: useStorage<T>, ...args: UseStorageEvents<T>[K]) => void,
+  ): this {
     if (eventName === 'load' && this.loaded) {
       callback.apply(this, [this.data]);
 
