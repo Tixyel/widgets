@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.0.3
+
+### Patch Changes
+
+- bffe2c8: Wait for the client initialize before starting the queue
+
 ## 6.0.2
 
 ### Patch Changes
