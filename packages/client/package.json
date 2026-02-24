@@ -54,6 +54,7 @@
   "devDependencies": {
     "@types/tmi.js": "^1.8.6",
     "comfy.js": "^1.1.29",
+    "rollup": "catalog:build",
     "rollup-plugin-dts": "catalog:build",
     "tmi.js": "^1.8.5",
     "typescript": "^5.9.3",

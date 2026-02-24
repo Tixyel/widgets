@@ -1,4 +1,4 @@
-import { EventProvider } from '../utils/EventProvider.js';
+import { EventProvider } from '../modules/EventProvider.js';
 import { logger } from '../main.js';
 
 import type {
@@ -69,7 +69,16 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
    * @param options - Configuration options for ComfyJS instance.
    * @param emulate - Whether to emulate chat messages in the Local  module.
    */
-  constructor(options: { username: string; password?: string; channels: string[]; isDebug?: boolean; init?: boolean }, emulate: boolean) {
+  constructor(
+    options: {
+      username: string;
+      password?: string;
+      channels: string[];
+      isDebug?: boolean;
+      init?: boolean;
+    },
+    emulate: boolean,
+  ) {
     super();
 
     this.username = options.username;
@@ -99,7 +108,9 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     if (typeof window.ComfyJS === 'undefined' || !window.ComfyJS) {
       return new Promise((resolve, reject) => {
         if (this.emulate && !client) {
-          return reject(new Error('useComfyJs: Cannot emulate chat messages without a Client instance.'));
+          return reject(
+            new Error('useComfyJs: Cannot emulate chat messages without a Client instance.'),
+          );
         }
 
         const script = document.createElement('script');
@@ -129,7 +140,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onCommand = (user, command, message, flags, extra) => {
       this.emit('command', user, command, message, flags, extra);
 
-      if (client.debug) logger.debug('[Client]', `ComfyJS Command: !${command} ${message} (User: ${user})`);
+      if (client.debug)
+        logger.debug('[Client]', `ComfyJS Command: !${command} ${message} (User: ${user})`);
 
       if (this.emulate) {
         const roles = {
@@ -247,7 +259,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onResub = (user, message, streakMonths, cumulativeMonths, subTierInfo, extra) => {
       this.emit('resub', user, message, streakMonths, cumulativeMonths, subTierInfo, extra);
 
-      if (client.debug) logger.debug('[Client]', `ComfyJS Resub: ${user} (${cumulativeMonths} months)`);
+      if (client.debug)
+        logger.debug('[Client]', `ComfyJS Resub: ${user} (${cumulativeMonths} months)`);
 
       if (this.emulate) {
         const tier = subTierInfo.plan === 'Prime' ? 'prime' : subTierInfo.plan;
@@ -261,10 +274,26 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
         });
       }
     };
-    this.instance.onSubGift = (gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra) => {
-      this.emit('subGift', gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra);
+    this.instance.onSubGift = (
+      gifterUser,
+      streakMonths,
+      recipientUser,
+      senderCount,
+      subTierInfo,
+      extra,
+    ) => {
+      this.emit(
+        'subGift',
+        gifterUser,
+        streakMonths,
+        recipientUser,
+        senderCount,
+        subTierInfo,
+        extra,
+      );
 
-      if (client.debug) logger.debug('[Client]', `ComfyJS Sub Gift: ${gifterUser} gifted ${senderCount} subs`);
+      if (client.debug)
+        logger.debug('[Client]', `ComfyJS Sub Gift: ${gifterUser} gifted ${senderCount} subs`);
 
       if (this.emulate) {
         const tier = subTierInfo.plan === 'Prime' ? 'prime' : subTierInfo.plan;
@@ -282,7 +311,11 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onSubMysteryGift = (gifterUser, numbOfSubs, senderCount, subTierInfo, extra) => {
       this.emit('subMysteryGift', gifterUser, numbOfSubs, senderCount, subTierInfo, extra);
 
-      if (client.debug) logger.debug('[Client]', `ComfyJS Sub Mystery Gift: ${gifterUser} gifted ${numbOfSubs} subs`);
+      if (client.debug)
+        logger.debug(
+          '[Client]',
+          `ComfyJS Sub Mystery Gift: ${gifterUser} gifted ${numbOfSubs} subs`,
+        );
 
       if (this.emulate) {
         const tier = subTierInfo.plan === 'Prime' ? 'prime' : subTierInfo.plan;
@@ -299,7 +332,11 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onGiftSubContinue = (user, sender, extra) => {
       this.emit('giftSubContinue', user, sender, extra);
 
-      if (client.debug) logger.debug('[Client]', `ComfyJS Gift Sub Continue: ${user} continued their gifted sub from ${sender}`);
+      if (client.debug)
+        logger.debug(
+          '[Client]',
+          `ComfyJS Gift Sub Continue: ${user} continued their gifted sub from ${sender}`,
+        );
 
       if (this.emulate) {
         Local.emulate.twitch.subscriber({
@@ -314,7 +351,8 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onCheer = (user, message, bits, flags, extra) => {
       this.emit('cheer', user, message, bits, flags, extra);
 
-      if (client.debug) logger.debug('[Client]', `ComfyJS Cheer: ${user} cheered ${bits} bits - ${message}`);
+      if (client.debug)
+        logger.debug('[Client]', `ComfyJS Cheer: ${user} cheered ${bits} bits - ${message}`);
 
       if (this.emulate) {
         Local.emulate.twitch.cheer({
@@ -332,12 +370,20 @@ export class useComfyJs extends EventProvider<ComfyEvents> {
     this.instance.onReward = (user, reward, cost, message, extra) => {
       this.emit('reward', user, reward, cost, message, extra);
 
-      if (client.debug) logger.debug('[Client]', `ComfyJS Reward: ${user} redeemed ${reward} for ${cost} - ${message}`);
+      if (client.debug)
+        logger.debug(
+          '[Client]',
+          `ComfyJS Reward: ${user} redeemed ${reward} for ${cost} - ${message}`,
+        );
     };
     this.instance.onConnected = (address, port, isFirstConnect) => {
       this.emit('connected', address, port, isFirstConnect);
 
-      if (client.debug) logger.debug('[Client]', `ComfyJS Connected: ${address}:${port} (First Connect: ${isFirstConnect})`);
+      if (client.debug)
+        logger.debug(
+          '[Client]',
+          `ComfyJS Connected: ${address}:${port} (First Connect: ${isFirstConnect})`,
+        );
     };
     this.instance.onReconnect = (reconnectCount) => {
       this.emit('reconnect', reconnectCount);

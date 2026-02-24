@@ -8,14 +8,16 @@ import { initializeLocalSEAPI } from './streamelements/api.js';
 import { StreamElements } from './types/index.js';
 import { Alejo } from './utils/alejo.js';
 import { useComfyJs } from './multistream/comfyJs.js';
-import { EventProvider } from './utils/EventProvider.js';
-import { useLogger } from './utils/Logger.js';
-import { useQueue } from './utils/useQueue.js';
-import { usedStorages, useStorage } from './utils/useStorage.js';
+import { EventProvider } from './modules/EventProvider.js';
+import { useLogger } from './modules/useLogger.js';
+import { useQueue } from './modules/useQueue.js';
+import { usedStorages, useStorage } from './modules/useStorage.js';
 import { Helper } from './helper/index.js';
 import { Data } from './data/index.js';
+import { useComms, usedComms } from './modules/useComms.js';
 
-export const USE_SE_API: Promise<StreamElements.SE_API> = typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
+export const USE_SE_API: Promise<StreamElements.SE_API> =
+  typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
 
 export const logger = new useLogger();
 
@@ -28,10 +30,10 @@ export const main = {
   Data,
   logger,
 
-  modules: { EventProvider, useStorage, useQueue, useLogger },
+  modules: { EventProvider, useStorage, useQueue, useLogger, useComms },
   actions: { Button, Command },
   multistream: { useComfyJs },
-  data: { usedStorages },
+  data: { usedStorages, usedComms },
   pronouns: { Alejo },
 };
 

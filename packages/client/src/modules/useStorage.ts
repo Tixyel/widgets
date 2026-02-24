@@ -14,16 +14,14 @@ type UseStorageOptions<T> = {
   data: T;
 };
 
-export var usedStorages: Array<useStorage<any>> = [];
+export const usedStorages: Array<useStorage<any>> = [];
 
 export class useStorage<T extends JSONObject> extends EventProvider<UseStorageEvents<T>> {
-  /**
-   * The unique identifier for the storage instance.
-   */
+  private SE_API: StreamElements.SE_API | null = null;
+
+  /** The unique identifier for the storage instance. */
   public id: string = 'default';
-
   public loaded: boolean = false;
-
   public data!: T;
 
   constructor(options: UseStorageOptions<T>) {
@@ -34,12 +32,6 @@ export class useStorage<T extends JSONObject> extends EventProvider<UseStorageEv
 
     usedStorages.push(this);
 
-    this.start();
-  }
-
-  SE_API: StreamElements.SE_API | null = null;
-
-  private start() {
     USE_SE_API?.then((se) => {
       this.SE_API = se;
 

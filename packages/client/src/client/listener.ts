@@ -1,11 +1,12 @@
 import { Client, ClientStorageOptions } from './client.js';
-import { usedStorages } from '../utils/useStorage.js';
+import { usedStorages } from '../modules/useStorage.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
 import { logger } from '../main.js';
 import { Local } from '../local/index.js';
-import { useQueue } from '../utils/useQueue.js';
+import { useQueue } from '../modules/useQueue.js';
 import { Helper } from '../helper/index.js';
+import { usedComms } from '../modules/useComms.js';
 
 if (typeof window !== undefined) {
   window.addEventListener('load', () => {
@@ -16,7 +17,10 @@ if (typeof window !== undefined) {
           window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
 
           if (received.listener === 'onEventReceived' && received.session) {
-            const sessionEvent = await Local.generate.event.onSessionUpdate(client.session, Helper.event.parseProvider(received.data));
+            const sessionEvent = await Local.generate.event.onSessionUpdate(
+              client.session,
+              Helper.event.parseProvider(received.data),
+            );
 
             window.dispatchEvent(new CustomEvent('onSessionUpdate', { detail: sessionEvent }));
           }
@@ -74,13 +78,27 @@ if (typeof window !== undefined) {
 
       client.storage.on('load', (data) => {
         if (client.debug && data) {
-          logger.debug('[Client]', 'Storage loaded for client', `"${client.id}";`, `Provider: "${client.details.provider}";`, data);
+          logger.debug(
+            '[Client]',
+            'Storage loaded for client',
+            `"${client.id}";`,
+            `Provider: "${client.details.provider}";`,
+            data,
+          );
         } else if (client.debug) {
-          logger.debug('[Client]', 'Storage loaded for client', `"${client.id}";`, `Provider: "${client.details.provider}";`, 'No data found.');
+          logger.debug(
+            '[Client]',
+            'Storage loaded for client',
+            `"${client.id}";`,
+            `Provider: "${client.details.provider}";`,
+            'No data found.',
+          );
         }
 
         if (data) {
-          const clearExpired = <T extends Record<string, ClientStorageOptions<string>>>(data: T) => {
+          const clearExpired = <T extends Record<string, ClientStorageOptions<string>>>(
+            data: T,
+          ) => {
             const now = Date.now();
             const cleanedData: any = {};
 
@@ -179,11 +197,26 @@ if (typeof window !== undefined) {
               const event = data.event;
 
               if (usedStorages.length) {
-                var storage = usedStorages.find((s) => s.id === event.data.key.replace('customWidget.', '') || s.id === event.data.key);
+                var storage = usedStorages.find(
+                  (s) =>
+                    s.id === event.data.key.replace('customWidget.', '') || s.id === event.data.key,
+                );
 
                 if (storage) {
                   // @ts-ignore
                   storage.update(event.data.value);
+                }
+              }
+
+              if (usedComms.length) {
+                const comm = usedComms.find(
+                  (c) =>
+                    c.id === event.data.key.replace('customWidget.', '') || c.id === event.data.key,
+                );
+
+                if (comm) {
+                  // @ts-ignore
+                  comm.update(event.data.value);
                 }
               }
 
@@ -242,13 +275,25 @@ if (typeof window !== undefined) {
               if (!data.event.gifted && !data.event.bulkGifted && !data.event.isCommunityGift) {
                 // normal
                 const event = data.event;
-              } else if (data.event.gifted && !data.event.bulkGifted && !data.event.isCommunityGift) {
+              } else if (
+                data.event.gifted &&
+                !data.event.bulkGifted &&
+                !data.event.isCommunityGift
+              ) {
                 // gift
                 const event = data.event;
-              } else if (data.event.gifted && !data.event.bulkGifted && data.event.isCommunityGift) {
+              } else if (
+                data.event.gifted &&
+                !data.event.bulkGifted &&
+                data.event.isCommunityGift
+              ) {
                 // community gift spam
                 const event = data.event;
-              } else if (!data.event.gifted && data.event.bulkGifted && !data.event.isCommunityGift) {
+              } else if (
+                !data.event.gifted &&
+                data.event.bulkGifted &&
+                !data.event.isCommunityGift
+              ) {
                 // community gift
                 const event = data.event;
               }
@@ -288,13 +333,25 @@ if (typeof window !== undefined) {
               if (!data.event.gifted && !data.event.bulkGifted && !data.event.isCommunityGift) {
                 // normal
                 const event = data.event;
-              } else if (data.event.gifted && !data.event.bulkGifted && !data.event.isCommunityGift) {
+              } else if (
+                data.event.gifted &&
+                !data.event.bulkGifted &&
+                !data.event.isCommunityGift
+              ) {
                 // gift
                 const event = data.event;
-              } else if (data.event.gifted && !data.event.bulkGifted && data.event.isCommunityGift) {
+              } else if (
+                data.event.gifted &&
+                !data.event.bulkGifted &&
+                data.event.isCommunityGift
+              ) {
                 // community gift spam
                 const event = data.event;
-              } else if (!data.event.gifted && data.event.bulkGifted && !data.event.isCommunityGift) {
+              } else if (
+                !data.event.gifted &&
+                data.event.bulkGifted &&
+                !data.event.isCommunityGift
+              ) {
                 // community gift
                 const event = data.event;
               }
@@ -338,7 +395,11 @@ if (typeof window !== undefined) {
       ];
 
       if (client.debug && !excludeListeners.some((e) => e === received.data.listener)) {
-        logger.received('[Client]', `Event ${received.data.listener} received from ${received.provider}`, received.data.event);
+        logger.received(
+          '[Client]',
+          `Event ${received.data.listener} received from ${received.provider}`,
+          received.data.event,
+        );
       }
     }
   });

@@ -1,7 +1,7 @@
 import { StreamElements } from '../types/streamelements/main.js';
 import type { ClientEvents, Provider } from '../types/client.js';
 import { logger } from '../main.js';
-import { useQueue } from '../utils/useQueue.js';
+import { useQueue } from '../modules/useQueue.js';
 import { Helper } from '../helper/index.js';
 import { Data } from '../data/index.js';
 
@@ -112,14 +112,32 @@ export namespace Local {
           },
           charityCampaignDonation: {
             latest: { name: types.name, amount: { type: 'int', min: 50, max: 150 } },
-            'session-top-donation': { name: types.name, amount: { type: 'int', min: 50, max: 200 } },
-            'weekly-top-donation': { name: types.name, amount: { type: 'int', min: 200, max: 500 } },
-            'monthly-top-donation': { name: types.name, amount: { type: 'int', min: 500, max: 800 } },
-            'alltime-top-donation': { name: types.name, amount: { type: 'int', min: 800, max: 1000 } },
+            'session-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 50, max: 200 },
+            },
+            'weekly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 200, max: 500 },
+            },
+            'monthly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 500, max: 800 },
+            },
+            'alltime-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 800, max: 1000 },
+            },
             'session-top-donator': { name: types.name, amount: { type: 'int', min: 50, max: 200 } },
             'weekly-top-donator': { name: types.name, amount: { type: 'int', min: 200, max: 500 } },
-            'monthly-top-donator': { name: types.name, amount: { type: 'int', min: 500, max: 800 } },
-            'alltime-top-donator': { name: types.name, amount: { type: 'int', min: 800, max: 1000 } },
+            'monthly-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 500, max: 800 },
+            },
+            'alltime-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 800, max: 1000 },
+            },
             recent: {
               type: 'recent',
               amount: 25,
@@ -131,15 +149,43 @@ export namespace Local {
             },
           },
           cheer: {
-            latest: { name: types.name, amount: { type: 'int', min: 200, max: 800 }, message: types.message },
-            'session-top-donation': { name: types.name, amount: { type: 'int', min: 200, max: 1000 } },
-            'weekly-top-donation': { name: types.name, amount: { type: 'int', min: 1000, max: 5000 } },
-            'monthly-top-donation': { name: types.name, amount: { type: 'int', min: 5000, max: 12000 } },
-            'alltime-top-donation': { name: types.name, amount: { type: 'int', min: 12000, max: 20000 } },
-            'session-top-donator': { name: types.name, amount: { type: 'int', min: 200, max: 1000 } },
-            'weekly-top-donator': { name: types.name, amount: { type: 'int', min: 1000, max: 5000 } },
-            'monthly-top-donator': { name: types.name, amount: { type: 'int', min: 5000, max: 12000 } },
-            'alltime-top-donator': { name: types.name, amount: { type: 'int', min: 12000, max: 20000 } },
+            latest: {
+              name: types.name,
+              amount: { type: 'int', min: 200, max: 800 },
+              message: types.message,
+            },
+            'session-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 200, max: 1000 },
+            },
+            'weekly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 1000, max: 5000 },
+            },
+            'monthly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 5000, max: 12000 },
+            },
+            'alltime-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 12000, max: 20000 },
+            },
+            'session-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 200, max: 1000 },
+            },
+            'weekly-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 1000, max: 5000 },
+            },
+            'monthly-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 5000, max: 12000 },
+            },
+            'alltime-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 12000, max: 20000 },
+            },
             session: { amount: { type: 'int', min: 200, max: 1000 } },
             week: { amount: { type: 'int', min: 1000, max: 5000 } },
             month: { amount: { type: 'int', min: 5000, max: 12000 } },
@@ -158,14 +204,35 @@ export namespace Local {
           },
           cheerPurchase: {
             latest: { name: types.name, amount: { type: 'int', min: 200, max: 400 } },
-            'session-top-donation': { name: types.name, amount: { type: 'int', min: 200, max: 400 } },
-            'weekly-top-donation': { name: types.name, amount: { type: 'int', min: 400, max: 800 } },
-            'monthly-top-donation': { name: types.name, amount: { type: 'int', min: 800, max: 1500 } },
-            'alltime-top-donation': { name: types.name, amount: { type: 'int', min: 1500, max: 2000 } },
-            'session-top-donator': { name: types.name, amount: { type: 'int', min: 200, max: 400 } },
+            'session-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 200, max: 400 },
+            },
+            'weekly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 400, max: 800 },
+            },
+            'monthly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 800, max: 1500 },
+            },
+            'alltime-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 1500, max: 2000 },
+            },
+            'session-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 200, max: 400 },
+            },
             'weekly-top-donator': { name: types.name, amount: { type: 'int', min: 400, max: 800 } },
-            'monthly-top-donator': { name: types.name, amount: { type: 'int', min: 800, max: 1500 } },
-            'alltime-top-donator': { name: types.name, amount: { type: 'int', min: 1500, max: 2000 } },
+            'monthly-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 800, max: 1500 },
+            },
+            'alltime-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 1500, max: 2000 },
+            },
             recent: {
               type: 'recent',
               amount: 25,
@@ -178,14 +245,38 @@ export namespace Local {
           },
           superchat: {
             latest: { name: types.name, amount: { type: 'int', min: 100, max: 400 } },
-            'session-top-donation': { name: types.name, amount: { type: 'int', min: 100, max: 500 } },
-            'weekly-top-donation': { name: types.name, amount: { type: 'int', min: 500, max: 1000 } },
-            'monthly-top-donation': { name: types.name, amount: { type: 'int', min: 1000, max: 2000 } },
-            'alltime-top-donation': { name: types.name, amount: { type: 'int', min: 2000, max: 2500 } },
-            'session-top-donator': { name: types.name, amount: { type: 'int', min: 100, max: 500 } },
-            'weekly-top-donator': { name: types.name, amount: { type: 'int', min: 500, max: 1000 } },
-            'monthly-top-donator': { name: types.name, amount: { type: 'int', min: 1000, max: 2000 } },
-            'alltime-top-donator': { name: types.name, amount: { type: 'int', min: 2000, max: 2500 } },
+            'session-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 100, max: 500 },
+            },
+            'weekly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 500, max: 1000 },
+            },
+            'monthly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 1000, max: 2000 },
+            },
+            'alltime-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 2000, max: 2500 },
+            },
+            'session-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 100, max: 500 },
+            },
+            'weekly-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 500, max: 1000 },
+            },
+            'monthly-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 1000, max: 2000 },
+            },
+            'alltime-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 2000, max: 2500 },
+            },
             session: { amount: { type: 'int', min: 100, max: 500 } },
             week: { amount: { type: 'int', min: 500, max: 1000 } },
             month: { amount: { type: 'int', min: 1000, max: 2000 } },
@@ -212,7 +303,10 @@ export namespace Local {
               _type: { type: 'array', options: ['follower', 'subscriber', 'cheer', 'donation'] },
             },
             'level-goal': { amount: { type: 'int', min: 0, max: 100 } },
-            'level-progress': { amount: { type: 'int', min: 0, max: 100 }, percent: { type: 'int', min: 0, max: 100 } },
+            'level-progress': {
+              amount: { type: 'int', min: 0, max: 100 },
+              percent: { type: 'int', min: 0, max: 100 },
+            },
             total: { amount: { type: 'int', min: 0, max: 100 } },
             'latest-top-contributors': { type: 'recent', amount: 25, value: { name: types.name } },
           },
@@ -226,14 +320,38 @@ export namespace Local {
           },
           tip: {
             latest: { name: types.name, amount: { type: 'int', min: 100, max: 400 } },
-            'session-top-donation': { name: types.name, amount: { type: 'int', min: 100, max: 500 } },
-            'weekly-top-donation': { name: types.name, amount: { type: 'int', min: 500, max: 1000 } },
-            'monthly-top-donation': { name: types.name, amount: { type: 'int', min: 1000, max: 2000 } },
-            'alltime-top-donation': { name: types.name, amount: { type: 'int', min: 2000, max: 2500 } },
-            'session-top-donator': { name: types.name, amount: { type: 'int', min: 100, max: 500 } },
-            'weekly-top-donator': { name: types.name, amount: { type: 'int', min: 500, max: 1000 } },
-            'monthly-top-donator': { name: types.name, amount: { type: 'int', min: 1000, max: 2000 } },
-            'alltime-top-donator': { name: types.name, amount: { type: 'int', min: 2000, max: 2500 } },
+            'session-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 100, max: 500 },
+            },
+            'weekly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 500, max: 1000 },
+            },
+            'monthly-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 1000, max: 2000 },
+            },
+            'alltime-top-donation': {
+              name: types.name,
+              amount: { type: 'int', min: 2000, max: 2500 },
+            },
+            'session-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 100, max: 500 },
+            },
+            'weekly-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 500, max: 1000 },
+            },
+            'monthly-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 1000, max: 2000 },
+            },
+            'alltime-top-donator': {
+              name: types.name,
+              amount: { type: 'int', min: 2000, max: 2500 },
+            },
             session: { amount: { type: 'int', min: 100, max: 500 } },
             week: { amount: { type: 'int', min: 500, max: 1000 } },
             month: { amount: { type: 'int', min: 1000, max: 2000 } },
@@ -251,7 +369,11 @@ export namespace Local {
             },
           },
           merch: {
-            latest: { name: types.name, amount: { type: 'int', min: 0, max: 100 }, items: types.item },
+            latest: {
+              name: types.name,
+              amount: { type: 'int', min: 0, max: 100 },
+              items: types.item,
+            },
             'goal-orders': { amount: { type: 'int', min: 0, max: 100 } },
             'goal-items': { amount: { type: 'int', min: 0, max: 100 } },
             'goal-total': { amount: { type: 'int', min: 0, max: 100 } },
@@ -275,7 +397,10 @@ export namespace Local {
         if (startSession) return startSession;
 
         const generate = (
-          available: StreamElements.Session.Config.Available.Data | StreamElements.Session.Config.Available.Category | StreamElements.Session.Config.Any,
+          available:
+            | StreamElements.Session.Config.Available.Data
+            | StreamElements.Session.Config.Available.Category
+            | StreamElements.Session.Config.Any,
         ): any => {
           const generateRecentData = (config: StreamElements.Session.Config.Any): Array<any> => {
             if (!config || !('amount' in config)) return [];
@@ -286,7 +411,9 @@ export namespace Local {
               items.push(generate(config.value));
             }
 
-            return items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            return items.sort(
+              (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            );
           };
 
           const generateObjectData = (config: Record<string, any>): Record<string, any> => {
@@ -402,11 +529,15 @@ export namespace Local {
        * @param session - The session data to be included in the event.
        * @returns A Promise that resolves to the simulated onSessionUpdate event data.
        */
-      async onSessionUpdate(session?: StreamElements.Session.Data, update?: ClientEvents): Promise<StreamElements.Event.onSessionUpdate> {
+      async onSessionUpdate(
+        session?: StreamElements.Session.Data,
+        update?: ClientEvents,
+      ): Promise<StreamElements.Event.onSessionUpdate> {
         session ??= await Local.generate.session.get();
 
         if (update) {
-          const orderByDateDesc = (a: { createdAt: string }, b: { createdAt: string }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          const orderByDateDesc = (a: { createdAt: string }, b: { createdAt: string }) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 
           switch (update.provider) {
             case 'twitch': {
@@ -461,7 +592,11 @@ export namespace Local {
                   session['cheer-total'].amount += amount;
                   session['cheer-count'].count += 1;
                   session['cheer-goal'].amount += amount;
-                  session['cheer-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
+                  session['cheer-recent'].unshift({
+                    name: name,
+                    amount: amount,
+                    createdAt: new Date().toISOString(),
+                  });
                   session['cheer-recent'] = (session['cheer-recent'] || []).sort(orderByDateDesc);
 
                   break;
@@ -476,8 +611,13 @@ export namespace Local {
                   session['follower-month'].count += 1;
                   session['follower-total'].count += 1;
                   session['follower-goal'].amount += 1;
-                  session['follower-recent'].unshift({ name: name, createdAt: new Date().toISOString() });
-                  session['follower-recent'] = (session['follower-recent'] || []).sort(orderByDateDesc);
+                  session['follower-recent'].unshift({
+                    name: name,
+                    createdAt: new Date().toISOString(),
+                  });
+                  session['follower-recent'] = (session['follower-recent'] || []).sort(
+                    orderByDateDesc,
+                  );
 
                   break;
                 }
@@ -489,7 +629,11 @@ export namespace Local {
 
                   session['subscriber-latest'] = { name, amount, tier, message: message ?? '' };
 
-                  if (!session['subscriber-recent'].find((e) => e.name.toLowerCase() === name.toLowerCase())) {
+                  if (
+                    !session['subscriber-recent'].find(
+                      (e) => e.name.toLowerCase() === name.toLowerCase(),
+                    )
+                  ) {
                     session['subscriber-new-latest'] = { name, amount, message: message ?? '' };
                     session['subscriber-new-session'].count += 1;
                   } else if (amount > 1) {
@@ -499,7 +643,11 @@ export namespace Local {
 
                   if (!data.event.gifted && !data.event.bulkGifted && !data.event.isCommunityGift) {
                     // normal
-                  } else if (data.event.gifted && !data.event.bulkGifted && !data.event.isCommunityGift) {
+                  } else if (
+                    data.event.gifted &&
+                    !data.event.bulkGifted &&
+                    !data.event.isCommunityGift
+                  ) {
                     const sender = data.event.sender;
                     // gift
                     session['subscriber-gifted-latest'] = {
@@ -512,9 +660,17 @@ export namespace Local {
                     session['subscriber-gifted-session'].count += 1;
 
                     session['subscriber-alltime-gifter'] = { name: sender, amount };
-                  } else if (data.event.gifted && !data.event.bulkGifted && data.event.isCommunityGift) {
+                  } else if (
+                    data.event.gifted &&
+                    !data.event.bulkGifted &&
+                    data.event.isCommunityGift
+                  ) {
                     // community gift spam
-                  } else if (!data.event.gifted && data.event.bulkGifted && !data.event.isCommunityGift) {
+                  } else if (
+                    !data.event.gifted &&
+                    data.event.bulkGifted &&
+                    !data.event.isCommunityGift
+                  ) {
                     // community gift
                   }
 
@@ -525,8 +681,15 @@ export namespace Local {
                   session['subscriber-goal'].amount += amount;
                   session['subscriber-points'].amount += amount;
 
-                  session['subscriber-recent'].unshift({ name: name, amount: amount, tier: tier, createdAt: new Date().toISOString() });
-                  session['subscriber-recent'] = (session['subscriber-recent'] || []).sort(orderByDateDesc);
+                  session['subscriber-recent'].unshift({
+                    name: name,
+                    amount: amount,
+                    tier: tier,
+                    createdAt: new Date().toISOString(),
+                  });
+                  session['subscriber-recent'] = (session['subscriber-recent'] || []).sort(
+                    orderByDateDesc,
+                  );
 
                   break;
                 }
@@ -536,7 +699,11 @@ export namespace Local {
 
                   session['raid-latest'] = { name, amount };
 
-                  session['raid-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
+                  session['raid-recent'].unshift({
+                    name: name,
+                    amount: amount,
+                    createdAt: new Date().toISOString(),
+                  });
                   session['raid-recent'] = (session['raid-recent'] || []).sort(orderByDateDesc);
                   break;
                 }
@@ -677,7 +844,11 @@ export namespace Local {
                   session['tip-total'].amount += amount;
                   session['tip-count'].count += 1;
                   session['tip-goal'].amount += amount;
-                  session['tip-recent'].unshift({ name: name, amount: amount, createdAt: new Date().toISOString() });
+                  session['tip-recent'].unshift({
+                    name: name,
+                    amount: amount,
+                    createdAt: new Date().toISOString(),
+                  });
                   session['tip-recent'] = (session['tip-recent'] || []).sort(orderByDateDesc);
 
                   break;
@@ -711,11 +882,24 @@ export namespace Local {
        */
       async onEventReceived(
         provider: Provider | 'random' = 'random',
-        type: StreamElements.Event.onEventReceived['listener'] | 'random' | 'tip' | 'cheer' | 'follower' | 'raid' | 'subscriber' = 'random',
+        type:
+          | StreamElements.Event.onEventReceived['listener']
+          | 'random'
+          | 'tip'
+          | 'cheer'
+          | 'follower'
+          | 'raid'
+          | 'subscriber' = 'random',
         options: Record<string, string | number | boolean> = {},
       ): Promise<StreamElements.Event.onEventReceived | null> {
         const available: Record<Provider, string[]> = {
-          twitch: ['message', 'follower-latest', 'cheer-latest', 'raid-latest', 'subscriber-latest'],
+          twitch: [
+            'message',
+            'follower-latest',
+            'cheer-latest',
+            'raid-latest',
+            'subscriber-latest',
+          ],
           streamelements: ['tip-latest'],
           youtube: ['message', 'superchat-latest', 'subscriber-latest', 'sponsor-latest'],
           kick: [],
@@ -725,31 +909,54 @@ export namespace Local {
         switch (provider) {
           default:
           case 'random': {
-            var randomProvider = Helper.random.array(Object.keys(available).filter((e) => available[e as Provider].length))[0] as Provider;
-            var randomEvent = Helper.random.array(available[randomProvider])[0] as StreamElements.Event.onEventReceived['listener'];
+            var randomProvider = Helper.random.array(
+              Object.keys(available).filter((e) => available[e as Provider].length),
+            )[0] as Provider;
+            var randomEvent = Helper.random.array(
+              available[randomProvider],
+            )[0] as StreamElements.Event.onEventReceived['listener'];
 
             return this.onEventReceived(randomProvider, randomEvent);
           }
 
           case 'twitch': {
-            switch (type as StreamElements.Event.Provider.Twitch.Events['listener'] | 'random' | 'cheer' | 'follower' | 'raid' | 'subscriber') {
+            switch (
+              type as
+                | StreamElements.Event.Provider.Twitch.Events['listener']
+                | 'random'
+                | 'cheer'
+                | 'follower'
+                | 'raid'
+                | 'subscriber'
+            ) {
               default:
               case 'random': {
-                var randomEvent = Helper.random.array(available[provider])[0] as StreamElements.Event.onEventReceived['listener'];
+                var randomEvent = Helper.random.array(
+                  available[provider],
+                )[0] as StreamElements.Event.onEventReceived['listener'];
 
                 return this.onEventReceived(provider, randomEvent);
               }
               case 'message': {
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
-                var message = (options?.message as string) ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var message =
+                  (options?.message as string) ??
+                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
 
-                var badges = await Helper.message.generateBadges((options?.badges as Helper.message.BadgeOptions) ?? [], provider);
+                var badges = await Helper.message.generateBadges(
+                  (options?.badges as Helper.message.BadgeOptions) ?? [],
+                  provider,
+                );
 
                 var emotes = Helper.message.findEmotesInText(message);
                 var renderedText = Helper.message.replaceEmotesWithHTML(message, emotes);
 
                 var color = (options?.color as string) ?? Helper.random.color('hex');
-                var userId = (options?.userId as string) ?? Helper.random.number(10000000, 99999999).toString();
+                var userId =
+                  (options?.userId as string) ??
+                  Helper.random.number(10000000, 99999999).toString();
                 var msgId = (options?.msgId as string) ?? Helper.random.uuid();
                 var time = (options?.time as number) ?? Date.now();
 
@@ -807,10 +1014,16 @@ export namespace Local {
               case 'cheer-latest': {
                 var amount = (options?.amount as number) ?? Helper.random.number(100, 10000);
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
-                var message = (options?.message as string) ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var message =
+                  (options?.message as string) ??
+                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.Twitch.Cheer & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.Twitch.Cheer & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'cheer-latest',
                   event: {
                     amount,
@@ -834,9 +1047,13 @@ export namespace Local {
               case 'follower':
               case 'follower-latest': {
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.Twitch.Follower & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.Twitch.Follower & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'follower-latest',
                   event: {
                     avatar,
@@ -859,9 +1076,13 @@ export namespace Local {
               case 'raid-latest': {
                 var amount = (options?.amount as number) ?? Helper.random.number(1, 100);
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.Twitch.Raid & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.Twitch.Raid & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'raid-latest',
                   event: {
                     amount,
@@ -883,12 +1104,20 @@ export namespace Local {
               }
               case 'subscriber':
               case 'subscriber-latest': {
-                var tier = (options?.tier as string) ?? Helper.random.array(['1000', '2000', '3000', 'prime'])[0];
+                var tier =
+                  (options?.tier as string) ??
+                  Helper.random.array(['1000', '2000', '3000', 'prime'])[0];
                 var amount = (options?.amount as number) ?? Helper.random.number(1, 24);
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
-                var sender = (options?.sender as string) ?? Helper.random.array(Data.names.filter((e) => e.length && e !== name))[0];
-                var message = (options?.message as string) ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var sender =
+                  (options?.sender as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length && e !== name))[0];
+                var message =
+                  (options?.message as string) ??
+                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
 
                 var addons = {
                   default: {
@@ -916,7 +1145,9 @@ export namespace Local {
 
                 subType = subTypes.includes(subType) ? subType : 'default';
 
-                const event: StreamElements.Event.Provider.Twitch.Subscriber & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.Twitch.Subscriber & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'subscriber-latest',
                   event: {
                     amount,
@@ -941,7 +1172,9 @@ export namespace Local {
                 return event;
               }
               case 'delete-message': {
-                const event: StreamElements.Event.Provider.Twitch.DeleteMessage & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.Twitch.DeleteMessage & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'delete-message',
                   event: {
                     msgId: (options?.id as string) ?? Helper.random.uuid(),
@@ -954,10 +1187,14 @@ export namespace Local {
                 return event;
               }
               case 'delete-messages': {
-                const event: StreamElements.Event.Provider.Twitch.DeleteMessages & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.Twitch.DeleteMessages & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'delete-messages',
                   event: {
-                    userId: (options?.id as string) ?? Helper.random.number(10000000, 99999999).toString(),
+                    userId:
+                      (options?.id as string) ??
+                      Helper.random.number(10000000, 99999999).toString(),
                     provider,
                   },
                   // @ts-ignore
@@ -970,10 +1207,20 @@ export namespace Local {
           }
 
           case 'streamelements': {
-            switch (type as StreamElements.Event.Provider.StreamElements.Events['listener'] | 'random' | 'tip' | 'mute' | 'unmute' | 'skip') {
+            switch (
+              type as
+                | StreamElements.Event.Provider.StreamElements.Events['listener']
+                | 'random'
+                | 'tip'
+                | 'mute'
+                | 'unmute'
+                | 'skip'
+            ) {
               default:
               case 'random': {
-                var randomEvent = Helper.random.array(available[provider])[0] as StreamElements.Event.onEventReceived['listener'];
+                var randomEvent = Helper.random.array(
+                  available[provider],
+                )[0] as StreamElements.Event.onEventReceived['listener'];
 
                 return this.onEventReceived(provider, randomEvent);
               }
@@ -981,9 +1228,13 @@ export namespace Local {
               case 'tip-latest': {
                 var amount = (options?.amount as number) ?? Helper.random.number(100, 4000);
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.StreamElements.Tip & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.StreamElements.Tip & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'tip-latest',
                   event: {
                     amount,
@@ -1004,7 +1255,9 @@ export namespace Local {
                 return event;
               }
               case 'kvstore:update': {
-                const event: StreamElements.Event.Provider.StreamElements.KVStore & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.StreamElements.KVStore & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'kvstore:update',
                   event: {
                     data: {
@@ -1020,7 +1273,9 @@ export namespace Local {
                 return event;
               }
               case 'bot:counter': {
-                const event: StreamElements.Event.Provider.StreamElements.BotCounter & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.StreamElements.BotCounter & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'bot:counter',
                   event: {
                     counter: (options?.counter as string) ?? 'sampleCounter',
@@ -1038,7 +1293,9 @@ export namespace Local {
               case 'alertService:toggleSound': {
                 var muted = (options?.muted as boolean) ?? !client.details.overlay.muted;
 
-                const event: StreamElements.Event.Provider.StreamElements.AlertService & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.StreamElements.AlertService & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'alertService:toggleSound',
                   event: {
                     muted,
@@ -1052,7 +1309,9 @@ export namespace Local {
               }
               case 'skip':
               case 'event:skip': {
-                const event: StreamElements.Event.Provider.StreamElements.EventSkip & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.StreamElements.EventSkip & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'event:skip',
                   event: {
                     provider,
@@ -1067,24 +1326,43 @@ export namespace Local {
           }
 
           case 'youtube': {
-            switch (type as StreamElements.Event.Provider.YouTube.Events['listener'] | 'random' | 'message' | 'superchat' | 'subscriber' | 'sponsor') {
+            switch (
+              type as
+                | StreamElements.Event.Provider.YouTube.Events['listener']
+                | 'random'
+                | 'message'
+                | 'superchat'
+                | 'subscriber'
+                | 'sponsor'
+            ) {
               default:
               case 'random': {
-                var randomEvent = Helper.random.array(available[provider])[0] as StreamElements.Event.onEventReceived['listener'];
+                var randomEvent = Helper.random.array(
+                  available[provider],
+                )[0] as StreamElements.Event.onEventReceived['listener'];
 
                 return this.onEventReceived(provider, randomEvent);
               }
               case 'message': {
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
-                var message = (options?.message as string) ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var message =
+                  (options?.message as string) ??
+                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
 
-                const badges = await Helper.message.generateBadges((options?.badges as Helper.message.BadgeOptions) ?? [], provider);
+                const badges = await Helper.message.generateBadges(
+                  (options?.badges as Helper.message.BadgeOptions) ?? [],
+                  provider,
+                );
 
                 var emotes = Helper.message.findEmotesInText(message);
                 var renderedText = Helper.message.replaceEmotesWithHTML(message, emotes);
 
                 var color = (options?.color as string) ?? Helper.random.color('hex');
-                var userId = (options?.userId as string) ?? Helper.random.number(10000000, 99999999).toString();
+                var userId =
+                  (options?.userId as string) ??
+                  Helper.random.number(10000000, 99999999).toString();
                 var msgId = (options?.msgId as string) ?? Helper.random.uuid();
                 var time = (options?.time as number) ?? Date.now();
 
@@ -1143,9 +1421,13 @@ export namespace Local {
               case 'subscriber':
               case 'subscriber-latest': {
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.YouTube.Subscriber & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.YouTube.Subscriber & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'subscriber-latest',
                   event: {
                     avatar,
@@ -1168,9 +1450,13 @@ export namespace Local {
               case 'superchat-latest': {
                 var amount = (options?.amount as number) ?? Helper.random.number(100, 4000);
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
 
-                const event: StreamElements.Event.Provider.YouTube.Superchat & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.YouTube.Superchat & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'superchat-latest',
                   event: {
                     amount,
@@ -1192,12 +1478,19 @@ export namespace Local {
               }
               case 'sponsor':
               case 'sponsor-latest': {
-                var tier = (options?.tier as string) ?? Helper.random.array(['1000', '2000', '3000'])[0];
+                var tier =
+                  (options?.tier as string) ?? Helper.random.array(['1000', '2000', '3000'])[0];
                 var amount = (options?.amount as number) ?? Helper.random.number(1, 24);
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
-                var name = (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
-                var sender = (options?.sender as string) ?? Helper.random.array(Data.names.filter((e) => e.length && e !== name))[0];
-                var message = (options?.message as string) ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                var name =
+                  (options?.name as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var sender =
+                  (options?.sender as string) ??
+                  Helper.random.array(Data.names.filter((e) => e.length && e !== name))[0];
+                var message =
+                  (options?.message as string) ??
+                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
 
                 var addons = {
                   default: {
@@ -1225,7 +1518,9 @@ export namespace Local {
 
                 subType = subTypes.includes(subType) ? subType : 'default';
 
-                const event: StreamElements.Event.Provider.YouTube.Sponsor & { event: { provider: Provider } } = {
+                const event: StreamElements.Event.Provider.YouTube.Sponsor & {
+                  event: { provider: Provider };
+                } = {
                   listener: 'sponsor-latest',
                   event: {
                     amount,
@@ -1269,11 +1564,17 @@ export namespace Local {
           time: number;
         }> = {},
       ) {
-        Local.generate.event.onEventReceived('twitch', 'message', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'twitch',
+            'message',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
       deleteMessage(msgId: string) {
         if (!msgId || typeof msgId !== 'string') return;
@@ -1305,11 +1606,17 @@ export namespace Local {
           name: string;
         }> = {},
       ) {
-        Local.generate.event.onEventReceived('twitch', 'follower-latest', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'twitch',
+            'follower-latest',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
       raid(
         data: Partial<{
@@ -1318,11 +1625,17 @@ export namespace Local {
           name: string;
         }> = {},
       ) {
-        Local.generate.event.onEventReceived('twitch', 'raid-latest', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'twitch',
+            'raid-latest',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
       cheer(
         data: Partial<{
@@ -1332,11 +1645,17 @@ export namespace Local {
           message: string;
         }> = {},
       ) {
-        Local.generate.event.onEventReceived('twitch', 'cheer-latest', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'twitch',
+            'cheer-latest',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
       subscriber(
         data: Partial<{
@@ -1349,11 +1668,17 @@ export namespace Local {
           subType: 'default' | 'gift' | 'community' | 'spam';
         }> & { subType?: 'default' | 'gift' | 'community' | 'spam' } = {},
       ) {
-        Local.generate.event.onEventReceived('twitch', 'subscriber-latest', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'twitch',
+            'subscriber-latest',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
     },
     streamelements: {
@@ -1364,11 +1689,17 @@ export namespace Local {
           name: string;
         }> = {},
       ) {
-        Local.generate.event.onEventReceived('streamelements', 'tip-latest', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'streamelements',
+            'tip-latest',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
     },
     youtube: {
@@ -1385,11 +1716,17 @@ export namespace Local {
           avatar: string;
         }> = {},
       ) {
-        Local.generate.event.onEventReceived('youtube', 'message', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'youtube',
+            'message',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
       subscriber(
         data: Partial<{
@@ -1397,11 +1734,17 @@ export namespace Local {
           name: string;
         }> = {},
       ) {
-        Local.generate.event.onEventReceived('youtube', 'subscriber-latest', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'youtube',
+            'subscriber-latest',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
       superchat(
         data: Partial<{
@@ -1410,11 +1753,17 @@ export namespace Local {
           name: string;
         }> = {},
       ) {
-        Local.generate.event.onEventReceived('youtube', 'superchat-latest', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'youtube',
+            'superchat-latest',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
       sponsor(
         data: Partial<{
@@ -1427,11 +1776,17 @@ export namespace Local {
           subType: 'default' | 'gift' | 'community' | 'spam';
         }> & { subType?: 'default' | 'gift' | 'community' | 'spam' } = {},
       ) {
-        Local.generate.event.onEventReceived('youtube', 'sponsor-latest', data as { [key: string]: string | number | boolean }).then((event) => {
-          if (event) {
-            Local.emulate.send('onEventReceived', event);
-          }
-        });
+        Local.generate.event
+          .onEventReceived(
+            'youtube',
+            'sponsor-latest',
+            data as { [key: string]: string | number | boolean },
+          )
+          .then((event) => {
+            if (event) {
+              Local.emulate.send('onEventReceived', event);
+            }
+          });
       },
     },
     kick: {},
@@ -1507,9 +1862,12 @@ export namespace Local {
       }),
     };
 
-    const data: Record<string, string | number | boolean> = await fetch('./' + (localFiles.data ?? 'data.json'), {
-      cache: 'no-store',
-    })
+    const data: Record<string, string | number | boolean> = await fetch(
+      './' + (localFiles.data ?? 'data.json'),
+      {
+        cache: 'no-store',
+      },
+    )
       .then((res) => res.json())
       .catch(() => ({}));
 
@@ -1533,7 +1891,10 @@ export namespace Local {
             } as Record<string, StreamElements.CustomField.Value>,
           );
 
-        const load = await Local.generate.event.onWidgetLoad(fields, await Local.generate.session.get(session));
+        const load = await Local.generate.event.onWidgetLoad(
+          fields,
+          await Local.generate.session.get(session),
+        );
 
         window.dispatchEvent(new CustomEvent('onWidgetLoad', { detail: load }));
       });

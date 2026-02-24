@@ -1,7 +1,7 @@
 import { Provider } from '../types/client.js';
 import { StreamElements } from '../types/streamelements/main.js';
-import { EventProvider } from '../utils/EventProvider.js';
-import { useStorage } from '../utils/useStorage.js';
+import { EventProvider } from '../modules/EventProvider.js';
+import { useStorage } from '../modules/useStorage.js';
 import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
 import { Alejo } from '../utils/alejo.js';
@@ -104,7 +104,10 @@ export class Client extends EventProvider<ClientEvents> {
     emote: 120,
   };
 
-  override on<K extends keyof ClientEvents>(eventName: K, callback: (this: Client, ...args: ClientEvents[K]) => void): this {
+  override on<K extends keyof ClientEvents>(
+    eventName: K,
+    callback: (this: Client, ...args: ClientEvents[K]) => void,
+  ): this {
     if (eventName === 'load' && this.loaded) {
       callback.apply(this, [
         {
