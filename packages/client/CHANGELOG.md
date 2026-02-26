@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.2.1
+
+### Patch Changes
+
+- b4008fa: Fix retyping
+
 ## 6.2.0
 
 ### Minor Changes
