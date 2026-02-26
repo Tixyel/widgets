@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.2.0
+
+### Minor Changes
+
+- cf413c8: Improve Helper with more functions and better typing
+
 ## 6.1.0
 
 ### Minor Changes
