@@ -15,19 +15,72 @@ export namespace Helper {
      * console.log(cardinal); // "forty-two"
      * ```
      */
-    export function translate(num: number, type: 'cardinal' | 'ordinal' | 'suffix' = 'cardinal'): string {
+    export function translate(
+      num: number,
+      type: 'cardinal' | 'ordinal' | 'suffix' = 'cardinal',
+    ): string {
       const CARDINALS = {
         single: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
-        tens: ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'],
+        tens: [
+          'ten',
+          'eleven',
+          'twelve',
+          'thirteen',
+          'fourteen',
+          'fifteen',
+          'sixteen',
+          'seventeen',
+          'eighteen',
+          'nineteen',
+        ],
         decades: ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'],
       };
       const ORDINALS = {
-        single: ['zeroth', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth'],
-        tens: ['tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'],
-        decades: ['twentieth', 'thirtieth', 'fortieth', 'fiftieth', 'sixtieth', 'seventieth', 'eightieth', 'ninetieth'],
+        single: [
+          'zeroth',
+          'first',
+          'second',
+          'third',
+          'fourth',
+          'fifth',
+          'sixth',
+          'seventh',
+          'eighth',
+          'ninth',
+        ],
+        tens: [
+          'tenth',
+          'eleventh',
+          'twelfth',
+          'thirteenth',
+          'fourteenth',
+          'fifteenth',
+          'sixteenth',
+          'seventeenth',
+          'eighteenth',
+          'nineteenth',
+        ],
+        decades: [
+          'twentieth',
+          'thirtieth',
+          'fortieth',
+          'fiftieth',
+          'sixtieth',
+          'seventieth',
+          'eightieth',
+          'ninetieth',
+        ],
       };
       const SUFFIXES = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'];
-      const SCALES = ['', 'thousand', 'million', 'billion', 'trillion', 'quadrillion', 'quintillion'];
+      const SCALES = [
+        '',
+        'thousand',
+        'million',
+        'billion',
+        'trillion',
+        'quadrillion',
+        'quintillion',
+      ];
       const SCALES_ORD = SCALES.map((s) => (s ? `${s}th` : ''));
 
       num = Math.abs(Math.floor(num));
@@ -44,7 +97,8 @@ export namespace Helper {
         if (n < 20) return kind === 'ordinal' ? ORDINALS.tens[n - 10] : CARDINALS.tens[n - 10];
         const decade = Math.floor(n / 10);
         const single = n % 10;
-        if (single === 0) return kind === 'ordinal' ? ORDINALS.decades[decade - 2] : CARDINALS.decades[decade - 2];
+        if (single === 0)
+          return kind === 'ordinal' ? ORDINALS.decades[decade - 2] : CARDINALS.decades[decade - 2];
         const tensPart = CARDINALS.decades[decade - 2];
         const unitPart = kind === 'ordinal' ? ORDINALS.single[single] : CARDINALS.single[single];
         return `${tensPart}-${unitPart}`;
@@ -56,7 +110,8 @@ export namespace Helper {
         const rest = n % 100;
         const parts: string[] = [];
         if (hundreds > 0) {
-          if (kind === 'ordinal' && rest === 0) parts.push(`${CARDINALS.single[hundreds]} hundredth`);
+          if (kind === 'ordinal' && rest === 0)
+            parts.push(`${CARDINALS.single[hundreds]} hundredth`);
           else parts.push(`${CARDINALS.single[hundreds]} hundred`);
         }
         if (rest > 0) parts.push(below100(rest, kind));
@@ -112,6 +167,7 @@ export namespace Helper {
      * @param amount - Number to balance
      * @param min - Minimum value
      * @param max - Maximum value
+     * @param decimals - Number of decimal places to round to (default is 0)
      * @returns - Balanced number
      * @example
      * ```javascript
@@ -119,8 +175,15 @@ export namespace Helper {
      * console.log(balancedValue); // 100
      * ```
      */
-    export function balance(amount: number, min: number = 0, max: number = 100) {
-      return Math.min(Math.max(amount, min), max);
+    export function balance(
+      amount: number,
+      min: number = 0,
+      max: number = 100,
+      decimals: number = 0,
+    ): number {
+      const result = Math.min(Math.max(amount, min), max);
+
+      return round(result, decimals);
     }
 
     /**
@@ -130,7 +193,7 @@ export namespace Helper {
      * @returns Rounded number
      * @example
      * ```javascript
-     * const roundedValue = Simulation.number.float(3.14159, 3);
+     * const roundedValue = Simulation.number.round(3.14159, 3);
      * console.log(roundedValue); // 3.142
      * ```
      */
@@ -139,6 +202,23 @@ export namespace Helper {
 
       return Math.round(value * factor) / factor;
     }
+
+    /**
+     * Generate random number
+     * @param min - Minimum value
+     * @param max - Maximum value
+     * @param float - Number of decimal places (0 for integer)
+     * @returns - Random number
+     * @example
+     * ```javascript
+     * const intNumber = number.random(1, 10);
+     * console.log(intNumber); // e.g. 7
+     *
+     * const floatNumber = number.random(1, 10, 2);
+     * console.log(floatNumber); // e.g. 3.14
+     * ```
+     */
+    export const random = Helper.random.number;
   }
 
   export namespace utils {
@@ -147,7 +227,10 @@ export namespace Helper {
      * @param ms - The number of milliseconds to delay.
      * @returns A Promise that resolves after the specified delay.
      */
-    export function delay<R extends any, M extends number>(ms: M, callback?: () => R): Promise<R | null> {
+    export function delay<R extends any, M extends number>(
+      ms: M,
+      callback?: () => R,
+    ): Promise<R | null> {
       return new Promise((resolve) =>
         setTimeout(() => {
           if (callback) {
@@ -163,34 +246,30 @@ export namespace Helper {
      * @param obj - The object to get entries from.
      * @returns An array of key-value pairs from the object.
      */
-    export function typedEntries<K extends string, V>(obj: Record<K, V> | Array<V>): [K, V][] {
-      return Object.entries(obj) as [K, V][];
-    }
+    export const typedEntries = object.entries;
 
     /**
      * Returns typed values of an object.
      * @param obj - The object to get values from.
      * @returns An array of values from the object.
      */
-    export function typedValues<K extends string, V>(obj: Record<K, V> | Array<V>): V[] {
-      return Object.values(obj) as V[];
-    }
+    export const typedValues = object.values;
 
     /**
      * Returns typed keys of an object.
      * @param obj - The object to get keys from.
      * @returns An array of keys from the object.
      */
-    export function typedKeys<K extends string, V>(obj: Record<K, V> | Array<V>): K[] {
-      return Object.keys(obj) as K[];
-    }
+    export const typedKeys = object.keys;
 
     /**
      * Selects an item based on weighted probabilities.
      * @param items - An object where keys are items and values are their weights.
      * @returns A randomly selected item based on the given probabilities.
      */
-    export function probability<K extends string, V extends number>(items: Record<K, V>): K | undefined {
+    export function probability<K extends string, V extends number>(
+      items: Record<K, V>,
+    ): K | undefined {
       const total = (Object.values(items) as number[]).reduce((acc, val) => acc + val, 0);
       const sorted = typedEntries(items).sort((a, b) => b[1] - a[1]);
       const rand = Math.random() * total;
@@ -254,7 +333,11 @@ export namespace Helper {
      * console.log(result); // Output: '<span style="font-size: 14px; color: red; font-weight: bold;">Hello World</span>'
      * ```
      */
-    export function mergeSpanStyles(outerStyle: string, innerHTML: string, className?: string): string {
+    export function mergeSpanStyles(
+      outerStyle: string,
+      innerHTML: string,
+      className?: string,
+    ): string {
       const match = innerHTML.match(/^<span(?: class="[^"]*")? style="([^"]*)">(.*)<\/span>$/s);
 
       if (match) {
@@ -322,7 +405,8 @@ export namespace Helper {
       const scaleY = (parentRect.height * max) / elementHeight;
 
       // Determine final scale based on base option or use smaller scale
-      let finalScale = base === 'width' ? scaleX : base === 'height' ? scaleY : Math.min(scaleX, scaleY);
+      let finalScale =
+        base === 'width' ? scaleX : base === 'height' ? scaleY : Math.min(scaleX, scaleY);
 
       // Apply minimum constraint if needed
       if (min > 0) {
@@ -366,8 +450,17 @@ export namespace Helper {
      * console.log(`Element scaled by a factor of ${scaleFactor}`);
      * ```
      */
-    export function scalev2<T extends HTMLElement>(element: T, options: ScaleOptions<T> = {}): number {
-      const { parent = element.parentElement, prefer = 'auto', min = 0, max = 1, apply = () => {} } = options;
+    export function scalev2<T extends HTMLElement>(
+      element: T,
+      options: ScaleOptions<T> = {},
+    ): number {
+      const {
+        parent = element.parentElement,
+        prefer = 'auto',
+        min = 0,
+        max = 1,
+        apply = () => {},
+      } = options;
 
       if (!parent) {
         throw new Error('No parent element found for scaling');
@@ -426,7 +519,11 @@ export namespace Helper {
      * console.log(`Adjusted font size: ${element.style.fontSize}`);
      * ```
      */
-    export function fitText(element: HTMLElement, compressor: number = 1, options: FitTextOptions = {}) {
+    export function fitText(
+      element: HTMLElement,
+      compressor: number = 1,
+      options: FitTextOptions = {},
+    ) {
       const fontSize = parseFloat(getComputedStyle(element).getPropertyValue('font-size'));
 
       const settings = {
@@ -577,7 +674,10 @@ export namespace Helper {
       stringify: boolean = true,
       prefix: string = '',
     ): Record<string, typeof stringify extends true ? string : string | number | boolean> {
-      const result = {} as Record<string, typeof stringify extends true ? string : string | number | boolean>;
+      const result = {} as Record<
+        string,
+        typeof stringify extends true ? string : string | number | boolean
+      >;
 
       for (const key in obj) {
         if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
@@ -647,10 +747,41 @@ export namespace Helper {
 
       return result;
     }
+
+    /**
+     * Returns the entries of an object as an array of key-value pairs, with proper typing.
+     * @param obj - The object to retrieve entries from.
+     * @returns An array of key-value pairs from the object, typed as an array of tuples with key and value types.
+     */
+    export function entries<K extends string, V>(obj: Record<K, V>): [K, V][] {
+      return Object.entries(obj) as [K, V][];
+    }
+
+    /**
+     * Returns the values of an object as an array, with proper typing.
+     * @param obj - The object to retrieve values from.
+     * @returns An array of values from the object, typed as an array of the value type.
+     */
+    export function values<K extends string, V>(obj: Record<K, V>): V[] {
+      return Object.values(obj) as V[];
+    }
+
+    /**
+     * Returns the keys of an object as an array of strings, with proper typing.
+     * @param obj - The object to retrieve keys from.
+     * @returns An array of keys from the object, typed as an array of strings.
+     */
+    export function keys<K extends string, V>(obj: Record<K, V>): K[] {
+      return Object.keys(obj) as K[];
+    }
   }
 
   export namespace message {
-    export type BadgeOptions = Twitch.roles[] | Twitch.roles | `${Twitch.roles}, ${Twitch.roles}` | `${Twitch.roles}, ${Twitch.roles}, ${Twitch.roles}`;
+    export type BadgeOptions =
+      | Twitch.roles[]
+      | Twitch.roles
+      | `${Twitch.roles}, ${Twitch.roles}`
+      | `${Twitch.roles}, ${Twitch.roles}, ${Twitch.roles}`;
     export type TwitchResult = {
       keys: Twitch.roles[];
       badges: Twitch.badge[];
@@ -734,18 +865,26 @@ export namespace Helper {
      * @param emotes - An array of YouTube emotes. Defaults to Local data YouTube emotes.
      * @returns The text with YouTube emotes replaced by HTML image tags.
      */
-    export function replaceYoutubeEmotesWithHTML(text: string, emotes = Data.youtube_emotes): string {
+    export function replaceYoutubeEmotesWithHTML(
+      text: string,
+      emotes = Data.youtube_emotes,
+    ): string {
       const emoteCodesInside = Array.from(text.matchAll(/:(.*?):/gim), (x) => x[0]);
 
       emoteCodesInside.forEach((code) => {
-        const emote = emotes.find((e) => e.shortcuts.includes(code) || e.searchTerms.includes(code.slice(1, -1)));
+        const emote = emotes.find(
+          (e) => e.shortcuts.includes(code) || e.searchTerms.includes(code.slice(1, -1)),
+        );
 
         if (emote) {
           const url = emote.image.thumbnails.at(-1)?.url;
           const alt = emote.image.accessibility.accessibilityData.label;
 
           if (url) {
-            text = text.replace(code, `<img src="${url}" alt="${alt}" class="emote" style="width: auto; height: 1em; vertical-align: middle;" />`);
+            text = text.replace(
+              code,
+              `<img src="${url}" alt="${alt}" class="emote" style="width: auto; height: 1em; vertical-align: middle;" />`,
+            );
           }
         }
       });
@@ -849,8 +988,15 @@ export namespace Helper {
      * @returns An object containing the provider and the original event data.
      */
     export function parseProvider(detail: StreamElements.Event.onEventReceived) {
-      // @ts-ignore
-      var provider: Provider = detail.event?.provider || detail.event?.service || detail.event?.data?.provider || window.client.details.provider;
+      var provider: Provider =
+        // @ts-ignore
+        detail.event?.provider ||
+        // @ts-ignore
+        detail.event?.service ||
+        // @ts-ignore
+        detail.event?.data?.provider ||
+        // @ts-ignore
+        window.client.details.provider;
 
       const actAsStreamElements = [
         'kvstore:update',
@@ -870,7 +1016,11 @@ export namespace Helper {
   }
 
   export namespace string {
-    export type Modifier = (value: string, param: string | null | undefined, values: { amount?: number; count?: number }) => string;
+    export type Modifier = (
+      value: string,
+      param: string | null | undefined,
+      values: { amount?: number; count?: number },
+    ) => string;
 
     // Global presets that can be configured and reused across templates.
     // Each preset value is a modifier group string, e.g. "BOLD,COLOR:#ff0056".
@@ -1044,7 +1194,8 @@ export namespace Helper {
           acc[k] = String(v);
 
           if (['username', 'name', 'nick', 'nickname', 'sender'].some((e) => k === e)) {
-            const username = acc?.username || acc?.name || acc?.nick || acc?.nickname || acc?.sender;
+            const username =
+              acc?.username || acc?.name || acc?.nick || acc?.nickname || acc?.sender;
 
             acc['username'] = acc.username || username;
             acc['usernameAt'] = `@${acc.username}`;
@@ -1075,7 +1226,10 @@ export namespace Helper {
 
       var amount = parseFloat(flatten?.amount ?? flatten?.count ?? 0);
 
-      function getNumericFromKeyOrValue(keyOrValue: string, valuesMap: Record<string, string>): number | null {
+      function getNumericFromKeyOrValue(
+        keyOrValue: string,
+        valuesMap: Record<string, string>,
+      ): number | null {
         const trimmed = keyOrValue?.trim?.() ?? '';
         if (!trimmed.length) return null;
 
@@ -1086,7 +1240,11 @@ export namespace Helper {
         return isNaN(num) ? null : num;
       }
 
-      function formatNumber(value: string, param: string | null | undefined, valuesMap: Record<string, string>): string {
+      function formatNumber(
+        value: string,
+        param: string | null | undefined,
+        valuesMap: Record<string, string>,
+      ): string {
         const decimals = !isNaN(Number(param)) ? Math.max(0, parseInt(String(param))) : 0;
 
         const num = getNumericFromKeyOrValue(value, valuesMap);
@@ -1124,7 +1282,11 @@ export namespace Helper {
         return `${Math.max(sec, 0)}s ${suffix}`;
       }
 
-      function formatDateLike(value: string, param: string | null | undefined, valuesMap: Record<string, string>): string {
+      function formatDateLike(
+        value: string,
+        param: string | null | undefined,
+        valuesMap: Record<string, string>,
+      ): string {
         const keyOrLiteral = value?.trim?.() ?? '';
         if (!keyOrLiteral.length) return value;
 
@@ -1156,7 +1318,11 @@ export namespace Helper {
         }
       }
 
-      function pluralize(value: string, param: string | null | undefined, valuesMap: Record<string, string>): string {
+      function pluralize(
+        value: string,
+        param: string | null | undefined,
+        valuesMap: Record<string, string>,
+      ): string {
         const text = value ?? '';
         const [singular, plural = singular] = text.split('|', 2);
 
@@ -1176,9 +1342,14 @@ export namespace Helper {
         return isPlural ? plural : singular;
       }
 
-      function mapSwitch(value: string, param: string | null | undefined, valuesMap: Record<string, string>): string {
+      function mapSwitch(
+        value: string,
+        param: string | null | undefined,
+        valuesMap: Record<string, string>,
+      ): string {
         const key = param?.trim() ?? '';
-        const targetRaw = key && (valuesMap as any)[key] !== undefined ? (valuesMap as any)[key] : '';
+        const targetRaw =
+          key && (valuesMap as any)[key] !== undefined ? (valuesMap as any)[key] : '';
         const target = String(targetRaw);
 
         const entries = (value ?? '')
@@ -1208,7 +1379,12 @@ export namespace Helper {
       }
 
       function escapeHtml(value: string): string {
-        return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        return value
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
       }
 
       function parseLiteralOrValue(token: string, valuesMap: Record<string, string>): any {
@@ -1255,7 +1431,10 @@ export namespace Helper {
         return true;
       }
 
-      function evaluateAtomicCondition(expression: string, valuesMap: Record<string, string>): boolean {
+      function evaluateAtomicCondition(
+        expression: string,
+        valuesMap: Record<string, string>,
+      ): boolean {
         let expr = expression.trim();
         if (!expr.length) return false;
 
@@ -1325,7 +1504,10 @@ export namespace Helper {
         return invert ? !result : result;
       }
 
-      function evaluateConditionExpression(expression: string, valuesMap: Record<string, string>): boolean {
+      function evaluateConditionExpression(
+        expression: string,
+        valuesMap: Record<string, string>,
+      ): boolean {
         let expr = expression.trim();
         if (!expr.length) return false;
 
@@ -1365,8 +1547,10 @@ export namespace Helper {
       }
 
       const HTML_MODIFIERS: Record<string, Modifier> = {
-        COLOR: (value, param) => span(param && !!color.validate(param) ? `color: ${param}` : '', value, 'color'),
-        WEIGHT: (value, param) => span(param && !isNaN(parseInt(param)) ? `font-weight: ${param}` : '', value, 'weight'),
+        COLOR: (value, param) =>
+          span(param && !!color.validate(param) ? `color: ${param}` : '', value, 'color'),
+        WEIGHT: (value, param) =>
+          span(param && !isNaN(parseInt(param)) ? `font-weight: ${param}` : '', value, 'weight'),
         SEMIBOLD: (value) => span('font-weight: 600', value, 'semibold'),
         BOLD: (value) => span('font-weight: bold', value, 'bold'),
         BLACK: (value) => span('font-weight: 900', value, 'black'),
@@ -1392,10 +1576,14 @@ export namespace Helper {
         LOW: (value) => value.toLowerCase(),
         REV: (value) => value.split('').reverse().join(''),
         CAP: (value) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase(),
-        NUMBER: (value, param, valuesMap) => formatNumber(value, param, valuesMap as Record<string, string>),
-        PLURAL: (value, param, valuesMap) => pluralize(value, param, valuesMap as Record<string, string>),
-        DATE: (value, param, valuesMap) => formatDateLike(value, param, valuesMap as Record<string, string>),
-        MAP: (value, param, valuesMap) => mapSwitch(value, param, valuesMap as Record<string, string>),
+        NUMBER: (value, param, valuesMap) =>
+          formatNumber(value, param, valuesMap as Record<string, string>),
+        PLURAL: (value, param, valuesMap) =>
+          pluralize(value, param, valuesMap as Record<string, string>),
+        DATE: (value, param, valuesMap) =>
+          formatDateLike(value, param, valuesMap as Record<string, string>),
+        MAP: (value, param, valuesMap) =>
+          mapSwitch(value, param, valuesMap as Record<string, string>),
         ESCAPE: (value) => escapeHtml(value),
         IF: (value, _param, valuesMap) => {
           const text = value ?? '';
@@ -1405,7 +1593,10 @@ export namespace Helper {
 
           const [whenTrue, whenFalse = ''] = rest.split('|', 2);
 
-          const condition = evaluateConditionExpression(rawCondition, valuesMap as Record<string, string>);
+          const condition = evaluateConditionExpression(
+            rawCondition,
+            valuesMap as Record<string, string>,
+          );
 
           return condition ? whenTrue : whenFalse;
         },
@@ -1472,7 +1663,11 @@ export namespace Helper {
         ...(options.aliases ?? {}),
       };
 
-      function applyModifier(value: string, name: string, param: string | null | undefined): string {
+      function applyModifier(
+        value: string,
+        name: string,
+        param: string | null | undefined,
+      ): string {
         const canonical = Object.entries(ALIASES).find(([key, aliases]) => {
           if (aliases.some((alias) => alias.toUpperCase() === name.toUpperCase())) return true;
           else if (key.toUpperCase() === name.toUpperCase()) return true;
@@ -1481,11 +1676,16 @@ export namespace Helper {
         const use = canonical ? canonical[0] : name.toUpperCase();
 
         try {
-          if (MODIFIERS[use]) return MODIFIERS[use](value, typeof param === 'string' ? param.trim() : null, flatten);
+          if (MODIFIERS[use])
+            return MODIFIERS[use](value, typeof param === 'string' ? param.trim() : null, flatten);
           else if (options?.html) return span('', value, use.toLowerCase());
           else return value;
         } catch (error) {
-          if (options?.debug && typeof console !== 'undefined' && typeof console.error === 'function') {
+          if (
+            options?.debug &&
+            typeof console !== 'undefined' &&
+            typeof console.error === 'function'
+          ) {
             console.error('[Helper.string.compose] Modifier error', { name, param, error });
           }
           return value;
@@ -1589,7 +1789,9 @@ export namespace Helper {
       }
 
       let result = template.replace(REGEX.PLACEHOLDERS, (_, key: string) =>
-        typeof flatten[key] === 'string' || typeof flatten[key] === 'number' ? String(flatten[key]) : (key ?? key),
+        typeof flatten[key] === 'string' || typeof flatten[key] === 'number'
+          ? String(flatten[key])
+          : (key ?? key),
       );
 
       result = options.method === 'loop' ? replaceAll(result) : parseModifiers(result);
@@ -1749,7 +1951,10 @@ export namespace Helper {
      * const colorName = color.convert("#FF5733", "css-color-name"); // "orangered"
      * ```
      */
-    export async function convert(str: string, format: 'hex' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name'): Promise<string | null> {
+    export async function convert(
+      str: string,
+      format: 'hex' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name',
+    ): Promise<string | null> {
       const valid = validate(str);
 
       if (!valid) throw new Error(`Invalid color format: ${str}`);
@@ -1802,7 +2007,9 @@ export namespace Helper {
      * console.log(rgbColor); // e.g. rgb(62, 146, 204)
      * ```
      */
-    export function color(type: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name' = 'hex') {
+    export function color(
+      type: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name' = 'hex',
+    ) {
       switch (type) {
         default:
         case 'hex': {
@@ -1906,7 +2113,10 @@ export namespace Helper {
      * console.log(randString); // e.g. "aZ3bT9xYqP"
      * ```
      */
-    export function string(length: number, chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'): string {
+    export function string(
+      length: number,
+      chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+    ): string {
       let result = '';
 
       for (let i = 0; i < length; i++) {
@@ -1980,6 +2190,38 @@ export namespace Helper {
      */
     export function uuid(): string {
       return crypto.randomUUID();
+    }
+  }
+
+  export namespace fn {
+    /**
+     * Apply function with given thisArg and arguments
+     * @param fn - Function to apply
+     * @param thisArg - Value to use as this when calling fn
+     * @param args - Arguments to pass to fn
+     * @returns Result of calling fn with thisArg and args
+     */
+    export function apply<TThis, TArgs extends unknown[], TReturn>(
+      fn: (this: TThis, ...args: TArgs) => TReturn,
+      thisArg: TThis,
+      args: TArgs,
+    ): TReturn {
+      return fn.apply(thisArg, args);
+    }
+
+    /**
+     * Call function with given thisArg and arguments
+     * @param fn - Function to call
+     * @param thisArg - Value to use as this when calling fn
+     * @param args - Arguments to pass to fn
+     * @returns Result of calling fn with thisArg and args
+     */
+    export function call<TThis, TArgs extends unknown[], TReturn>(
+      fn: (this: TThis, ...args: TArgs) => TReturn,
+      thisArg: TThis,
+      ...args: TArgs
+    ): TReturn {
+      return fn.call(thisArg, ...args);
     }
   }
 }
