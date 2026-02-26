@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.1.0
+
+### Minor Changes
+
+- b3c3bd2: Reestructure modules and implement useComms for multi widget communication
+
 ## 6.0.3
 
 ### Patch Changes
