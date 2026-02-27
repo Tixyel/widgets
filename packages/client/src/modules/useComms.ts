@@ -55,8 +55,8 @@ export class useComms<T extends MessageMap> extends EventProvider<BaseEvents<T>>
   public id: string = 'widget communications';
   public loaded: boolean = false;
 
-  private history: Array<UseCommItem<T>> = [];
-  private detected = new Set<string>();
+  public history: Array<UseCommItem<T>> = [];
+  public detected = new Set<string>();
 
   constructor(options: UseCommsOptions = {}) {
     super();
