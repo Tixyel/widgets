@@ -47,9 +47,10 @@ export const generateCommand: Command = program
       spinner.text = 'Generating widget...';
       spinner.color = 'green';
 
-      const widgetPath = inputPath
+      let widgetPath = inputPath
         ? resolve(workspace.root, inputPath.replace(/[/\\]$/, ''))
         : workspace.root;
+
       /**
        * Means to generate the widget scaffold inside the target directory
        */
@@ -62,6 +63,8 @@ export const generateCommand: Command = program
         const folderName = basename(widgetPath);
 
         name = folderName;
+        // set widgetPath to the parent directory since the widget will be scaffolded inside it
+        widgetPath = resolve(widgetPath, '..');
 
         inputPath?.slice(0, -1);
       } else {
@@ -70,7 +73,7 @@ export const generateCommand: Command = program
         if (!name) {
           spinner.stop();
 
-          const nextNum = await getNextWidgetNumber(workspace.root);
+          const nextNum = await getNextWidgetNumber(widgetPath);
           const defaultName = `${nextNum} - Custom Widget`;
 
           const { name: nameAnswer } = await inquirer.prompt({
@@ -165,7 +168,7 @@ export const generateCommand: Command = program
         }
       }
 
-      const createPath = isTarget ? widgetPath : join(workspace.root, name);
+      const createPath = isTarget ? widgetPath : join(widgetPath, name);
 
       spinner.start();
       spinner.text = `📂 Creating widget ${name} at ${createPath}`;
