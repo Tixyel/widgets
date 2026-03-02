@@ -1,16 +1,10 @@
-import { existsSync, unlink } from 'fs';
+import type { Command } from 'commander';
 import { program } from '../app';
-import { resolve } from 'path';
-import { INITIAL_PACKAGES, INSTALL_COMMANDS, WORKSPACE_CONFIG_FILES } from '../lib/constants';
-import { WORKSPACE_CONFIG_TEMPLATE } from '../template/workspaceConfig';
+
+import { existsSync, unlink } from 'fs';
 import { writeFile } from 'fs/promises';
-import inquirer from 'inquirer';
-import { detectPackageManager } from '../utils/pm';
 import { exec } from 'child_process';
-import ora from 'ora';
-import cliSpinners from 'cli-spinners';
-import { Command } from 'commander';
-import { Workspace } from '../lib/workspace';
+import { resolve } from 'path';
 
 export const initCommand: Command = program
   .command('init')
@@ -21,6 +15,24 @@ export const initCommand: Command = program
     'Force initialization by overwriting existing configuration without confirmation',
   )
   .action(async (options: { force?: boolean } = {}) => {
+    const [
+      { Workspace },
+      { default: ora },
+      { default: cliSpinners },
+      { INITIAL_PACKAGES, INSTALL_COMMANDS },
+      { WORKSPACE_CONFIG_TEMPLATE },
+      { default: inquirer },
+      { detectPackageManager },
+    ] = await Promise.all([
+      import('../lib/workspace'),
+      import('ora'),
+      import('cli-spinners'),
+      import('../lib/constants'),
+      import('../template/workspaceConfig'),
+      import('inquirer'),
+      import('../utils/pm'),
+    ]);
+
     const spinner = ora({
       color: 'magenta',
       text: 'Checking for existing workspace configuration...',

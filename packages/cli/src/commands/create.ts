@@ -1,12 +1,8 @@
-import { Command } from 'commander';
+import type { WidgetType } from '../types/widget';
+import type { Command } from 'commander';
 import { program } from '../app';
-import { Workspace } from '../lib/workspace';
-import ora from 'ora';
-import cliSpinners from 'cli-spinners';
+
 import { basename, join, resolve } from 'path';
-import { getNextWidgetNumber } from '../utils/widget';
-import inquirer from 'inquirer';
-import { WidgetType } from '../types/widget';
 
 export const generateCommand: Command = program
   .command('generate [path] [name] [description] [tags]')
@@ -23,6 +19,20 @@ export const generateCommand: Command = program
         type?: WidgetType;
       },
     ) => {
+      const [
+        { Workspace },
+        { default: ora },
+        { default: cliSpinners },
+        { getNextWidgetNumber },
+        { default: inquirer },
+      ] = await Promise.all([
+        import('../lib/workspace'),
+        import('ora'),
+        import('cli-spinners'),
+        import('../utils/widget'),
+        import('inquirer'),
+      ]);
+
       const spinner = ora({
         color: 'magenta',
         text: 'Loading workspace configuration...',

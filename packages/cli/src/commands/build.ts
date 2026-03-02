@@ -1,12 +1,7 @@
-import { Command } from 'commander';
+import type { Command } from 'commander';
 import { program } from '../app';
-import { Workspace } from '../lib/workspace';
-import ora from 'ora';
-import cliSpinners from 'cli-spinners';
-import inquirer from 'inquirer';
+
 import { existsSync, readFileSync } from 'fs';
-import { readFile } from 'fs/promises';
-import { Widget } from '../lib/widget';
 import path, { relative } from 'path';
 
 export const buildCommand: Command = program
@@ -32,6 +27,20 @@ export const buildCommand: Command = program
       widgets?: string[] | '*';
       bump?: 'none' | 'patch' | 'minor' | 'major';
     }) => {
+      const [
+        { Workspace },
+        { default: ora },
+        { default: cliSpinners },
+        { default: inquirer },
+        { Widget },
+      ] = await Promise.all([
+        import('../lib/workspace'),
+        import('ora'),
+        import('cli-spinners'),
+        import('inquirer'),
+        import('../lib/widget'),
+      ]);
+
       const spinner = ora({
         text: 'Loading workspace configuration...',
         color: 'magenta',
