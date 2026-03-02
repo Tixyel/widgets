@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.2.2
+
+### Patch Changes
+
+- 168397b: Change history and detected properties to public access
+
 ## 6.2.1
 
 ### Patch Changes
