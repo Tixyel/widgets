@@ -1,5 +1,12 @@
 # @tixyel/cli
 
+## 3.2.0
+
+### Minor Changes
+
+- 9ad6552: refactor: optimize dynamic imports and type imports in command files
+  fix: correct widget path resolution for scaffold generation
+
 ## 3.1.1
 
 ### Patch Changes
