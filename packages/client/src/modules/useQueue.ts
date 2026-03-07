@@ -86,9 +86,15 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
     this.waitForClientAndBindLoad(options.duration);
   }
 
-  private waitForClientAndBindLoad(duration: QueueDuration | 'client' = this.duration) {
+  private waitForClientAndBindLoad(
+    duration: QueueDuration | 'client' = this.duration,
+    callback?: () => void,
+  ) {
     if (!(window?.client instanceof Client)) {
-      setTimeout(() => this.waitForClientAndBindLoad(duration), this.clientWaitRetryDelay);
+      setTimeout(
+        () => this.waitForClientAndBindLoad(duration, callback),
+        this.clientWaitRetryDelay,
+      );
 
       return;
     }
@@ -100,6 +106,7 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
       this.emit('load');
 
       this.loaded = true;
+      if (callback) callback();
     });
   }
 

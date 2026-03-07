@@ -6,13 +6,26 @@ import { Helper } from '../helper/index.js';
 import { Data } from '../data/index.js';
 
 export namespace Local {
-  type Queue = useQueue<
+  export type QueueItem =
     | { listener: 'onEventReceived'; data: StreamElements.Event.onEventReceived; session?: boolean }
     | { listener: 'onWidgetLoad'; data: StreamElements.Event.onWidgetLoad }
-    | { listener: 'onSessionUpdate'; data: StreamElements.Event.onSessionUpdate }
-  >;
+    | { listener: 'onSessionUpdate'; data: StreamElements.Event.onSessionUpdate };
 
-  export var queue: Queue | undefined;
+  export const queue = new useQueue<QueueItem>({
+    duration: 'client',
+    processor: async function processor(received) {
+      window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
+
+      if (received.listener === 'onEventReceived' && received.session) {
+        const sessionEvent = await Local.generate.event.onSessionUpdate(
+          client.session,
+          Helper.event.parseProvider(received.data),
+        );
+
+        window.dispatchEvent(new CustomEvent('onSessionUpdate', { detail: sessionEvent }));
+      }
+    },
+  });
 
   export const generate = {
     session: {

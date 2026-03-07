@@ -9,26 +9,6 @@ import { Helper } from '../helper/index.js';
 import { usedComms } from '../modules/useComms.js';
 
 if (typeof window !== undefined) {
-  window.addEventListener('load', () => {
-    if (window.client instanceof Client) {
-      Local.queue = new useQueue({
-        duration: 'client',
-        processor: async function processor(received) {
-          window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
-
-          if (received.listener === 'onEventReceived' && received.session) {
-            const sessionEvent = await Local.generate.event.onSessionUpdate(
-              client.session,
-              Helper.event.parseProvider(received.data),
-            );
-
-            window.dispatchEvent(new CustomEvent('onSessionUpdate', { detail: sessionEvent }));
-          }
-        },
-      });
-    }
-  });
-
   window.addEventListener('onWidgetLoad', async (data) => {
     const { detail } = data;
 
