@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.0
+
+### Minor Changes
+
+- 09f01b3: Streamline event handling and queue initialization in listener
+
 ## 6.3.0
 
 ### Minor Changes
