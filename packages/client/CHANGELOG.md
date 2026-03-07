@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.3.0
+
+### Minor Changes
+
+- 1fcbe0e: Update dependencies and refactor type exports
+
 ## 6.2.2
 
 ### Patch Changes
