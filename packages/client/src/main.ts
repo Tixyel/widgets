@@ -18,23 +18,38 @@ import { useComms, usedComms } from './modules/useComms.js';
 
 export const USE_SE_API: Promise<StreamElements.SE_API> =
   typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
-
 export const logger = new useLogger();
 
 export const main = {
   SeAPI: USE_SE_API,
 
-  Client,
-  Helper,
-  Local,
-  Data,
-  logger,
+  Client: Client,
+  Helper: Helper,
+  Local: Local,
+  Data: Data,
+  logger: logger,
 
-  modules: { EventProvider, useStorage, useQueue, useLogger, useComms },
-  actions: { Button, Command },
-  multistream: { useComfyJs },
-  data: { usedStorages, usedComms },
-  pronouns: { Alejo },
+  modules: {
+    EventProvider,
+    useStorage,
+    useQueue,
+    useLogger,
+    useComms,
+  },
+  actions: {
+    Button,
+    Command,
+  },
+  multistream: {
+    useComfyJs,
+  },
+  data: {
+    usedStorages,
+    usedComms,
+  },
+  pronouns: {
+    Alejo,
+  },
 };
 
 if (typeof window !== 'undefined') {

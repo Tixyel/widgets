@@ -720,10 +720,12 @@ export namespace Helper {
       | Twitch.roles
       | `${Twitch.roles}, ${Twitch.roles}`
       | `${Twitch.roles}, ${Twitch.roles}, ${Twitch.roles}`;
+
     export type TwitchResult = {
       keys: Twitch.roles[];
       badges: Twitch.badge[];
     };
+
     export type YouTubeResult = {
       isVerified: boolean;
       isChatOwner: boolean;
