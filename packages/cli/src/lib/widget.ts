@@ -393,7 +393,7 @@ export namespace Widget {
               usedWatermarks.add('html');
             }
 
-            if (typeof key === 'string') content += results[key];
+            if (typeof key === 'string' && results[key]?.trim().length) content += results[key];
             else if (Array.isArray(key)) {
               for await (const k of key) {
                 const part = results[k];
@@ -447,13 +447,22 @@ export namespace Widget {
                 zipWatermarks.add('html');
               }
 
-              if (typeof key === 'string') content += results[key];
+              if (typeof key === 'string' && results[key]?.trim().length) content += results[key];
               else if (Array.isArray(key)) {
                 for await (const k of key) {
                   const part = results[k];
 
                   if (part && part.trim().length) {
-                    content += '\n' + part.trim();
+                    if (
+                      ['fields', 'customfields', 'cf', 'fielddata', 'fieldData', 'data'].some((f) =>
+                        k.toLowerCase().includes(f.toLowerCase()),
+                      )
+                    ) {
+                      let old = JSON.parse(content || '{}');
+                      let addition = JSON.parse(part);
+
+                      content = JSON.stringify({ ...old, ...addition }, null, 2);
+                    } else content += '\n' + part.trim();
 
                     if (verbose) console.log(`   ✓ Merged part for ZIP: ${k}`);
                   }
