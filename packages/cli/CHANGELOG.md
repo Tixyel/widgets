@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.3.0
+
+### Minor Changes
+
+- 0255bb1: Add watermarks for script, css, and html files in ZIP export
+
 ## 3.2.0
 
 ### Minor Changes
