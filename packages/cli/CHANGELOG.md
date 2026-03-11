@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.3.1
+
+### Patch Changes
+
+- 5593ed2: Correct content accumulation for watermarks in ZIP export
+
 ## 3.3.0
 
 ### Minor Changes
