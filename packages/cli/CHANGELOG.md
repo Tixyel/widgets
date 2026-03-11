@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.3.2
+
+### Patch Changes
+
+- f6c705b: Enhance content accumulation logic for ZIP export
+
 ## 3.3.1
 
 ### Patch Changes
