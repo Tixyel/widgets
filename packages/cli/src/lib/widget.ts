@@ -429,6 +429,8 @@ export namespace Widget {
           try {
             const zip = new JSZip();
 
+            const zipWatermarks = new Set<string>();
+
             for await (const [filename, key] of Object.entries(extensionMap)) {
               let content = '';
 
@@ -446,7 +448,20 @@ export namespace Widget {
               }
 
               if (content) {
-                zip.file(filename, content);
+                const arrrr = Array.isArray(key) ? key : [key];
+
+                if (arrrr.some((k) => k.includes('script'))) {
+                  if (!zipWatermarks.has('script')) content += watermark.script(this) + '\n';
+                  zipWatermarks.add('script');
+                } else if (arrrr.some((k) => k.includes('css'))) {
+                  if (!zipWatermarks.has('css')) content += watermark.css(this) + '\n';
+                  zipWatermarks.add('css');
+                } else if (arrrr.some((k) => k.includes('html'))) {
+                  if (!zipWatermarks.has('html')) content += watermark.html(this) + '\n';
+                  zipWatermarks.add('html');
+                }
+
+                zip.file(filename, content.trim());
 
                 if (verbose) console.log(`   ✓ Added to ZIP: ${filename}`);
               }
