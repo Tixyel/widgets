@@ -393,7 +393,7 @@ export namespace Widget {
               usedWatermarks.add('html');
             }
 
-            if (typeof key === 'string') content = results[key];
+            if (typeof key === 'string') content += results[key];
             else if (Array.isArray(key)) {
               for await (const k of key) {
                 const part = results[k];
@@ -434,7 +434,20 @@ export namespace Widget {
             for await (const [filename, key] of Object.entries(extensionMap)) {
               let content = '';
 
-              if (typeof key === 'string') content = results[key];
+              const arrrr = Array.isArray(key) ? key : [key];
+
+              if (arrrr.some((k) => k.includes('script'))) {
+                if (!zipWatermarks.has('script')) content += watermark.script(this) + '\n';
+                zipWatermarks.add('script');
+              } else if (arrrr.some((k) => k.includes('css'))) {
+                if (!zipWatermarks.has('css')) content += watermark.css(this) + '\n';
+                zipWatermarks.add('css');
+              } else if (arrrr.some((k) => k.includes('html'))) {
+                if (!zipWatermarks.has('html')) content += watermark.html(this) + '\n';
+                zipWatermarks.add('html');
+              }
+
+              if (typeof key === 'string') content += results[key];
               else if (Array.isArray(key)) {
                 for await (const k of key) {
                   const part = results[k];
@@ -448,19 +461,6 @@ export namespace Widget {
               }
 
               if (content) {
-                const arrrr = Array.isArray(key) ? key : [key];
-
-                if (arrrr.some((k) => k.includes('script'))) {
-                  if (!zipWatermarks.has('script')) content += watermark.script(this) + '\n';
-                  zipWatermarks.add('script');
-                } else if (arrrr.some((k) => k.includes('css'))) {
-                  if (!zipWatermarks.has('css')) content += watermark.css(this) + '\n';
-                  zipWatermarks.add('css');
-                } else if (arrrr.some((k) => k.includes('html'))) {
-                  if (!zipWatermarks.has('html')) content += watermark.html(this) + '\n';
-                  zipWatermarks.add('html');
-                }
-
                 zip.file(filename, content.trim());
 
                 if (verbose) console.log(`   ✓ Added to ZIP: ${filename}`);

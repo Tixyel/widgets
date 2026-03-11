@@ -150,7 +150,7 @@ export const buildCommand: Command = program
             message: 'Select which widgets to build:',
             choices,
             pageSize: 10,
-            loop: false,
+            loop: true,
             theme: {
               checkbox: {
                 on: '[x]',
