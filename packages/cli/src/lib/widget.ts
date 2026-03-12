@@ -194,6 +194,12 @@ export namespace Widget {
               return replacement ?? match;
             };
 
+            const extractTxReplaceAttributeKey = (match: string): string | null => {
+              const attributeMatch = match.match(/\bkey\s*=\s*(["'])([\s\S]*?)\1/);
+
+              return attributeMatch?.[2]?.trim() || null;
+            };
+
             let replaced = content;
 
             // Common template syntaxes.
@@ -202,10 +208,37 @@ export namespace Widget {
               applyReplacement(match, key, '{{key}}'),
             );
 
-            // Example: <tx-template key="widgetName" />
+            // Example: <tx-replace key="widgetName" />
+            replaced = replaced.replace(/<\s*tx-replace\b[^>]*\/>/g, (match) => {
+              const key = extractTxReplaceAttributeKey(match);
+
+              return key ? applyReplacement(match, key, '<tx-replace key="..." />') : match;
+            });
+
+            // Example: <tx-replace key="widgetName"></tx-replace>
+            // Example two: <tx-replace>widgetName</tx-replace>
             replaced = replaced.replace(
-              /<\s*tx-template\b[^>]*\bkey\s*=\s*(["'])(.*?)\1[^>]*\/>/g,
-              (match, _quote, key) => applyReplacement(match, key, '<tx-template key="..." />'),
+              /<\s*tx-replace\b[^>]*>[\s\S]*?<\/\s*tx-replace\s*>/g,
+              (match) => {
+                const attributeKey = extractTxReplaceAttributeKey(match);
+
+                if (attributeKey) {
+                  return applyReplacement(
+                    match,
+                    attributeKey,
+                    '<tx-replace key="..."></tx-replace>',
+                  );
+                }
+
+                const childrenMatch = match.match(
+                  /<\s*tx-replace\b[^>]*>([\s\S]*?)<\/\s*tx-replace\s*>/,
+                );
+                const childrenKey = childrenMatch?.[1]?.trim();
+
+                return childrenKey
+                  ? applyReplacement(match, childrenKey, '<tx-replace>...</tx-replace>')
+                  : match;
+              },
             );
 
             // Example: [[widgetName]]
