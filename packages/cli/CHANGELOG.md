@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.5.0
+
+### Minor Changes
+
+- 75f78a6: Implement tx-replace attribute handling for dynamic content replacement
+
 ## 3.4.0
 
 ### Minor Changes
