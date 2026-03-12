@@ -135,6 +135,136 @@ export namespace Widget {
         const buildTarget = async (entryDir: string, targetOutDir: string, zipName: string) => {
           const usedWatermarks = new Set<string>();
           const processedFiles = new Set<string>();
+          const fieldKeys = ['fields', 'customfields', 'cf', 'fielddata', 'fieldData', 'data'];
+
+          const resolveReplacement = (value: string): string => {
+            const trimmed = value.trim();
+
+            const candidates = new Set<string>();
+
+            if (trimmed.startsWith('file://')) {
+              candidates.add(trimmed.replace('file://', ''));
+            }
+
+            if (trimmed.startsWith('file:./')) {
+              candidates.add(trimmed.replace('file:./', ''));
+            }
+
+            if (trimmed.startsWith('file:')) {
+              candidates.add(trimmed.replace('file:', ''));
+            }
+
+            candidates.add(trimmed);
+
+            for (const candidate of candidates) {
+              if (!candidate) continue;
+
+              if (existsSync(candidate)) {
+                return readFileSync(candidate, 'utf-8');
+              }
+
+              const relativeCandidate = join(this.path, candidate);
+              if (existsSync(relativeCandidate)) {
+                return readFileSync(relativeCandidate, 'utf-8');
+              }
+            }
+
+            return trimmed;
+          };
+
+          const replacePlaceholders = (content: string): string => {
+            const applyReplacement = (match: string, rawKey: string, syntax: string): string => {
+              const key = rawKey.trim();
+              let replacement = this.config.replace?.[key];
+
+              if (replacement) {
+                if (verbose)
+                  console.log(
+                    `   ✓ Replaced placeholder (${syntax}): ${key} with "${replacement}"`,
+                  );
+
+                replacement = resolveReplacement(replacement);
+              } else {
+                if (verbose)
+                  console.log(
+                    `   ⚠️  No replacement found for placeholder (${syntax}): ${key}, keeping as is.`,
+                  );
+              }
+
+              return replacement ?? match;
+            };
+
+            let replaced = content;
+
+            // Common template syntaxes.
+            // Example: {{widgetName}}
+            replaced = replaced.replace(/{{\s*([A-Za-z0-9._-]+)\s*}}/g, (match, key) =>
+              applyReplacement(match, key, '{{key}}'),
+            );
+
+            // Example: <tx-template key="widgetName" />
+            replaced = replaced.replace(
+              /<\s*tx-template\b[^>]*\bkey\s*=\s*(["'])(.*?)\1[^>]*\/>/g,
+              (match, _quote, key) => applyReplacement(match, key, '<tx-template key="..." />'),
+            );
+
+            // Example: [[widgetName]]
+            replaced = replaced.replace(/\[\[\s*([A-Za-z0-9._-]+)\s*\]\]/g, (match, key) =>
+              applyReplacement(match, key, '[[key]]'),
+            );
+
+            // Example: <<widgetName>>
+            replaced = replaced.replace(/<<\s*([A-Za-z0-9._-]+)\s*>>/g, (match, key) =>
+              applyReplacement(match, key, '<<key>>'),
+            );
+
+            return replaced;
+          };
+
+          const buildMappedContent = async (
+            key: string | string[],
+            watermarkSet: Set<string>,
+            mergedPartLabel: 'for' | 'for ZIP',
+          ): Promise<string> => {
+            let content = '';
+            const keys = Array.isArray(key) ? key : [key];
+
+            if (keys.some((k) => k.includes('script'))) {
+              if (!watermarkSet.has('script')) content += watermark.script(this) + '\n';
+              watermarkSet.add('script');
+            } else if (keys.some((k) => k.includes('css'))) {
+              if (!watermarkSet.has('css')) content += watermark.css(this) + '\n';
+              watermarkSet.add('css');
+            } else if (keys.some((k) => k.includes('html'))) {
+              if (!watermarkSet.has('html')) content += watermark.html(this) + '\n';
+              watermarkSet.add('html');
+            }
+
+            if (typeof key === 'string' && results[key]?.trim().length) {
+              content += results[key];
+            } else if (Array.isArray(key)) {
+              for await (const k of key) {
+                const part = results[k];
+
+                if (part && part.trim().length) {
+                  if (fieldKeys.some((f) => k.toLowerCase().includes(f.toLowerCase()))) {
+                    const old = JSON.parse(content || '{}');
+                    const addition = JSON.parse(part);
+
+                    content = JSON.stringify({ ...old, ...addition }, null, 2);
+                  } else {
+                    content += '\n' + part.trim();
+                  }
+
+                  if (verbose) console.log(`   ✓ Merged part ${mergedPartLabel}: ${k}`);
+                }
+              }
+            }
+
+            content = content.trim();
+
+            return content ? replacePlaceholders(content) : '';
+          };
 
           const results: Record<string, string> = Object.fromEntries(
             await Promise.all(
@@ -377,129 +507,70 @@ export namespace Widget {
             ),
           );
 
-          for await (const [filename, key] of Object.entries(resultMapping)) {
-            let content = '';
+          await Promise.all([
+            (async () => {
+              for (const [filename, key] of Object.entries(resultMapping)) {
+                const content = await buildMappedContent(
+                  key as string | string[],
+                  usedWatermarks,
+                  'for',
+                );
 
-            let arrrr = Array.isArray(key) ? key : [key];
+                if (content) {
+                  const outPath = join(targetOutDir, filename);
 
-            if (arrrr.some((k) => k.includes('script'))) {
-              if (!usedWatermarks.has('script')) content += watermark.script(this) + '\n';
-              usedWatermarks.add('script');
-            } else if (arrrr.some((k) => k.includes('css'))) {
-              if (!usedWatermarks.has('css')) content += watermark.css(this) + '\n';
-              usedWatermarks.add('css');
-            } else if (arrrr.some((k) => k.includes('html'))) {
-              if (!usedWatermarks.has('html')) content += watermark.html(this) + '\n';
-              usedWatermarks.add('html');
-            }
+                  writeFileSync(outPath, content, 'utf-8');
 
-            if (typeof key === 'string' && results[key]?.trim().length) content += results[key];
-            else if (Array.isArray(key)) {
-              for await (const k of key) {
-                const part = results[k];
-
-                if (part && part.trim().length) {
-                  if (
-                    ['fields', 'customfields', 'cf', 'fielddata', 'fieldData', 'data'].some((f) =>
-                      k.toLowerCase().includes(f.toLowerCase()),
-                    )
-                  ) {
-                    let old = JSON.parse(content || '{}');
-                    let addition = JSON.parse(part);
-
-                    content = JSON.stringify({ ...old, ...addition }, null, 2);
-                  } else content += '\n' + part.trim();
-
-                  if (verbose) console.log(`   ✓ Merged part for: ${k}`);
+                  if (verbose) console.log(`   ✓ Written: ${outPath}`);
                 }
               }
-            }
+            })(),
+            (async () => {
+              try {
+                const zip = new JSZip();
 
-            content = content.trim();
+                const zipWatermarks = new Set<string>();
 
-            if (content) {
-              const outPath = join(targetOutDir, filename);
+                for (const [filename, key] of Object.entries(extensionMap)) {
+                  const content = await buildMappedContent(
+                    key as string | string[],
+                    zipWatermarks,
+                    'for ZIP',
+                  );
 
-              writeFileSync(outPath, content, 'utf-8');
+                  if (content) {
+                    zip.file(filename, content.trim());
 
-              if (verbose) console.log(`   ✓ Written: ${outPath}`);
-            }
-          }
-
-          try {
-            const zip = new JSZip();
-
-            const zipWatermarks = new Set<string>();
-
-            for await (const [filename, key] of Object.entries(extensionMap)) {
-              let content = '';
-
-              const arrrr = Array.isArray(key) ? key : [key];
-
-              if (arrrr.some((k) => k.includes('script'))) {
-                if (!zipWatermarks.has('script')) content += watermark.script(this) + '\n';
-                zipWatermarks.add('script');
-              } else if (arrrr.some((k) => k.includes('css'))) {
-                if (!zipWatermarks.has('css')) content += watermark.css(this) + '\n';
-                zipWatermarks.add('css');
-              } else if (arrrr.some((k) => k.includes('html'))) {
-                if (!zipWatermarks.has('html')) content += watermark.html(this) + '\n';
-                zipWatermarks.add('html');
-              }
-
-              if (typeof key === 'string' && results[key]?.trim().length) content += results[key];
-              else if (Array.isArray(key)) {
-                for await (const k of key) {
-                  const part = results[k];
-
-                  if (part && part.trim().length) {
-                    if (
-                      ['fields', 'customfields', 'cf', 'fielddata', 'fieldData', 'data'].some((f) =>
-                        k.toLowerCase().includes(f.toLowerCase()),
-                      )
-                    ) {
-                      let old = JSON.parse(content || '{}');
-                      let addition = JSON.parse(part);
-
-                      content = JSON.stringify({ ...old, ...addition }, null, 2);
-                    } else content += '\n' + part.trim();
-
-                    if (verbose) console.log(`   ✓ Merged part for ZIP: ${k}`);
+                    if (verbose) console.log(`   ✓ Added to ZIP: ${filename}`);
                   }
                 }
+
+                zip.file(
+                  'widget.ini',
+                  `[HTML]\npath = "html.txt"\n\n[CSS]\npath = "css.txt"\n\n[JS]\npath = "js.txt"\n\n[FIELDS]\npath = "fields.txt"\n\n[DATA]\npath = "data.txt"`,
+                );
+
+                // check if data.txt exists in results, otherwise create empty
+                const dataContent = results['data'] || '{}';
+                zip.file('data.txt', dataContent);
+
+                const result = await zip
+                  .generateInternalStream({ type: 'base64' })
+                  .accumulate()
+                  .then((data) => data);
+
+                const zipPath = join(
+                  extDir + '/' + (this.config.version || '0.0.0'),
+                  `${zipName ?? this.config.name}.zip`,
+                );
+
+                mkdirSync(extDir + '/' + (this.config.version || '0.0.0'), { recursive: true });
+                writeFileSync(zipPath, result, 'base64');
+              } catch (error) {
+                throw new Error(`Failed to create ZIP archive: ${error}`);
               }
-
-              if (content) {
-                zip.file(filename, content.trim());
-
-                if (verbose) console.log(`   ✓ Added to ZIP: ${filename}`);
-              }
-            }
-
-            zip.file(
-              'widget.ini',
-              `[HTML]\npath = "html.txt"\n\n[CSS]\npath = "css.txt"\n\n[JS]\npath = "js.txt"\n\n[FIELDS]\npath = "fields.txt"\n\n[DATA]\npath = "data.txt"`,
-            );
-
-            // check if data.txt exists in results, otherwise create empty
-            const dataContent = results['data'] || '{}';
-            zip.file('data.txt', dataContent);
-
-            const result = await zip
-              .generateInternalStream({ type: 'base64' })
-              .accumulate()
-              .then((data) => data);
-
-            const zipPath = join(
-              extDir + '/' + (this.config.version || '0.0.0'),
-              `${zipName ?? this.config.name}.zip`,
-            );
-
-            mkdirSync(extDir + '/' + (this.config.version || '0.0.0'), { recursive: true });
-            writeFileSync(zipPath, result, 'base64');
-          } catch (error) {
-            throw new Error(`Failed to create ZIP archive: ${error}`);
-          }
+            })(),
+          ]);
         };
 
         if (this.config.type === 'multiple') {
@@ -633,6 +704,7 @@ export namespace Widget {
         description: config.description ?? '',
         metadata: config.metadata ?? {},
         dirs: dirs,
+        replace: config.replace ?? {},
       };
 
       return merged;
