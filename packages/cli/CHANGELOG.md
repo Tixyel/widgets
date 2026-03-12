@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.4.0
+
+### Minor Changes
+
+- 02957ac: Add replace property to DotTixyel interface for dynamic content replacement
+
 ## 3.3.2
 
 ### Patch Changes
