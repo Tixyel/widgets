@@ -4,6 +4,7 @@ import { logger } from '../main.js';
 import { useQueue } from '../modules/useQueue.js';
 import { Helper } from '../helper/index.js';
 import { Data } from '../data/index.js';
+import { Client } from '../client/client.js';
 
 export namespace Local {
   export type QueueItem =
@@ -16,7 +17,13 @@ export namespace Local {
     processor: async function processor(received) {
       window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
 
-      if (received.listener === 'onEventReceived' && received.session) {
+      if (
+        received.listener === 'onEventReceived' &&
+        received.session &&
+        client instanceof Client &&
+        !!client &&
+        client?.session
+      ) {
         const sessionEvent = await Local.generate.event.onSessionUpdate(
           client.session,
           Helper.event.parseProvider(received.data),
@@ -973,7 +980,8 @@ export namespace Local {
                 var msgId = (options?.msgId as string) ?? Helper.random.uuid();
                 var time = (options?.time as number) ?? Date.now();
 
-                var channel = (options?.channel as string) ?? client.details.user.username;
+                var channel =
+                  (options?.channel as string) ?? client?.details?.user?.username ?? 'local';
 
                 const event: StreamElements.Event.Provider.Twitch.Message = {
                   listener: 'message',
@@ -1304,7 +1312,7 @@ export namespace Local {
               case 'mute':
               case 'unmute':
               case 'alertService:toggleSound': {
-                var muted = (options?.muted as boolean) ?? !client.details.overlay.muted;
+                var muted = (options?.muted as boolean) ?? client?.details?.overlay?.muted ?? false;
 
                 const event: StreamElements.Event.Provider.StreamElements.AlertService & {
                   event: { provider: Provider };
@@ -1381,7 +1389,8 @@ export namespace Local {
 
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
 
-                var channel = (options?.channel as string) ?? client.details.user.username;
+                var channel =
+                  (options?.channel as string) ?? client?.details?.user?.username ?? 'local';
 
                 const event: StreamElements.Event.Provider.YouTube.Message = {
                   listener: 'message',

@@ -2190,7 +2190,7 @@ export namespace Helper {
      * @param obj - The object to get entries from.
      * @returns An array of key-value pairs from the object.
      */
-    export function typedEntries<K extends string, V>(obj: Record<K, V>): [K, V][] {
+    export function typedEntries<K extends string, V>(obj: Record<K, V> | Array<V>): [K, V][] {
       return Object.entries(obj) as [K, V][];
     }
 
@@ -2199,7 +2199,7 @@ export namespace Helper {
      * @param obj - The object to get values from.
      * @returns An array of values from the object.
      */
-    export function typedValues<K extends string, V>(obj: Record<K, V>): V[] {
+    export function typedValues<K extends string, V>(obj: Record<K, V> | Array<V>): V[] {
       return Object.values(obj) as V[];
     }
 
@@ -2208,7 +2208,7 @@ export namespace Helper {
      * @param obj - The object to get keys from.
      * @returns An array of keys from the object.
      */
-    export function typedKeys<K extends string, V>(obj: Record<K, V>): K[] {
+    export function typedKeys<K extends string, V>(obj: Record<K, V> | Array<V>): K[] {
       return Object.keys(obj) as K[];
     }
 

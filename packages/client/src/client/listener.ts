@@ -12,7 +12,7 @@ if (typeof window !== undefined) {
   window.addEventListener('onWidgetLoad', async (data) => {
     const { detail } = data;
 
-    if (window.client instanceof Client) {
+    if (window.client instanceof Client && client instanceof Client && !!client) {
       const client = window.client;
 
       client.fields = detail.fieldData;
@@ -122,7 +122,7 @@ if (typeof window !== undefined) {
   window.addEventListener('onSessionUpdate', (data) => {
     const { detail } = data;
 
-    if (window.client instanceof Client) {
+    if (window.client instanceof Client && client instanceof Client && !!client) {
       const client = window.client;
 
       client.session = detail.session;
@@ -136,7 +136,7 @@ if (typeof window !== undefined) {
   });
 
   window.addEventListener('onEventReceived', ({ detail }) => {
-    if (window.client instanceof Client) {
+    if (window.client instanceof Client && client instanceof Client && !!client) {
       const received = Helper.event.parseProvider(detail);
 
       switch (received.provider) {

@@ -52,13 +52,17 @@ export namespace Alejo {
 
   export async function list(): Promise<typeof Pronouns.map> {
     try {
-      const data = (await fetch('https://pronouns.alejo.io/api/pronouns').then((res) => res.json())) as {
+      const data = (await fetch('https://pronouns.alejo.io/api/pronouns').then((res) =>
+        res.json(),
+      )) as {
         display: Pronouns.display;
         name: Pronouns.name;
       }[];
 
       if (Array.isArray(data) && data.length) {
-        const built = Object.fromEntries(data.map(({ name, display }) => [name, display] as const)) as Record<Pronouns.name, Pronouns.display>;
+        const built = Object.fromEntries(
+          data.map(({ name, display }) => [name, display] as const),
+        ) as Record<Pronouns.name, Pronouns.display>;
 
         return { ...Pronouns.map, ...built } as typeof Pronouns.map;
       }
@@ -78,7 +82,28 @@ export namespace Alejo {
 
     username = username.toLowerCase();
 
-    if (username in client.storage.data.pronoun && client.storage.data.pronoun[username].expire > Date.now()) {
+    if (!client) {
+      try {
+        const data = await fetch(`https://pronouns.alejo.io/api/users/${username}`)
+          .then((res) => res.json())
+          .then(([data]) => data as Alejo.user | undefined);
+
+        if (data) {
+          return data.pronoun_id;
+        }
+      } catch (error) {
+        throw new Error(
+          `Failed to fetch pronoun data for user "${username}": ${error instanceof Error ? error.message : error}`,
+        );
+      }
+
+      return;
+    }
+
+    if (
+      username in client.storage.data.pronoun &&
+      client.storage.data.pronoun[username].expire > Date.now()
+    ) {
       return client.storage.data.pronoun[username].value;
     } else {
       try {
@@ -96,7 +121,9 @@ export namespace Alejo {
           return client.storage.data.pronoun[username].value ?? data.pronoun_id;
         }
       } catch (error) {
-        throw new Error(`Failed to fetch pronoun data for user "${username}": ${error instanceof Error ? error.message : error}`);
+        throw new Error(
+          `Failed to fetch pronoun data for user "${username}": ${error instanceof Error ? error.message : error}`,
+        );
       }
     }
   }

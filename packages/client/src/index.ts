@@ -18,7 +18,7 @@ declare global {
   }
 
   const Tixyel: typeof main;
-  let client: InstanceType<typeof main.Client>;
+  let client: InstanceType<typeof main.Client> | undefined;
 
   const SE_API: StreamElements.SE_API;
 }

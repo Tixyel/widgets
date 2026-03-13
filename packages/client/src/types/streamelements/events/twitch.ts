@@ -1,6 +1,5 @@
 import { MapNumberValuesToString } from '../../path.js';
 import { Twitch } from '../../twitch.js';
-import { StreamElements } from '../main.js';
 
 export namespace TwitchEvents {
   export namespace Message {
