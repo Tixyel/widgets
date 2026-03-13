@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.4
+
+### Patch Changes
+
+- a428ac3: Enhance Twitch badge handling and message event structure in local module
+
 ## 6.4.3
 
 ### Patch Changes
