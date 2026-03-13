@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.2
+
+### Patch Changes
+
+- d79b0c2: Update client references to use optional chaining
+
 ## 6.4.1
 
 ### Patch Changes
