@@ -21,11 +21,11 @@ export namespace Local {
         received.listener === 'onEventReceived' &&
         received.session &&
         client instanceof Client &&
-        !!client &&
-        client?.session
+        !!window?.client &&
+        window?.client?.session
       ) {
         const sessionEvent = await Local.generate.event.onSessionUpdate(
-          client.session,
+          window?.client?.session,
           Helper.event.parseProvider(received.data),
         );
 
@@ -981,7 +981,9 @@ export namespace Local {
                 var time = (options?.time as number) ?? Date.now();
 
                 var channel =
-                  (options?.channel as string) ?? client?.details?.user?.username ?? 'local';
+                  (options?.channel as string) ??
+                  window?.client?.details?.user?.username ??
+                  'local';
 
                 const event: StreamElements.Event.Provider.Twitch.Message = {
                   listener: 'message',
@@ -1312,7 +1314,8 @@ export namespace Local {
               case 'mute':
               case 'unmute':
               case 'alertService:toggleSound': {
-                var muted = (options?.muted as boolean) ?? client?.details?.overlay?.muted ?? false;
+                var muted =
+                  (options?.muted as boolean) ?? window?.client?.details?.overlay?.muted ?? false;
 
                 const event: StreamElements.Event.Provider.StreamElements.AlertService & {
                   event: { provider: Provider };
@@ -1390,7 +1393,9 @@ export namespace Local {
                 var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
 
                 var channel =
-                  (options?.channel as string) ?? client?.details?.user?.username ?? 'local';
+                  (options?.channel as string) ??
+                  window?.client?.details?.user?.username ??
+                  'local';
 
                 const event: StreamElements.Event.Provider.YouTube.Message = {
                   listener: 'message',

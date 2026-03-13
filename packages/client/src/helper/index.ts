@@ -1119,7 +1119,7 @@ export namespace Helper {
 
       if (typeof window !== 'undefined') {
         try {
-          const client: any = (window as any).client;
+          const client: any = (window as any)?.client;
           const currency = client?.details?.currency;
 
           if (currency?.symbol) defaultCurrency = String(currency.symbol);
