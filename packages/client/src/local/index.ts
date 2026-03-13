@@ -5,6 +5,8 @@ import { useQueue } from '../modules/useQueue.js';
 import { Helper } from '../helper/index.js';
 import { Data } from '../data/index.js';
 import { Client } from '../client/client.js';
+import { Twitch } from '../types.js';
+import { MapNumberValuesToString } from '../types/path.js';
 
 export namespace Local {
   export type QueueItem =
@@ -952,32 +954,70 @@ export namespace Local {
                 return this.onEventReceived(provider, randomEvent);
               }
               case 'message': {
-                var name =
-                  (options?.name as string) ??
-                  Helper.random.array(Data.names.filter((e) => e.length))[0];
-                var message =
-                  (options?.message as string) ??
-                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                const data = options as Partial<{
+                  name: string;
+                  message: string;
+                  badges: Helper.message.BadgeOptions;
+                  color: string;
+                  userId: string;
+                  msgId: string;
+                  channel: string;
+                  time: number;
+                  firstMsg: boolean;
+                  returningChatter: boolean;
+                  reply: {
+                    msgId: string;
+                    userId: string;
+                    login: string;
+                    name: string;
+                    text: string;
+                  };
+                  thread: {
+                    msgId: string;
+                    name: string;
+                  };
+                }>;
 
-                var badges = await Helper.message.generateBadges(
-                  (options?.badges as Helper.message.BadgeOptions) ?? [],
-                  provider,
-                );
+                var name = data?.name ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+                var message =
+                  data?.message ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
+
+                var badges = await Helper.message.generateBadges(data?.badges ?? [], provider);
 
                 var emotes = Helper.message.findEmotesInText(message);
                 var renderedText = Helper.message.replaceEmotesWithHTML(message, emotes);
 
-                var color = (options?.color as string) ?? Helper.random.color('hex');
-                var userId =
-                  (options?.userId as string) ??
-                  Helper.random.number(10000000, 99999999).toString();
-                var msgId = (options?.msgId as string) ?? Helper.random.uuid();
-                var time = (options?.time as number) ?? Date.now();
+                var color = (data?.color as string) ?? Helper.random.color('hex');
+                var userId = (data?.userId as string) ?? Helper.random.string(16);
+                var msgId = (data?.msgId as string) ?? Helper.random.string(16);
+                var time = (data?.time as number) ?? Date.now();
 
                 var channel =
-                  (options?.channel as string) ??
-                  window?.client?.details?.user?.username ??
-                  'local';
+                  (data?.channel as string) ?? window?.client?.details?.user?.username ?? 'local';
+
+                var reply = data?.reply
+                  ? ({
+                      'reply-parent-display-name': data.reply.name,
+                      'reply-parent-msg-body': data.reply.text,
+                      'reply-parent-msg-id': data.reply.msgId,
+                      'reply-parent-user-id': data.reply.userId,
+                      'reply-parent-user-login': data.reply.name.toLowerCase(),
+                    } satisfies Partial<Twitch.IRC>)
+                  : {};
+
+                var thread = data?.thread
+                  ? ({
+                      'reply-thread-parent-msg-id': data.thread.msgId,
+                      'reply-thread-parent-user-login': data.thread.name.toLowerCase(),
+                    } satisfies Partial<Twitch.IRC>)
+                  : {};
+
+                var roles = {
+                  vip: badges.keys.includes('vip') ? '' : undefined,
+                  subscriber: badges.keys.includes('subscriber') ? '1' : '0',
+                  mod: badges.keys.includes('moderator') ? '1' : '0',
+                  turbo: badges.keys.includes('turbo') ? '1' : '0',
+                } satisfies Partial<MapNumberValuesToString<Twitch.IRC>>;
 
                 const event: StreamElements.Event.Provider.Twitch.Message = {
                   listener: 'message',
@@ -986,12 +1026,10 @@ export namespace Local {
                     data: {
                       time: time,
                       tags: {
-                        'badge-info': `${badges.keys.map((key) => `${key}/${Helper.random.number(1, 5)}`).join(',')}`,
-                        'badges': badges.keys.join('/1,'),
+                        'badge-info': `${badges.keys.map((key) => `${key}/${badges.amount[key] ?? Helper.random.number(1, 5)}`).join(',')}`,
+                        'badges': badges.keys.map((key) => `${key}/1`).join(','),
 
-                        'mod': badges.keys.includes('moderator') ? '1' : '0',
-                        'subscriber': badges.keys.includes('subscriber') ? '1' : '0',
-                        'turbo': badges.keys.includes('turbo') ? '1' : '0',
+                        ...roles,
 
                         'tmi-sent-ts': time.toString(),
 
@@ -1005,8 +1043,11 @@ export namespace Local {
                         'client-nonce': Helper.random.string(16),
                         'flags': '',
                         'id': msgId,
-                        'first-msg': '0',
-                        'returning-chatter': '0',
+                        'first-msg': data?.firstMsg ? '1' : '0',
+                        'returning-chatter': data?.returningChatter ? '1' : '0',
+
+                        ...reply,
+                        ...thread,
                       },
                       nick: name.toLowerCase(),
                       displayName: name,
@@ -1583,14 +1624,23 @@ export namespace Local {
           msgId: string;
           channel: string;
           time: number;
+          firstMsg: boolean;
+          returningChatter: boolean;
+          reply: {
+            msgId: string;
+            userId: string;
+            login: string;
+            name: string;
+            text: string;
+          };
+          thread: {
+            msgId: string;
+            name: string;
+          };
         }> = {},
       ) {
         Local.generate.event
-          .onEventReceived(
-            'twitch',
-            'message',
-            data as { [key: string]: string | number | boolean },
-          )
+          .onEventReceived('twitch', 'message', data as { [key: string]: any })
           .then((event) => {
             if (event) {
               Local.emulate.send('onEventReceived', event);

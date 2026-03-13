@@ -105,7 +105,13 @@ export namespace StreamElementsEvents {
       };
     };
 
-    type Session = SessionCount | SessionTotal | SessionTop | SessionGoal | SessionRecent | SessionPoints;
+    type Session =
+      | SessionCount
+      | SessionTotal
+      | SessionTop
+      | SessionGoal
+      | SessionRecent
+      | SessionPoints;
 
     type SessionCount = {
       listener: `${EventType}-count`;

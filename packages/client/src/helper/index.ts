@@ -718,12 +718,15 @@ export namespace Helper {
     export type BadgeOptions =
       | Twitch.roles[]
       | Twitch.roles
-      | `${Twitch.roles}, ${Twitch.roles}`
-      | `${Twitch.roles}, ${Twitch.roles}, ${Twitch.roles}`;
+      | `${Twitch.roles}/${number}`
+      | `${Twitch.roles}/${number}`[];
 
     export type TwitchResult = {
       keys: Twitch.roles[];
       badges: Twitch.badge[];
+      amount: {
+        [K in Twitch.roles]?: number;
+      };
     };
 
     export type YouTubeResult = {
@@ -853,16 +856,18 @@ export namespace Helper {
         badges = badges.split(',').map((e) => e.trim()) as Twitch.roles[];
       }
 
-      if (!badges || !badges.length) {
+      var clearedBadges = badges.map((badge) => badge.split('/')[0] as Twitch.roles);
+
+      if (!clearedBadges || !clearedBadges.length) {
         var max = random.number(1, 3);
 
         for await (const _ of Array.from({ length: max }, () => '')) {
           var current = random.array(Object.keys(Data.badges))[0] as Twitch.roles;
 
-          if (!badges.includes(current) && Array.isArray(badges)) {
-            badges.push(current);
+          if (!clearedBadges.includes(current) && Array.isArray(clearedBadges)) {
+            clearedBadges.push(current);
           } else {
-            badges = [current];
+            clearedBadges = [current];
           }
         }
       }
@@ -872,11 +877,23 @@ export namespace Helper {
       switch (provider) {
         case 'twitch': {
           result = {
-            keys: Array.from(badges).filter((e) => e in Data.badges) as Twitch.roles[],
-            badges: Array.from(badges)
+            keys: Array.from(clearedBadges).filter((e) => e in Data.badges) as Twitch.roles[],
+            badges: Array.from(clearedBadges)
               .slice(0, 3)
               .map((badge) => Data.badges[badge])
               .filter(Boolean) as Twitch.badge[],
+            amount: badges.reduce(
+              (acc, data) => {
+                var [badge, amount = '1'] = data.split('/') as [Twitch.roles, string];
+
+                if (isNaN(parseInt(amount)) || !amount.length) amount = '1';
+
+                acc[badge] = parseInt(amount) || 1;
+
+                return acc;
+              },
+              {} as { [K in Twitch.roles]?: number },
+            ),
           };
 
           break;
@@ -892,7 +909,7 @@ export namespace Helper {
             'moderator': { isChatModerator: true },
           };
 
-          result = Object.entries(badges).reduce(
+          result = Object.entries(clearedBadges).reduce(
             (acc, [key]) => {
               if (key in details) {
                 Object.assign(acc, details[key as keyof typeof details]);
