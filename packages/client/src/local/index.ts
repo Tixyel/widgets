@@ -17,15 +17,9 @@ export namespace Local {
     processor: async function processor(received) {
       window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
 
-      if (
-        received.listener === 'onEventReceived' &&
-        received.session &&
-        client instanceof Client &&
-        !!window?.client &&
-        window?.client?.session
-      ) {
+      if (received.listener === 'onEventReceived' && received.session) {
         const sessionEvent = await Local.generate.event.onSessionUpdate(
-          window?.client?.session,
+          window?.client && window?.client instanceof Client ? window.client.session : undefined,
           Helper.event.parseProvider(received.data),
         );
 

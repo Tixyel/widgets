@@ -46,7 +46,8 @@ export class Button {
     if (!(window.client instanceof Client)) return;
 
     this.field = options.field ?? this.field;
-    this.template = options.template ?? (typeof this.field === 'string' ? this.field : this.template);
+    this.template =
+      options.template ?? (typeof this.field === 'string' ? this.field : this.template);
     this.name = options.name ?? this.name;
     this.value = options.value ?? this.value;
     this.run = options.run;
@@ -68,13 +69,21 @@ export class Button {
           label: name,
         };
 
-        let value: string | number | boolean = Helper.string.compose(String(this.value), { index, ...values }, { html: false });
+        let value: string | number | boolean = Helper.string.compose(
+          String(this.value),
+          { index, ...values },
+          { html: false },
+        );
 
         if (!isNaN(Number(value))) value = Number(value);
         else if (value.toLowerCase() === 'true') value = true;
         else if (value.toLowerCase() === 'false') value = false;
 
-        if (typeof value !== 'undefined' && !!value && (typeof value === 'string' ? value.length : true)) {
+        if (
+          typeof value !== 'undefined' &&
+          !!value &&
+          (typeof value === 'string' ? value.length : true)
+        ) {
           acc[key].value = value;
         }
 
@@ -94,12 +103,21 @@ export class Button {
      * For example, if the template is "button-{id}" and the field is "button-123",
      * this will extract "123" as the actual field name.
      */
-    var f = field.replace(typeof this.field === 'string' ? this.field : (this.template.replace(/\{[^}]*\}/g, '') ?? ''), '').trim();
+    var f = field
+      .replace(
+        typeof this.field === 'string'
+          ? this.field
+          : (this.template.replace(/\{[^}]*\}/g, '') ?? ''),
+        '',
+      )
+      .trim();
 
     try {
       this.run.apply(window.client, [f.length ? f : (field ?? field), value]);
     } catch (error) {
-      throw new Error(`Error running button "${this.field}": ${error instanceof Error ? error.message : error}`);
+      throw new Error(
+        `Error running button "${this.field}": ${error instanceof Error ? error.message : error}`,
+      );
     }
 
     return this;
@@ -139,11 +157,13 @@ export class Button {
             try {
               button.parse(field, value);
 
-              window.client.emit('action', button, 'executed');
+              window?.client?.emit('action', button, 'executed');
 
               logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ''}`);
             } catch (error) {
-              logger.error(`Error executing button "${field}": ${error instanceof Error ? error.message : error}`);
+              logger.error(
+                `Error executing button "${field}": ${error instanceof Error ? error.message : error}`,
+              );
             }
           });
 

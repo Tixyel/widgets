@@ -101,7 +101,7 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
 
     window.client.on('load', () => {
       if (duration === 'client')
-        this.duration = (window.client.fields?.widgetDuration ?? 0) as number;
+        this.duration = (window?.client?.fields?.widgetDuration ?? 0) as number;
 
       this.emit('load');
 

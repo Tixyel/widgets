@@ -7,7 +7,7 @@ export type * from './types.ts';
 declare global {
   interface Window {
     Tixyel: typeof main;
-    client: InstanceType<typeof main.Client>;
+    client: InstanceType<typeof main.Client> | undefined;
     ComfyJS?: ComfyJSInstance;
   }
 

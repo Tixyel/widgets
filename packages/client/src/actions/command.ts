@@ -65,13 +65,21 @@ export class Command {
       return true;
     }
 
-    if (this.permissions === true || typeof this.permissions === 'undefined' || (Array.isArray(this.permissions) && !this.permissions.length)) {
+    if (
+      this.permissions === true ||
+      typeof this.permissions === 'undefined' ||
+      (Array.isArray(this.permissions) && !this.permissions.length)
+    ) {
       return true;
     }
 
     if (
       Array.isArray(this.permissions) &&
-      (this.permissions.some((p) => nickname.toLowerCase() === p.toLowerCase() || roles.map((r) => r.toLowerCase()).includes(p.toLowerCase())) ||
+      (this.permissions.some(
+        (p) =>
+          nickname.toLowerCase() === p.toLowerCase() ||
+          roles.map((r) => r.toLowerCase()).includes(p.toLowerCase()),
+      ) ||
         this.permissions.includes('*'))
     ) {
       return true;
@@ -169,7 +177,10 @@ export class Command {
     const data = received.data;
 
     try {
-      if (window.client.actions.commands.length && window.client.actions.commands.some((c) => data.event.data.text.startsWith(c.prefix))) {
+      if (
+        window.client.actions.commands.length &&
+        window.client.actions.commands.some((c) => data.event.data.text.startsWith(c.prefix))
+      ) {
         const commands = window.client.actions.commands.filter((c) => {
           var nameAndAliases = [c.name, ...(c.aliases ?? [])];
           var commandMatch = data.event.data.text.replace(c.prefix, '').split(' ')[0];
@@ -181,9 +192,12 @@ export class Command {
           commands.forEach((command) => {
             command.parse(data.event.data.text, received);
 
-            window.client.emit('action', command, 'executed');
+            window?.client?.emit('action', command, 'executed');
 
-            logger.received(`Command executed: ${data.event.data.text} by ${data.event.data.nick || data.event.data.displayName}`, data);
+            logger.received(
+              `Command executed: ${data.event.data.text} by ${data.event.data.nick || data.event.data.displayName}`,
+              data,
+            );
           });
 
           return true;
