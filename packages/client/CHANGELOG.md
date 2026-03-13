@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.1
+
+### Patch Changes
+
+- 6bca032: Update dependencies and improve client checks for event listeners
+
 ## 6.4.0
 
 ### Minor Changes
