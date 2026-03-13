@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.3
+
+### Patch Changes
+
+- 1e78e39: Improve optional chaining and formatting in button, command, and useQueue actions
+
 ## 6.4.2
 
 ### Patch Changes
