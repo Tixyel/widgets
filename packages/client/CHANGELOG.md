@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.5
+
+### Patch Changes
+
+- f2687cd: Enhance splitTextToChars function to preserve whitespace and improve element processing
+
 ## 6.4.4
 
 ### Patch Changes
