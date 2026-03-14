@@ -937,8 +937,13 @@ export namespace Helper {
      * @param detail - The event detail object received from the StreamElements event.
      * @returns An object containing the provider and the original event data.
      */
-    export function parseProvider(detail: StreamElements.Event.onEventReceived) {
+    export function parseProvider(
+      detail: StreamElements.Event.onEventReceived,
+      _provider?: Provider,
+    ): ClientEvents {
       var provider: Provider =
+        // @ts-ignore
+        _provider ||
         // @ts-ignore
         detail.event?.provider ||
         // @ts-ignore
@@ -946,7 +951,8 @@ export namespace Helper {
         // @ts-ignore
         detail.event?.data?.provider ||
         // @ts-ignore
-        window.client.details.provider;
+        window?.client?.details?.provider ||
+        'twitch';
 
       const actAsStreamElements = [
         'kvstore:update',
