@@ -47,7 +47,27 @@ export namespace Workspace {
     public spinner?: Ora;
 
     constructor(options?: ServiceOptions) {
-      this.root = options?.path ?? process.cwd();
+      const rootPath = resolve(options?.path ?? process.cwd());
+
+      this.root = rootPath;
+
+      // When running from a widget folder, resolve the workspace root from .tixyel config.
+      const dotTixyelPath = resolve(rootPath, '.tixyel');
+
+      if (existsSync(dotTixyelPath)) {
+        try {
+          const content = readFileSync(dotTixyelPath, 'utf-8');
+          const dotTixyel = JSON.parse(content) as Partial<DotTixyel>;
+
+          if (typeof dotTixyel.config === 'string' && dotTixyel.config.trim().length) {
+            const workspaceConfigPath = resolve(rootPath, dotTixyel.config.trim());
+
+            this.root = dirname(workspaceConfigPath);
+          }
+        } catch {
+          this.root = rootPath;
+        }
+      }
 
       this.config = options?.config ?? {
         data: DEFAULT_WORKSPACE_CONFIG,
