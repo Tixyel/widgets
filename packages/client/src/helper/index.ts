@@ -501,9 +501,13 @@ export namespace Helper {
      * // Output: '<span class="container" data-index="0"><span class="char" data-index="0">T</span><span class="char" data-index="1">e</span>...'
      * ```
      */
-    export function splitTextToChars(htmlString: string, startIndex: number = 0): string {
+    export function splitTextToChars(
+      htmlString: string,
+      startIndex: number = 0,
+      preserveInterElementWhitespace: boolean = false,
+    ): string {
       const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlString, 'text/html');
+      const processed = document.createElement('div');
 
       let charIndex = startIndex;
 
@@ -511,15 +515,14 @@ export namespace Helper {
         if (node.nodeType === Node.TEXT_NODE) {
           const text = node.textContent || '';
 
-          // Split only non-whitespace or preserve whitespace if it's significant
           const chars = text.split('').map((char, index) => {
             const span = document.createElement('span');
 
             span.classList.add('char');
             span.dataset.index = String(charIndex);
-            span.dataset.exclusivityIndex = String(charIndex);
+            span.dataset.exclusivityIndex = String(index);
             span.style.setProperty('--char-index', String(charIndex));
-            span.style.setProperty('--exclusivity-index', String(charIndex));
+            span.style.setProperty('--exclusivity-index', String(index));
 
             if (char === ' ' || char === '\n' || char === '\t') {
               span.style.whiteSpace = 'pre-wrap';
@@ -539,20 +542,14 @@ export namespace Helper {
         } else if (node.nodeType === Node.ELEMENT_NODE) {
           const clone = node.cloneNode(false) as HTMLElement;
 
-          // Add container class and data-index to parent elements
           clone.classList.add('container');
           clone.dataset.index = String(charIndex);
           clone.style.setProperty('--char-index', String(charIndex));
 
-          // Process child nodes
           node.childNodes.forEach((child) => {
             const processed = processNode(child);
 
-            if (processed instanceof DocumentFragment) {
-              clone.appendChild(processed);
-            } else if (processed instanceof Node) {
-              clone.appendChild(processed);
-            }
+            clone.appendChild(processed);
           });
 
           return clone;
@@ -561,32 +558,25 @@ export namespace Helper {
         return node.cloneNode(true);
       }
 
-      const body = doc.body;
-      const processed = document.createElement('div');
-
-      body.childNodes.forEach((node) => {
-        // Skip empty text nodes at the root level
-        if (node.nodeType === Node.TEXT_NODE && !node.textContent?.trim()) {
+      parser.parseFromString(htmlString, 'text/html').body.childNodes.forEach((node) => {
+        if (
+          !preserveInterElementWhitespace &&
+          node.nodeType === Node.TEXT_NODE &&
+          !node.textContent?.trim()
+        ) {
           return;
         }
 
         const result = processNode(node);
 
-        if (result instanceof DocumentFragment) {
-          processed.appendChild(result);
-        } else if (result instanceof Node) {
-          processed.appendChild(result);
-        }
+        processed.appendChild(result);
       });
 
-      // Join root-level text nodes and elements while preserving spacing
       let html = '';
+
       Array.from(processed.childNodes).forEach((node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          html += node.textContent;
-        } else {
-          html += (node as HTMLElement).outerHTML;
-        }
+        if (node.nodeType === Node.TEXT_NODE) html += node.textContent;
+        else html += (node as HTMLElement).outerHTML;
       });
 
       return html;
