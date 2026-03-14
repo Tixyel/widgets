@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.8
+
+### Patch Changes
+
+- 19499e0: Update parseProvider function to handle optional provider parameter and default to 'twitch'
+
 ## 6.4.7
 
 ### Patch Changes
