@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.7
+
+### Patch Changes
+
+- 92839b7: Update splitTextToChars function to correctly handle character indexing
+
 ## 6.4.6
 
 ### Patch Changes
