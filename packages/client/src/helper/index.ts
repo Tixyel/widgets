@@ -526,11 +526,11 @@ export namespace Helper {
 
             if (char === ' ' || char === '\n' || char === '\t') {
               span.style.whiteSpace = 'pre-wrap';
+            } else {
+              charIndex++;
             }
 
             span.textContent = char;
-
-            charIndex++;
 
             return span;
           });
