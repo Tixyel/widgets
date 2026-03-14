@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.5.0
+
+### Minor Changes
+
+- 22e1242: Enhance emote handling with new Emoji type and update related functions
+
 ## 6.4.9
 
 ### Patch Changes
