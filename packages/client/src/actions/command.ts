@@ -19,6 +19,8 @@ type CommandEvent =
   | { provider: 'youtube'; data: StreamElements.Event.Provider.YouTube.Message }
   | { provider: 'kick'; data: any };
 
+const commands: Command[] = [];
+
 export class Command {
   prefix: string = '!';
 
@@ -34,8 +36,6 @@ export class Command {
   admins: string[] = [];
 
   constructor(options: CommandOptions) {
-    if (!(window.client instanceof Client)) return;
-
     this.prefix = options.prefix ?? this.prefix;
     this.name = options.name;
     this.description = options.description ?? this.description;
@@ -48,13 +48,17 @@ export class Command {
     this.permissions = options.permissions ?? this.permissions;
     this.admins = options.admins ?? this.admins;
 
-    // Register the command in the client actions
-    window.client.actions.commands.push(this);
+    commands.push(this);
 
-    window.client.emit('action', this, 'created');
+    if (!(window?.client instanceof Client)) return;
+
+    // Register the command in the client actions
+    window?.client?.actions.commands.push(this);
+
+    window?.client?.emit('action', this, 'created');
   }
 
-  run(this: Client, args: string[], event: CommandEvent): void {}
+  run(this: Client | undefined, args: string[], event: CommandEvent): void {}
 
   verify(nickname: string, roles: string[], args: string[]): boolean {
     if (this.arguments === true && (!args || !args.length)) {
@@ -89,8 +93,6 @@ export class Command {
   }
 
   parse(text: string, event: CommandEvent): boolean {
-    if (!(window.client instanceof Client)) return false;
-
     const args = text
       .replace(this.prefix, '')
       .split(' ')
@@ -154,42 +156,43 @@ export class Command {
     const verify = this.verify(nickname, roles, args);
 
     if (verify === true) {
-      this.run.apply(window.client, [args, event]);
+      this.run.apply(window?.client || undefined, [args, event]);
     }
 
     return verify;
   }
 
   remove(): void {
-    if (!(window.client instanceof Client)) return;
+    const _index = commands.indexOf(this);
 
-    const index = window.client.actions.commands.indexOf(this);
+    if (_index > -1) {
+      commands.splice(_index, 1);
+    }
+
+    if (!(window?.client instanceof Client)) return;
+
+    const index = window?.client?.actions.commands.indexOf(this);
 
     if (index > -1) {
-      window.client.actions.commands.splice(index, 1);
-      window.client.emit('action', this, 'removed');
+      window?.client?.actions.commands.splice(index, 1);
+      window?.client?.emit('action', this, 'removed');
     }
   }
 
   static execute(received: CommandEvent): boolean {
-    if (!(window.client instanceof Client)) return false;
-
     const data = received.data;
 
     try {
-      if (
-        window.client.actions.commands.length &&
-        window.client.actions.commands.some((c) => data.event.data.text.startsWith(c.prefix))
-      ) {
-        const commands = window.client.actions.commands.filter((c) => {
+      if (commands.length && commands.some((c) => data.event.data.text.startsWith(c.prefix))) {
+        const found = commands.filter((c) => {
           var nameAndAliases = [c.name, ...(c.aliases ?? [])];
           var commandMatch = data.event.data.text.replace(c.prefix, '').split(' ')[0];
 
           return nameAndAliases.includes(commandMatch);
         });
 
-        if (commands.length && commands.every((command) => command instanceof Command)) {
-          commands.forEach((command) => {
+        if (found.length && found.every((command) => command instanceof Command)) {
+          found.forEach((command) => {
             command.parse(data.event.data.text, received);
 
             window?.client?.emit('action', command, 'executed');
@@ -210,3 +213,5 @@ export class Command {
     }
   }
 }
+
+export { commands as usedCommands };

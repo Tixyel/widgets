@@ -1,7 +1,7 @@
 import './client/listener.js';
 
-import { Button } from './actions/button.js';
-import { Command } from './actions/command.js';
+import { Button, usedButtons } from './actions/button.js';
+import { Command, usedCommands } from './actions/command.js';
 import { Client } from './client/client.js';
 import { Local } from './local/index.js';
 import { initializeLocalSEAPI } from './streamelements/api.js';
@@ -43,9 +43,11 @@ export const main = {
   multistream: {
     useComfyJs,
   },
-  data: {
+  internal: {
     usedStorages,
     usedComms,
+    usedCommands,
+    usedButtons,
   },
   pronouns: {
     Alejo,
