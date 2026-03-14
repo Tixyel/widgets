@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.5.1
+
+### Patch Changes
+
+- ef7ea50: Enhance workspace root resolution from .tixyel config
+
 ## 3.5.0
 
 ### Minor Changes
