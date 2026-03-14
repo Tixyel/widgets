@@ -738,29 +738,31 @@ export namespace Helper {
     export function findEmotesInText(text: string, emotes: Emote[] = Data.emotes): Emote[] {
       const result: Emote[] = [];
 
-      emotes.forEach((emote) => {
-        const name = emote.name;
+      emotes
+        .filter((emote) => emote.type !== 'emoji')
+        .forEach((emote) => {
+          const name = emote.name;
 
-        let searchIndex = 0;
-        let start = 0;
+          let searchIndex = 0;
+          let start = 0;
 
-        while (searchIndex < text.length) {
-          const index = text.indexOf(name, start);
+          while (searchIndex < text.length) {
+            const index = text.indexOf(name, start);
 
-          if (index === -1) break;
+            if (index === -1) break;
 
-          const before = index > 0 ? text[index - 1] : ' ';
-          const after = index + name.length < text.length ? text[index + name.length] : ' ';
+            const before = index > 0 ? text[index - 1] : ' ';
+            const after = index + name.length < text.length ? text[index + name.length] : ' ';
 
-          if (/\s/.test(before) && /\s/.test(after)) {
-            result.push({ ...emote, start: index, end: index + name.length });
+            if (/\s/.test(before) && /\s/.test(after)) {
+              result.push({ ...emote, start: index, end: index + name.length });
+            }
+
+            start = index + 1;
           }
+        });
 
-          start = index + 1;
-        }
-      });
-
-      return result.sort((a, b) => a.start - b.start);
+      return result;
     }
 
     /**
@@ -775,24 +777,44 @@ export namespace Helper {
       let result = '';
       let index = 0;
 
-      emotes.forEach((emote) => {
-        result += text.substring(index, emote.start);
+      emotes
+        .filter((emote) => emote.type !== 'emoji')
+        .forEach((emote) => {
+          if (emote.start < index) return;
 
-        const emotesArray = Array.from({ ...emote.urls, length: 5 })
-          .slice(1)
-          .reverse()
-          .filter(Boolean);
+          result += text.substring(index, emote.start);
 
-        const imgUrl = emotesArray[0] || emote.urls['1'];
+          const emotesArray = Array.from({ ...emote.urls, length: 5 })
+            .slice(1)
+            .reverse()
+            .filter(Boolean);
 
-        result += `<img src="${imgUrl}" alt="${emote.name}" class="emote" style="width: auto; height: 1em; vertical-align: middle;" />`;
+          const imgUrl = emotesArray[0] || emote.urls['1'];
 
-        index = emote.end;
-      });
+          result += `<img src="${imgUrl}" alt="${emote.name}" class="emote" style="width: auto; height: 1em; vertical-align: middle;" />`;
+
+          index = emote.end;
+        });
 
       result += text.substring(index);
 
       return result;
+    }
+
+    /**
+     * Checks if the text contains only emotes and whitespace.
+     * @param text - The text to check.
+     * @param emotes - An array of emotes with their positions in the text.
+     * @returns True if the text contains only emotes and whitespace, false otherwise.
+     */
+    export function hasOnlyEmotes(text: string, emotes: Emote[]): boolean {
+      const textWithoutEmotes = emotes.reduce((acc, emote) => {
+        return acc
+          .replace(new RegExp(`\\b${emote.name}\\b`, 'g'), '')
+          .replace(/<img[^>]*class="emote"[^>]*>/gi, '');
+      }, text);
+
+      return textWithoutEmotes.trim().length === 0;
     }
 
     /**

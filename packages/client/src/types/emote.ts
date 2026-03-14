@@ -32,4 +32,12 @@ export type BttvEmote = {
   coords: { x: number; y: number; width: number; height: number };
 };
 
-export type Emote = TwitchEmote | BttvEmote | SeventvEmote;
+export type Emoji = {
+  type: 'emoji';
+  name: string;
+  id: string;
+  gif: boolean;
+  urls: { '1': string };
+};
+
+export type Emote = TwitchEmote | BttvEmote | SeventvEmote | Emoji;
