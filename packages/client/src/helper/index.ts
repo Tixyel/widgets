@@ -545,6 +545,9 @@ export namespace Helper {
           clone.classList.add('container');
           clone.dataset.index = String(charIndex);
           clone.style.setProperty('--char-index', String(charIndex));
+          clone.style.setProperty('--exclusivity-index', String(charIndex));
+
+          charIndex++;
 
           node.childNodes.forEach((child) => {
             const processed = processNode(child);
