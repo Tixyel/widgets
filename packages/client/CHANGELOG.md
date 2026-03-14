@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.9
+
+### Patch Changes
+
+- 11419b7: Update Button and Command classes to handle optional Client context and register actions correctly
+
 ## 6.4.8
 
 ### Patch Changes
