@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.4.6
+
+### Patch Changes
+
+- 5443776: Add exclusivity index to character processing in splitTextToChars function
+
 ## 6.4.5
 
 ### Patch Changes
