@@ -17,47 +17,49 @@ export default defineConfig({
     extension: 'widgetIO',
   },
 
-  scaffold: [
-    {
-      name: 'development',
-      type: 'folder',
-      content: [
-        {
-          name: 'index.html',
-          type: 'file',
-          content: \`\`,
-        },
-        {
-          name: 'style.css',
-          type: 'file',
-          content: \`\`,
-        },
-        {
-          name: 'script.js',
-          type: 'file',
-          content: \`\`,
-        },
-        {
-          name: 'fields.json',
-          type: 'file',
-          content: '{}',
-        },
-        {
-          name: 'data.json',
-          type: 'file',
-          content: '{}',
-        },
-      ],
-    },
-    {
-      name: 'finished',
-      type: 'folder',
-    },
-    {
-      name: 'widgetIO',
-      type: 'folder',
-    },
-  ],
+  scaffold: {
+    single: [
+      {
+        name: 'development',
+        type: 'folder',
+        content: [
+          {
+            name: 'index.html',
+            type: 'file',
+            content: \`\`,
+          },
+          {
+            name: 'style.css',
+            type: 'file',
+            content: \`\`,
+          },
+          {
+            name: 'script.js',
+            type: 'file',
+            content: \`\`,
+          },
+          {
+            name: 'fields.json',
+            type: 'file',
+            content: '{}',
+          },
+          {
+            name: 'data.json',
+            type: 'file',
+            content: '{}',
+          },
+        ],
+      },
+      {
+        name: 'finished',
+        type: 'folder',
+      },
+      {
+        name: 'widgetIO',
+        type: 'folder',
+      },
+    ],
+  },
 
   build: {
     parallel: true,
