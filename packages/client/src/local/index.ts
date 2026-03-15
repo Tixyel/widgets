@@ -7,6 +7,7 @@ import { Data } from '../data/index.js';
 import { Client } from '../client/client.js';
 import { Twitch } from '../types.js';
 import { MapNumberValuesToString } from '../types/path.js';
+import { BadgeOptions } from '../helper/classes/message.js';
 
 export namespace Local {
   export type QueueItem =
@@ -957,7 +958,7 @@ export namespace Local {
                 const data = options as Partial<{
                   name: string;
                   message: string;
-                  badges: Helper.message.BadgeOptions;
+                  badges: BadgeOptions;
                   color: string;
                   userId: string;
                   msgId: string;
@@ -1411,7 +1412,7 @@ export namespace Local {
                   Helper.random.array(Data.messages.filter((e) => e.length))[0];
 
                 const badges = await Helper.message.generateBadges(
-                  (options?.badges as Helper.message.BadgeOptions) ?? [],
+                  (options?.badges as BadgeOptions) ?? [],
                   provider,
                 );
 
@@ -1618,7 +1619,7 @@ export namespace Local {
         data: Partial<{
           name: string;
           message: string;
-          badges: Helper.message.BadgeOptions;
+          badges: BadgeOptions;
           color: string;
           userId: string;
           msgId: string;
@@ -1778,7 +1779,7 @@ export namespace Local {
         data: Partial<{
           name: string;
           message: string;
-          badges: Helper.message.BadgeOptions;
+          badges: BadgeOptions;
           color: string;
           userId: string;
           msgId: string;

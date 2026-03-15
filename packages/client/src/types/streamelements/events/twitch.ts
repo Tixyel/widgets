@@ -1,3 +1,4 @@
+import { Emote } from '../../emote.js';
 import { MapNumberValuesToString } from '../../path.js';
 import { Twitch } from '../../twitch.js';
 
@@ -38,20 +39,6 @@ export namespace TwitchEvents {
       version: string;
       description: string;
       url: string;
-    };
-
-    type Emote = {
-      type: string;
-      name: string;
-      id: string;
-      gif: boolean;
-      urls: {
-        '1': string;
-        '2': string;
-        '4': string;
-      };
-      start: number;
-      end: number;
     };
   }
 
