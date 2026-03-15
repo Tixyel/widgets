@@ -71,6 +71,7 @@ export default defineConfig({
       css: ['style.css'],
       fields: ['fields.json', 'fields.jsonc'],
     },
+    shared: {},
     result: {
       'HTML.html': 'html',
       'SCRIPT.js': 'script',

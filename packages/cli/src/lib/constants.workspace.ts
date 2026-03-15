@@ -157,6 +157,7 @@ export const DEFAULT_WORKSPACE_CONFIG: WorkspaceConfig = {
       script: ['script.js'],
       fields: ['fields.json'],
     },
+    shared: {},
     result: {
       'HTML.html': 'html',
       'CSS.css': 'css',
