@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.5.2
+
+### Patch Changes
+
+- 96c3839: Update dependencies in package.json for improved compatibility and performance
+
 ## 3.5.1
 
 ### Patch Changes

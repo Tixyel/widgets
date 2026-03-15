@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 6.5.1
+
+### Patch Changes
+
+- 5fb386b: Move utility classes
+
 ## 6.5.0
 
 ### Minor Changes
