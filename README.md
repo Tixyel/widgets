@@ -20,28 +20,32 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
   const { Client, Simulation, logger, modules, utils, Alejo } = window.Tixyel;
 
   new Client({
-    id: 'my-custom-widget', // ID of your widget for storage purposes
+    id: "my-custom-widget", // ID of your widget for storage purposes
     debug: true, // Enable event debug logs
   });
 
   // client is already set on window.client after the executation of new Client(...)
-  client.on('load', (data) => {
-    Simulation.emulate.twitch.message({ name: 'tixyel', badges: ['broadcaster'], message: 'hello!' });
+  client.on("load", (data) => {
+    Simulation.emulate.twitch.message({
+      name: "tixyel",
+      badges: ["broadcaster"],
+      message: "hello!",
+    });
 
     console.log(data.fieldData);
 
     // Create a !test 123 command
     new modules.Command({
-      prefix: '!',
-      name: 'test',
-      permissions: ['broadcaster', 'moderator', 'username'],
-      admins: ['tixyel'], // Admins can use the command regardless of permissions
+      prefix: "!",
+      name: "test",
+      permissions: ["broadcaster", "moderator", "username"],
+      admins: ["tixyel"], // Admins can use the command regardless of permissions
       arguments: true,
       run(args, event) {
         const amount = parseInt(args[0]);
 
         if (isNaN(amount) || !amount) {
-          logger.warn('Invalid amount provided', args);
+          logger.warn("Invalid amount provided", args);
           return;
         }
       },
@@ -50,8 +54,8 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
     // Create a customfields button listener
     new modules.Button({
       field: (field, value) => {
-        if (field.startsWith('emote.')) {
-          const count = parseInt(field.split('.')[1]);
+        if (field.startsWith("emote.")) {
+          const count = parseInt(field.split(".")[1]);
 
           if (!isNaN(count) && count > 0) {
             return true;
@@ -60,26 +64,26 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
 
         return false;
       },
-      template: 'emote.{amount}',
+      template: "emote.{amount}",
       run(amount) {
         amount = parseInt(amount);
 
-        if (client.details.provider === 'youtube') {
+        if (client.details.provider === "youtube") {
           const message = Array.from({ length: amount })
             .map(() => {
               return Simulation.rand.array(Simulation.data.youtube_emotes)[0];
             })
             .map((emote) => emote.shortcuts[0])
-            .join(' ');
+            .join(" ");
 
           Simulation.emulate.youtube.message({ message });
-        } else if (client.details.provider === 'twitch') {
+        } else if (client.details.provider === "twitch") {
           const message = Array.from({ length: amount })
             .map(() => {
               return Simulation.rand.array(Simulation.data.emotes)[0];
             })
             .map((emote) => emote.name)
-            .join(' ');
+            .join(" ");
 
           Simulation.emulate.twitch.message({ message });
         }
@@ -88,17 +92,17 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
 
     // or simple use
     new modules.Button({
-      field: 'test events',
+      field: "test events",
       run() {
         // logic here...
       },
     });
 
     // comfyJs is integrated to the script
-    if (client.details.provider !== 'twitch') {
+    if (client.details.provider !== "twitch") {
       new modules.useComfyJs(
         {
-          channels: ['tixyel'], // channels to listen
+          channels: ["tixyel"], // channels to listen
           isDebug: true, // debug logs
           init: true, // auto init the websocket
         },
@@ -107,11 +111,11 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
     }
   });
 
-  client.on('message', async (provider, received) => {
+  client.on("message", async (provider, received) => {
     switch (provider) {
-      case 'twitch': {
+      case "twitch": {
         switch (received.listener) {
-          case 'message': {
+          case "message": {
             logger.received(`Received message event from ${provider}`, received.event);
 
             const messageHTML = utils.replaceEmotesWithHTML(event.data.text, event.data.emotes);
@@ -126,12 +130,15 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
         }
         break;
       }
-      case 'youtube': {
+      case "youtube": {
         switch (received.listener) {
-          case 'message': {
+          case "message": {
             logger.received(`Received message event from ${provider}`, received.event);
 
-            const messageHTML = utils.replaceYoutubeEmotesWithHTML(event.data.text, Simulation.data.youtube_emotes);
+            const messageHTML = utils.replaceYoutubeEmotesWithHTML(
+              event.data.text,
+              Simulation.data.youtube_emotes,
+            );
             break;
           }
         }
@@ -140,7 +147,7 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
     }
   });
 
-  client.on('session', (session) => {
+  client.on("session", (session) => {
     // update goals
   });
 </script>

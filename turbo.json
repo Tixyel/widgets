@@ -4,7 +4,14 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**", "src/finished/**", "src/widgetIO/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "build/**",
+        "src/finished/**",
+        "src/widgetIO/**"
+      ]
     },
     "check-types": {
       "dependsOn": ["^check-types"]
