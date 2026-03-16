@@ -1,13 +1,13 @@
-import { StreamElements } from '../types/streamelements/main.js';
-import type { ClientEvents, Provider } from '../types/client.js';
+import { Client } from '../client/client.js';
+import { Data } from '../data/index.js';
+import { BadgeOptions } from '../helper/classes/message.js';
+import { Helper } from '../helper/index.js';
 import { logger } from '../main.js';
 import { useQueue } from '../modules/useQueue.js';
-import { Helper } from '../helper/index.js';
-import { Data } from '../data/index.js';
-import { Client } from '../client/client.js';
 import { Twitch } from '../types.js';
+import type { ClientEvents, Provider } from '../types/client.js';
 import { MapNumberValuesToString } from '../types/path.js';
-import { BadgeOptions } from '../helper/classes/message.js';
+import { StreamElements } from '../types/streamelements/main.js';
 
 export namespace Local {
   export type QueueItem =
@@ -1028,7 +1028,7 @@ export namespace Local {
                       time: time,
                       tags: {
                         'badge-info': `${badges.keys.map((key) => `${key}/${badges.amount[key] ?? Helper.random.number(1, 5)}`).join(',')}`,
-                        'badges': badges.keys.map((key) => `${key}/1`).join(','),
+                        badges: badges.keys.map((key) => `${key}/1`).join(','),
 
                         ...roles,
 
@@ -1037,13 +1037,13 @@ export namespace Local {
                         'user-id': userId,
                         'user-type': '',
 
-                        'color': color,
+                        color: color,
                         'display-name': name,
-                        'emotes': '',
+                        emotes: '',
 
                         'client-nonce': Helper.random.string(16),
-                        'flags': '',
-                        'id': msgId,
+                        flags: '',
+                        id: msgId,
                         'first-msg': data?.firstMsg ? '1' : '0',
                         'returning-chatter': data?.returningChatter ? '1' : '0',
 

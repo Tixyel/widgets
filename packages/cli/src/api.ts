@@ -1,5 +1,5 @@
-import { BuildFindMap, WorkspaceConfig } from './types/workspace';
 import { Workspace } from './lib/workspace';
+import { BuildFindMap, WorkspaceConfig } from './types/workspace';
 
 export function defineConfig<const Find extends BuildFindMap = BuildFindMap>(
   config: WorkspaceConfig<Find>,

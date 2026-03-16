@@ -1,6 +1,6 @@
+import { ColorHelper } from './color.js';
 import { ElementHelper } from './element.js';
 import { ObjectHelper } from './object.js';
-import { ColorHelper } from './color.js';
 
 export type Modifier = (
   value: string,

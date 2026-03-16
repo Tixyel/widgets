@@ -1,4 +1,5 @@
 import { test, expect } from 'bun:test';
+
 import { Helper } from '../index.js';
 
 const { color } = Helper;
@@ -22,6 +23,10 @@ test('color.convert should convert colors between formats', async () => {
   expect(await color.convert('#ff0056', 'css-color-name')).toBe('crimson');
   expect(await color.convert('#c3a7e2', 'css-color-name')).toBe('plum');
   expect(await color.convert('#FF5733', 'invalid-format' as any)).toBe(null);
-  expect(color.convert('invalid-color', 'rgb')).rejects.toThrow('Invalid color format: invalid-color');
-  expect(color.convert('#FF5733', 'hex')).rejects.toThrow('Color is already in the desired format: hex');
+  expect(color.convert('invalid-color', 'rgb')).rejects.toThrow(
+    'Invalid color format: invalid-color',
+  );
+  expect(color.convert('#FF5733', 'hex')).rejects.toThrow(
+    'Color is already in the desired format: hex',
+  );
 });

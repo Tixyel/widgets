@@ -1,6 +1,7 @@
 import { ComfyJSInstance } from 'comfy.js';
-import { StreamElements } from './types.js';
+
 import { main } from './main.js';
+import { StreamElements } from './types.js';
 
 export type * from './types.ts';
 

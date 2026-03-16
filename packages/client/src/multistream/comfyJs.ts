@@ -1,6 +1,3 @@
-import { EventProvider } from '../modules/EventProvider.js';
-import { logger } from '../main.js';
-
 import type {
   OnErrorHandler,
   OnCommandHandler,
@@ -23,9 +20,12 @@ import type {
   OnChatModeHandler,
   ComfyJSInstance,
 } from 'comfy.js';
-import { Local } from '../local/index.js';
-import { Helper } from '../helper/index.js';
+
 import { BadgeOptions } from '../helper/classes/message.js';
+import { Helper } from '../helper/index.js';
+import { Local } from '../local/index.js';
+import { logger } from '../main.js';
+import { EventProvider } from '../modules/EventProvider.js';
 
 type ComfyEvents = {
   load: [instance: ComfyJSInstance];

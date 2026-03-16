@@ -1,20 +1,22 @@
-import { basename, join, resolve } from 'path';
-import { DotTixyel } from '../types/widget';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
-import { parse } from 'jsonc-parser';
 import { readFile, writeFile } from 'fs/promises';
-import { Workspace } from './workspace';
-import { Ora } from 'ora';
-import { watermark } from '../utils/watermark';
-import postcss from 'postcss';
-import cssnano from 'cssnano';
-import JSZip from 'jszip';
-import nested from 'postcss-nested';
-import { transformSync } from 'esbuild';
+import { basename, join, resolve } from 'path';
+
 import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
+import { transformSync } from 'esbuild';
 import { minify as minifyHTML } from 'html-minifier-terser';
 import JavaScriptObfuscator from 'javascript-obfuscator';
+import { parse } from 'jsonc-parser';
+import JSZip from 'jszip';
+import { Ora } from 'ora';
+import postcss from 'postcss';
+import nested from 'postcss-nested';
+
+import { DotTixyel } from '../types/widget';
+import { watermark } from '../utils/watermark';
 import { DEFAULT_WORKSPACE_CONFIG } from './constants.workspace';
+import { Workspace } from './workspace';
 
 export namespace Widget {
   export type WidgetOptions = {

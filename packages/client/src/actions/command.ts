@@ -1,6 +1,6 @@
-import { StreamElements } from '../types/streamelements/main.js';
 import { Client } from '../client/client.js';
 import { logger } from '../main.js';
+import { StreamElements } from '../types/streamelements/main.js';
 
 interface CommandOptions {
   prefix?: string;

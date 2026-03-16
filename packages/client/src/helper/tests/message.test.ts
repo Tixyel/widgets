@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'bun:test';
+
 import { Helper } from '../index.js';
 
 const { message } = Helper;

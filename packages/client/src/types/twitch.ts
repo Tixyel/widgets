@@ -17,7 +17,7 @@ export namespace Twitch {
      * 'staff/1,bits/1000,partner/1'
      * ```
      */
-    'badges': String;
+    badges: String;
     /**
      * The color of the user's name in the chat.
      * @example
@@ -25,7 +25,7 @@ export namespace Twitch {
      * '#FF0000'
      * ```
      */
-    'color': string | undefined;
+    color: string | undefined;
     /**
      * The user’s display name, escaped as described in the [IRCv3 spec](https://ircv3.net/specs/extensions/message-tags.html). This tag may be empty if it is never set.
      * @example
@@ -46,12 +46,12 @@ export namespace Twitch {
      * '25:0-4,12-16/1902:6-10'
      * ```
      */
-    'emotes': String;
-    'flags': String;
+    emotes: String;
+    flags: String;
     /**
      * A Boolean value that indicates whether the user has site-wide commercial free mode enabled. Is true (1) if enabled; otherwise, false (0).
      */
-    'turbo': 0 | 1;
+    turbo: 0 | 1;
     /**
      * The User ID of the relevant user.
      * @example
@@ -73,11 +73,11 @@ export namespace Twitch {
     /**
      * The amount of Bits the user cheered. Only a Bits cheer message includes this tag.
      */
-    'bits': number;
+    bits: number;
     /**
      * A Boolean value that determines whether the user is a moderator. Is true (1) if the user is a moderator; otherwise, false (0).
      */
-    'mod': 0 | 1;
+    mod: 0 | 1;
     /**
      * The ID of the message. In UUID format.
      */
@@ -137,7 +137,7 @@ export namespace Twitch {
     /**
      * A Boolean value that determines whether the user is a subscriber. Is true (1) if the user is a subscriber; otherwise, false (0).
      */
-    'subscriber': 0 | 1;
+    subscriber: 0 | 1;
     /**
      * The UNIX timestamp.
      */
@@ -145,7 +145,7 @@ export namespace Twitch {
     /**
      * A Boolean value that determines whether the user that sent the chat is a VIP. The message includes this tag if the user is a VIP; otherwise, the message doesn’t include this tag (check for the presence of the tag instead of whether the tag is set to true or false).
      */
-    'vip': undefined | '';
+    vip: undefined | '';
   };
 
   export type badge = {

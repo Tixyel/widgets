@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'bun:test';
+
 import { Helper } from '../index.js';
 
 const { string } = Helper;
@@ -41,7 +42,9 @@ describe('string functions', () => {
 
     const result = string.compose(template, data, { html: true });
 
-    expect(result).toBe('<span class="color bold" style="color: #ff0056; font-weight: bold;">username</span>');
+    expect(result).toBe(
+      '<span class="color bold" style="color: #ff0056; font-weight: bold;">username</span>',
+    );
   });
 
   it('Generate string template with more modifiers correctly', async () => {
@@ -51,7 +54,9 @@ describe('string functions', () => {
 
     const result = string.compose(template, data, { html: true });
 
-    expect(result).toBe('<span class="color bold italic" style="color: #ff0056; font-weight: bold; font-style: italic;">username</span>');
+    expect(result).toBe(
+      '<span class="color bold italic" style="color: #ff0056; font-weight: bold; font-style: italic;">username</span>',
+    );
   });
 
   it('Generate string template with IF truthy condition correctly', async () => {

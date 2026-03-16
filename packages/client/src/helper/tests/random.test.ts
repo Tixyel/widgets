@@ -1,4 +1,5 @@
 import { test, expect } from 'bun:test';
+
 import { Helper } from '../index.js';
 
 const { random } = Helper;

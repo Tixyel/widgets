@@ -22,7 +22,9 @@ export class EventProvider<EventMap extends Record<string, any[]> = Record<strin
   /**
    * Stores registered event listeners.
    */
-  private registeredEvents: { [K in keyof EventMap]?: Array<(this: this, ...args: EventMap[K]) => any> } = {};
+  private registeredEvents: {
+    [K in keyof EventMap]?: Array<(this: this, ...args: EventMap[K]) => any>;
+  } = {};
 
   /**
    * Emits an event to all registered listeners.
@@ -41,7 +43,10 @@ export class EventProvider<EventMap extends Record<string, any[]> = Record<strin
    * @param eventName The name of the event.
    * @param callback The callback function.
    */
-  on<K extends keyof EventMap>(eventName: K, callback: (this: this, ...args: EventMap[K]) => any): this {
+  on<K extends keyof EventMap>(
+    eventName: K,
+    callback: (this: this, ...args: EventMap[K]) => any,
+  ): this {
     if (typeof callback !== 'function') {
       throw new TypeError('Callback must be a function');
     }
@@ -60,7 +65,10 @@ export class EventProvider<EventMap extends Record<string, any[]> = Record<strin
    * @param eventName The name of the event.
    * @param callback The callback function to remove.
    */
-  off<K extends keyof EventMap>(eventName: K, callback?: (this: this, ...args: EventMap[K]) => any): this {
+  off<K extends keyof EventMap>(
+    eventName: K,
+    callback?: (this: this, ...args: EventMap[K]) => any,
+  ): this {
     const listeners = this.registeredEvents[eventName] || [];
 
     if (!callback) {
@@ -79,7 +87,10 @@ export class EventProvider<EventMap extends Record<string, any[]> = Record<strin
    * @param eventName The name of the event.
    * @param callback The callback function.
    */
-  once<K extends keyof EventMap>(eventName: K, callback: (this: this, ...args: EventMap[K]) => any): this {
+  once<K extends keyof EventMap>(
+    eventName: K,
+    callback: (this: this, ...args: EventMap[K]) => any,
+  ): this {
     const wrapper = (...args: EventMap[K]) => {
       this.off(eventName, wrapper);
       callback.apply(this, args);

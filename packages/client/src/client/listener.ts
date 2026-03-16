@@ -1,12 +1,12 @@
-import { Client, ClientStorageOptions } from './client.js';
-import { usedStorages } from '../modules/useStorage.js';
-import { Command } from '../actions/command.js';
 import { Button } from '../actions/button.js';
-import { logger } from '../main.js';
-import { Local } from '../local/index.js';
-import { useQueue } from '../modules/useQueue.js';
+import { Command } from '../actions/command.js';
 import { Helper } from '../helper/index.js';
+import { Local } from '../local/index.js';
+import { logger } from '../main.js';
 import { usedComms } from '../modules/useComms.js';
+import { useQueue } from '../modules/useQueue.js';
+import { usedStorages } from '../modules/useStorage.js';
+import { Client, ClientStorageOptions } from './client.js';
 
 if (typeof window !== undefined) {
   window.addEventListener('onWidgetLoad', async (data) => {

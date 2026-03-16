@@ -14,18 +14,19 @@
       }
     }
   },
+  "type": "module",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build --ui stream",
     "build:client": "turbo run build -F @tixyel/streamelements build --ui stream",
     "build:cli": "turbo run build -F @tixyel/cli build --ui stream",
-    "check-types": "turbo run check-types --ui stream",
-    "lint": "turbo run lint",
-    "watch": "turbo run build --watch",
-    "prettier": "prettier --write packages/",
     "version": "bunx --bun changeset version && git add --all",
     "release": "bun run build && bunx --bun changeset publish",
-    "cli": "bun run -C packages/cli dev"
+    "check-types": "turbo run check-types --ui stream",
+    "cli": "bun run -C packages/cli dev",
+    "watch": "turbo run build --watch",
+    "lint": "turbo run lint",
+    "format": "oxfmt --write"
   },
   "dependencies": {
     "turbo": "^2.8.17"

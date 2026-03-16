@@ -10,5 +10,5 @@ export default defineConfig({
   dts: {
     oxc: true,
   },
-  'cjsDefault': false,
+  cjsDefault: false,
 });

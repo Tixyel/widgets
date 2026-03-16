@@ -1,5 +1,6 @@
-import { Command as Commander } from 'commander';
 import { createRequire } from 'module';
+
+import { Command as Commander } from 'commander';
 
 const program = new Commander();
 

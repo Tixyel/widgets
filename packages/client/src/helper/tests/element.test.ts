@@ -1,4 +1,5 @@
 import { it, expect } from 'bun:test';
+
 import { Helper } from '../index.js';
 
 const { element } = Helper;

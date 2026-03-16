@@ -1,4 +1,5 @@
 import { test, expect } from 'bun:test';
+
 import { Helper } from '../index.js';
 
 const { object } = Helper;
@@ -19,7 +20,7 @@ test('Flatten nested objects with stringify=true', () => {
     'user.name': 'Alice',
     'user.address.street': '123 Main St',
     'user.address.city': 'Wonderland',
-    'age': '30',
+    age: '30',
     'tags:0': 'friend',
     'tags:1': 'colleague',
     'tags:2': 'true',
@@ -43,7 +44,7 @@ test('Flatten nested objects with stringify=false', () => {
     'user.name': 'Alice',
     'user.address.street': '123 Main St',
     'user.address.city': 'Wonderland',
-    'age': 30,
+    age: 30,
     'tags:0': 'friend',
     'tags:1': 'colleague',
     'tags:2': true,

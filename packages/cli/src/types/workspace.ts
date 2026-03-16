@@ -1,7 +1,7 @@
-import type { Options as HtmlMinifierOptions } from 'html-minifier-terser';
-import type { ObfuscatorOptions } from 'javascript-obfuscator';
 import type autoprefixer from 'autoprefixer';
 import cssnanoPlugin from 'cssnano';
+import type { Options as HtmlMinifierOptions } from 'html-minifier-terser';
+import type { ObfuscatorOptions } from 'javascript-obfuscator';
 import { JSX } from 'react';
 
 export namespace WorkspaceScaffold {

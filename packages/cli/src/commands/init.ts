@@ -1,10 +1,11 @@
-import type { Command } from 'commander';
-import { program } from '../app';
-
+import { exec } from 'child_process';
 import { existsSync, unlink } from 'fs';
 import { writeFile } from 'fs/promises';
-import { exec } from 'child_process';
 import { resolve } from 'path';
+
+import type { Command } from 'commander';
+
+import { program } from '../app';
 
 export const initCommand: Command = program
   .command('init')

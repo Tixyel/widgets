@@ -1,9 +1,9 @@
-import { Provider } from '../types/client.js';
-import { StreamElements } from '../types/streamelements/main.js';
+import { Button } from '../actions/button.js';
+import { Command } from '../actions/command.js';
 import { EventProvider } from '../modules/EventProvider.js';
 import { useStorage } from '../modules/useStorage.js';
-import { Command } from '../actions/command.js';
-import { Button } from '../actions/button.js';
+import { Provider } from '../types/client.js';
+import { StreamElements } from '../types/streamelements/main.js';
 import { Alejo } from '../utils/alejo.js';
 
 type ClientEvents = {

@@ -15,8 +15,8 @@ export namespace TwitchEvents {
         time: number;
         tags: Partial<MapNumberValuesToString<Twitch.IRC>> & {
           'client-nonce': string;
-          'flags': string;
-          'id': string;
+          flags: string;
+          id: string;
           'first-msg': '1' | '0';
           'returning-chatter': '1' | '0';
         };

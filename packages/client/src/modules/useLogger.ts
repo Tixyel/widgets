@@ -50,9 +50,17 @@ export class useLogger {
 
       if (primitives.length > 0) {
         const message = primitives.join(' ');
-        console.log(`%c${prefix.endsWith(' ') ? prefix : prefix.trim() + ' '}${icon}${message}`, style, ...objects);
+        console.log(
+          `%c${prefix.endsWith(' ') ? prefix : prefix.trim() + ' '}${icon}${message}`,
+          style,
+          ...objects,
+        );
       } else if (objects.length > 0) {
-        console.log(`%c${prefix.endsWith(' ') ? prefix : prefix.trim() + ' '}${icon}`, style, ...objects);
+        console.log(
+          `%c${prefix.endsWith(' ') ? prefix : prefix.trim() + ' '}${icon}`,
+          style,
+          ...objects,
+        );
       }
     };
   }

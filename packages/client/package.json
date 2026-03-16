@@ -1,29 +1,35 @@
 {
   "name": "@tixyel/streamelements",
   "version": "6.5.1",
+  "private": false,
   "description": "TypeScript/JavaScript helper library for StreamElements custom widgets with type safety and local development support",
   "keywords": [
-    "streamelements",
-    "twitch",
-    "youtube",
-    "widgets",
-    "streaming",
     "overlay",
-    "typescript"
+    "streamelements",
+    "streaming",
+    "twitch",
+    "typescript",
+    "widgets",
+    "youtube"
   ],
-  "author": "Tixyel",
-  "license": "Apache-2.0",
   "homepage": "https://github.com/Tixyel/widgets#readme",
+  "bugs": {
+    "url": "https://github.com/Tixyel/widgets/issues"
+  },
+  "license": "Apache-2.0",
+  "author": "Tixyel",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tixyel/widgets.git",
     "directory": "packages/client"
   },
-  "bugs": {
-    "url": "https://github.com/Tixyel/widgets/issues"
-  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
   "type": "module",
-  "private": false,
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
@@ -40,17 +46,16 @@
     "./+es": "./dist/index.es.js",
     "./+umd": "./dist/index.umd.js"
   },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE.md",
-    "THIRD_PARTY_NOTICES.md"
-  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": false
+  },
   "scripts": {
     "build": "bunx --bun vite build && bunx --bun rollup -c rollup.config.js",
     "dev": "concurrently \"bunx --bun vite build --watch\" \"bunx --bun rollup -c rollup.config.js --watch\"",
     "check-types": "bunx --bun tsc --noEmit"
   },
+  "dependencies": {},
   "devDependencies": {
     "@types/tmi.js": "^1.8.6",
     "comfy.js": "^1.1.29",
@@ -60,12 +65,7 @@
     "typescript": "^5.9.3",
     "vite": "catalog:build"
   },
-  "dependencies": {},
   "engines": {
     "node": ">=18.0.0"
-  },
-  "publishConfig": {
-    "access": "public",
-    "provenance": false
   }
 }

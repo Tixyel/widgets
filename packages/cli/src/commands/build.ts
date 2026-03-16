@@ -1,8 +1,9 @@
-import type { Command } from 'commander';
-import { program } from '../app';
-
 import { existsSync, readFileSync } from 'fs';
 import path, { relative } from 'path';
+
+import type { Command } from 'commander';
+
+import { program } from '../app';
 
 export const buildCommand: Command = program
   .command('build')
@@ -151,12 +152,7 @@ export const buildCommand: Command = program
             choices,
             pageSize: 10,
             loop: true,
-            theme: {
-              checkbox: {
-                on: '[x]',
-                off: '[ ]',
-              },
-            },
+            theme: { checkbox: { on: '[x]', off: '[ ]' } },
           });
 
           selectedPaths = selected as string[];

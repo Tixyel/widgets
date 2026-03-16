@@ -6,7 +6,10 @@ import { css_color_names } from '../data/collection/css.js';
  * @param format - format of the input color string
  * @returns - RGBA components or null if parsing fails
  */
-export function parseToRGBA(str: string, format: string | false): { r: number; g: number; b: number; a: number } | null {
+export function parseToRGBA(
+  str: string,
+  format: string | false,
+): { r: number; g: number; b: number; a: number } | null {
   if (!format) return null;
 
   switch (format) {
@@ -91,7 +94,10 @@ export function parseToRGBA(str: string, format: string | false): { r: number; g
  * @param includeAlpha - Whether to include alpha in the hex string
  * @returns Hex color string
  */
-export function rgbaToHex(rgba: { r: number; g: number; b: number; a: number }, includeAlpha: boolean = true): string {
+export function rgbaToHex(
+  rgba: { r: number; g: number; b: number; a: number },
+  includeAlpha: boolean = true,
+): string {
   const toHex = (n: number) => Math.round(n).toString(16).padStart(2, '0');
 
   let hex = `#${toHex(rgba.r)}${toHex(rgba.g)}${toHex(rgba.b)}`;

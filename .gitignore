@@ -18,8 +18,7 @@ pnpm-debug.log*
 .env
 .env.*
 
-# IDEs
-.vscode/
+# IDEs 
 .idea/
 .DS_Store
 

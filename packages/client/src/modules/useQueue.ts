@@ -1,6 +1,6 @@
-import { EventProvider } from './EventProvider.js';
 import { Client } from '../client/client.js';
 import { logger } from '../main.js';
+import { EventProvider } from './EventProvider.js';
 
 type QueueEvents<T> = {
   load: [];

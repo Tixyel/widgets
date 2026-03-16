@@ -1,6 +1,6 @@
 import { StreamElementsEvents } from './events/streamelements.js';
-import { YoutubeEvents } from './events/youtube.js';
 import { TwitchEvents } from './events/twitch.js';
+import { YoutubeEvents } from './events/youtube.js';
 
 export namespace StreamElements {
   export namespace CustomField {
@@ -116,7 +116,14 @@ export namespace StreamElements {
       }
 
       export namespace StreamElements {
-        export type Events = Tip | Event | KVStore | EventSkip | EventTest | BotCounter | AlertService;
+        export type Events =
+          | Tip
+          | Event
+          | KVStore
+          | EventSkip
+          | EventTest
+          | BotCounter
+          | AlertService;
 
         export type Tip = StreamElementsEvents.Tip.Data;
         export type Event = StreamElementsEvents.Event.Data;
@@ -128,7 +135,15 @@ export namespace StreamElements {
       }
 
       export namespace Twitch {
-        export type Events = Raid | Event | Cheer | Message | Follower | Subscriber | DeleteMessage | DeleteMessages;
+        export type Events =
+          | Raid
+          | Event
+          | Cheer
+          | Message
+          | Follower
+          | Subscriber
+          | DeleteMessage
+          | DeleteMessages;
 
         export type SubscriberTier = TwitchEvents.Subscriber.SubscriberTier;
 
@@ -154,7 +169,11 @@ export namespace StreamElements {
       }
     }
 
-    export type onEventReceived = (Provider.Twitch.Events | Provider.YouTube.Events | Provider.StreamElements.Events) & { emulated?: boolean };
+    export type onEventReceived = (
+      | Provider.Twitch.Events
+      | Provider.YouTube.Events
+      | Provider.StreamElements.Events
+    ) & { emulated?: boolean };
   }
 
   export namespace Session {
@@ -204,7 +223,10 @@ export namespace StreamElements {
       export type Any = Int | String | Date | Array | Recent | undefined;
 
       export namespace Available {
-        export type Category = Record<string, Config.Any | Record<string, Config.Any | undefined> | undefined>;
+        export type Category = Record<
+          string,
+          Config.Any | Record<string, Config.Any | undefined> | undefined
+        >;
         export type Data = Record<string, Category | undefined>;
       }
     }

@@ -1,34 +1,38 @@
 {
   "name": "@tixyel/cli",
   "version": "3.5.2",
+  "private": false,
   "description": "CLI tool for streamelements widgets",
   "keywords": [
+    "build",
     "cli",
-    "widgets",
-    "typescript",
     "server",
-    "build"
+    "typescript",
+    "widgets"
   ],
+  "homepage": "https://github.com/Tixyel/widgets#readme",
+  "bugs": {
+    "url": "https://github.com/Tixyel/widgets/issues"
+  },
+  "license": "Apache-2.0",
   "author": {
     "name": "Tixyel",
     "email": "tixyelpvd@gmail.com",
     "url": "https://github.com/tixyel"
   },
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/Tixyel/widgets#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tixyel/widgets.git",
     "directory": "packages/cli"
   },
-  "bugs": {
-    "url": "https://github.com/Tixyel/widgets/issues"
-  },
-  "type": "module",
-  "private": false,
   "bin": {
     "tixyel": "./dist/index.mjs"
   },
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "type": "module",
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
@@ -43,10 +47,10 @@
       "default": "./dist/api.mjs"
     }
   },
-  "files": [
-    "dist",
-    "package.json"
-  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": false
+  },
   "scripts": {
     "build": "cross-env TIXYEL_VERSION=$npm_package_version tsdown",
     "dev": "cross-env TIXYEL_VERSION=$npm_package_version tsdown --watch",
@@ -87,9 +91,5 @@
     "@typescript/native-preview": "^7.0.0-dev.20260315.1",
     "tsdown": "^0.21.2",
     "typescript": "^5.9.3"
-  },
-  "publishConfig": {
-    "access": "public",
-    "provenance": false
   }
 }

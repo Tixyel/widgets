@@ -211,12 +211,12 @@ export class MessageHelper {
 
       case 'youtube': {
         var details = {
-          'verified': { isVerified: true },
-          'broadcaster': { isChatOwner: true },
-          'host': { isChatOwner: true },
-          'sponsor': { isChatSponsor: true },
-          'subscriber': { isChatSponsor: true },
-          'moderator': { isChatModerator: true },
+          verified: { isVerified: true },
+          broadcaster: { isChatOwner: true },
+          host: { isChatOwner: true },
+          sponsor: { isChatSponsor: true },
+          subscriber: { isChatSponsor: true },
+          moderator: { isChatModerator: true },
         };
 
         result = Object.entries(clearedBadges).reduce(

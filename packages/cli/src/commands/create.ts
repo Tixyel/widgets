@@ -1,8 +1,9 @@
-import type { WidgetType } from '../types/widget';
-import type { Command } from 'commander';
-import { program } from '../app';
-
 import { basename, join, resolve } from 'path';
+
+import type { Command } from 'commander';
+
+import { program } from '../app';
+import type { WidgetType } from '../types/widget';
 
 export const generateCommand: Command = program
   .command('generate [path] [name] [description] [tags]')

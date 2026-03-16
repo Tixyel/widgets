@@ -1,15 +1,17 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { mkdir, writeFile } from 'fs/promises';
+import { dirname, extname, relative, resolve } from 'path';
+
+import { transform } from 'esbuild';
+import FastGlob from 'fast-glob';
+import { Ora } from 'ora';
+import { isValidElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+
+import { DotTixyel, WidgetType } from '../types/widget';
 import { WorkspaceConfig, WorkspaceScaffold } from '../types/workspace';
 import { DEFAULT_WORKSPACE_CONFIG, WORKSPACE_CONFIG_FILES } from './constants.workspace';
-import { dirname, extname, relative, resolve } from 'path';
-import { transform } from 'esbuild';
-import { mkdir, writeFile } from 'fs/promises';
-import { renderToStaticMarkup } from 'react-dom/server';
-import { Ora } from 'ora';
-import { DotTixyel, WidgetType } from '../types/widget';
-import { isValidElement } from 'react';
 import { Widget } from './widget';
-import FastGlob from 'fast-glob';
 
 export namespace Workspace {
   /**
