@@ -417,7 +417,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
 
       const userIndex = users.length + 1;
       const isSubscriber = selectedBadges.some((badge) =>
-        ['subscriber', 'prime', 'founder'].includes(String(badge).toLocaleLowerCase()),
+        ['subscriber'].includes(String(badge).toLocaleLowerCase()),
       );
 
       const user = new FakeUser(
