@@ -31,6 +31,7 @@ export class FakeUser {
 }
 
 export interface FakeUserPoolOptions {
+  id?: string;
   badges?: Twitch.tags[];
   limits?: {
     [key in Twitch.tags]?: number;
@@ -48,6 +49,7 @@ export const fakeUserPools: FakeUserPool[] = [];
 
 export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
   public readonly users: FakeUser[] = [];
+  public readonly id: string;
 
   private readonly byId: Map<string, FakeUser> = new Map();
   private readonly byName: Map<string, FakeUser> = new Map();
@@ -78,6 +80,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
     super();
 
     this.users = this.start(names, options?.badges, options);
+    this.id = options?.id ?? `fake_user_pool_${Math.random().toString(36).slice(2, 10)}`;
     this.byId = new Map(this.users.map((user) => [user.id, user]));
     this.byName = new Map(this.users.map((user) => [user.login, user]));
     this.byBadge = new Map(
@@ -195,7 +198,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
       );
 
       const user = new FakeUser(
-        `fake_user_${userIndex.toString().padStart(2, '0')}_${Math.random().toString(36).slice(2, 8)}`,
+        `fake_user_${userIndex.toString().padStart(2, '0')}_${Math.random().toString(36).slice(2, 8)}+${this.id}`,
         name,
         selectedBadge ? [selectedBadge] : [],
         isSubscriber,
