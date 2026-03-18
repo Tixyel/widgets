@@ -142,6 +142,36 @@ export class MessageHelper {
     return text;
   }
 
+  /**
+   * Maps global badge versions to a structured format.
+   * @param globalBadges - An array of Twitch global badges. Defaults to Local data badges.
+   * @returns An array of objects containing badge IDs and their corresponding versions.
+   * @example
+   * ```javascript
+   * const badgeVersions = mapGlobalBadgeVersions();
+   * console.log(badgeVersions);
+   * // Output:
+   * [
+   *   {
+   *     id: 'subscriber',
+   *     versions: [
+   *       { type: 'subscriber', version: '1', url: 'https://...', description: 'Subscriber' },
+   *       { type: 'subscriber', version: '2', url: 'https://...', description: '2-Month Subscriber' },
+   *       // ... more versions
+   *     ],
+   *   },
+   *   {
+   *     id: 'bits',
+   *     versions: [
+   *       { type: 'bits', version: '100', url: 'https://...', description: 'cheer 100' },
+   *       { type: 'bits', version: '1000', url: 'https://...', description: 'cheer 1000' },
+   *       // ... more versions
+   *     ],
+   *   },
+   *   // ... more badges
+   * ]
+   * ```
+   */
   mapGlobalBadgeVersions(globalBadges: Twitch.GlobalBadge[] = Data.badges): Array<{
     id: Twitch.tags;
     versions: Twitch.badge[];
@@ -157,6 +187,21 @@ export class MessageHelper {
     }));
   }
 
+  /**
+   * Maps a badge type and variation to the corresponding badge version amount.
+   * @param type - The badge type (e.g., 'subscriber', 'bits', etc.).
+   * @param variation - The badge variation, which can be a number or a string (e.g., 'horde', 'alliance', etc.).
+   * @returns The badge version amount as a string. Returns '0' if no matching badge version is found.
+   * @example
+   * ```javascript
+   * // For subscriber badge with 3 months
+   * mapGlobalBadgeVersionAmount('subscriber', 3); // Returns '3'
+   * // For bits badge with 5000 bits
+   * mapGlobalBadgeVersionAmount('bits', 5000); // Returns the corresponding badge version based on the mapping
+   * // For warcraft badge with 'horde' variation
+   * mapGlobalBadgeVersionAmount('warcraft', 'horde'); // Returns 'horde'
+   * ```
+   */
   mapGlobalBadgeVersionAmount(type: Twitch.tags, variation: string | number): string {
     const IdToId = (key: Twitch.tags) =>
       Data.badges
