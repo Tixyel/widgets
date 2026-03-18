@@ -8,7 +8,7 @@ export namespace Twitch {
      * 'subscriber/25'
      * ```
      */
-    'badge-info': String;
+    'badge-info': string;
     /**
      * Comma-separated list of chat badges in the form, <badge>/<version>. For example admin/1. There are many possible badge values, but here are few: admin, bits, broadcaster, moderator, subscriber, staff, turbo
      * Most badges have only 1 version, but some badges like subscriber badges offer different versions of the badge depending on how long the user has subscribed.
@@ -17,7 +17,7 @@ export namespace Twitch {
      * 'staff/1,bits/1000,partner/1'
      * ```
      */
-    badges: String;
+    badges: string;
     /**
      * The color of the user's name in the chat.
      * @example
@@ -33,11 +33,11 @@ export namespace Twitch {
      * 'TwitchUser'
      * ```
      */
-    'display-name': String;
+    'display-name': string;
     /**
      * A comma-delimited list of IDs that identify the emote sets that the user has access to. Is always set to at least zero (0).
      */
-    'emote-sets': String;
+    'emote-sets': string;
     /**
      * A slash-delimited list of emotes and their positions in the message. Each emote is in the form, `<emote ID>:<ranges>`, where ranges are comma-delimited pairs of indices in the form `<start position>-<end position>`. The position indices are zero-based.
      * NOTE: It’s possible for a message to begin with with `\001ACTION` when /me is used by a user in chat. In these cases emote positions should be considered to begin after `001ACTION `, which includes its succeeding whitespace.
@@ -46,8 +46,8 @@ export namespace Twitch {
      * '25:0-4,12-16/1902:6-10'
      * ```
      */
-    emotes: String;
-    flags: String;
+    emotes: string;
+    flags: string;
     /**
      * A Boolean value that indicates whether the user has site-wide commercial free mode enabled. Is true (1) if enabled; otherwise, false (0).
      */
@@ -59,17 +59,18 @@ export namespace Twitch {
      * '1337'
      * ```
      */
-    'user-id': String;
+    'user-id': string;
     /**
      * The type of user. Possible values are:
      * ```
      *  • "" - A normal user
+     *  • mod - A channel moderator
      *  • admin - A Twitch administrator
      *  • global_mod - A global moderator
      *  • staff - A Twitch employee
      * ```
      */
-    'user-type': '' | 'admin' | 'global_mod' | 'staff';
+    'user-type': '' | 'mod' | 'admin' | 'global_mod' | 'staff';
     /**
      * The amount of Bits the user cheered. Only a Bits cheer message includes this tag.
      */
@@ -113,19 +114,19 @@ export namespace Twitch {
     /**
      * An ID that identifies the chat room (channel).
      */
-    'room-id': String;
+    'room-id': string;
     /**
      * Comma-separated list of chat badges for the chatter in the room the message was sent from. This uses the same format as the `badges` tag.
      */
-    'source-badges': String;
+    'source-badges': string;
     /**
      * Contains metadata related to the chat badges in the source-badges tag.
      */
-    'source-badge-info': String;
+    'source-badge-info': string;
     /**
      * A UUID that identifies the source message from the channel the message was sent from.
      */
-    'source-id': String;
+    'source-id': string;
     /**
      * A Boolean that indicates if a message sent during a shared chat session is only sent to the source channel. Has no effect if the message is not sent during a shared chat session.
      */
@@ -133,7 +134,7 @@ export namespace Twitch {
     /**
      * An ID that identifies the chat room (channel) the message was sent from.
      */
-    'source-room-id': String;
+    'source-room-id': string;
     /**
      * A Boolean value that determines whether the user is a subscriber. Is true (1) if the user is a subscriber; otherwise, false (0).
      */
