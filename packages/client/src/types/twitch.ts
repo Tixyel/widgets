@@ -169,7 +169,7 @@ export namespace Twitch {
   };
 
   export type GlobalBadge = {
-    set_id: GlobalBadgeSetId;
+    set_id: tags;
     versions: Array<{
       id: string;
       image_url_1x: string;
@@ -182,23 +182,7 @@ export namespace Twitch {
     }>;
   };
 
-  // twitch badge keys
-  export type roles =
-    | 'no audio'
-    | 'no video'
-    | 'bot-badge'
-    | 'artist-badge'
-    | 'subscriber'
-    | 'founder'
-    | 'broadcaster'
-    | 'partner'
-    | 'moderator'
-    | 'lead_moderator'
-    | 'vip'
-    | 'premium'
-    | 'bits';
-
-  export type GlobalBadgeSetId =
+  export type tags =
     | 'qsmp2'
     | 'jasontheween-7-day-survival'
     | 'support-a-streamer-ho26-badge'

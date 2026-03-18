@@ -4,16 +4,16 @@ import { NumberHelper } from './number.js';
 import { RandomHelper } from './random.js';
 
 export type BadgeOptions =
-  | Twitch.GlobalBadgeSetId[]
-  | Twitch.GlobalBadgeSetId
-  | `${Twitch.GlobalBadgeSetId}/${string}`
-  | `${Twitch.GlobalBadgeSetId}/${string}`[];
+  | Twitch.tags[]
+  | Twitch.tags
+  | `${Twitch.tags}/${string}`
+  | `${Twitch.tags}/${string}`[];
 
 export type TwitchResult = {
-  keys: Twitch.GlobalBadgeSetId[];
+  keys: Twitch.tags[];
   badges: Twitch.badge[];
-  versions: { [K in Twitch.GlobalBadgeSetId]?: string | number };
-  amount: { [K in Twitch.GlobalBadgeSetId]?: string | number };
+  versions: { [K in Twitch.tags]?: string | number };
+  amount: { [K in Twitch.tags]?: string | number };
 };
 
 export type YouTubeResult = {
@@ -143,7 +143,7 @@ export class MessageHelper {
   }
 
   mapGlobalBadgeVersions(globalBadges: Twitch.GlobalBadge[] = Data.badges): Array<{
-    id: Twitch.GlobalBadgeSetId;
+    id: Twitch.tags;
     versions: Twitch.badge[];
   }> {
     return globalBadges.map((badge) => ({
@@ -157,8 +157,8 @@ export class MessageHelper {
     }));
   }
 
-  mapGlobalBadgeVersionAmount(type: Twitch.GlobalBadgeSetId, variation: string | number): string {
-    const IdToId = (key: Twitch.GlobalBadgeSetId) =>
+  mapGlobalBadgeVersionAmount(type: Twitch.tags, variation: string | number): string {
+    const IdToId = (key: Twitch.tags) =>
       Data.badges
         .find((b) => b.set_id === key)!
         .versions.map((v) => [v.id, parseInt(v.id)] as [string, number]);
@@ -338,10 +338,10 @@ export class MessageHelper {
     const globalBadges = this.mapGlobalBadgeVersions();
 
     if (!Array.isArray(badges) && typeof badges === 'string') {
-      badges = badges.split(',').map((e) => e.trim()) as Twitch.GlobalBadgeSetId[];
+      badges = badges.split(',').map((e) => e.trim()) as Twitch.tags[];
     }
 
-    var clearedBadges = badges.map((badge) => badge.split('/')[0] as Twitch.GlobalBadgeSetId);
+    var clearedBadges = badges.map((badge) => badge.split('/')[0] as Twitch.tags);
 
     if (!clearedBadges || !clearedBadges.length) {
       const number = new NumberHelper();
@@ -366,11 +366,11 @@ export class MessageHelper {
       case 'twitch': {
         const keys = Array.from(clearedBadges).filter((e) =>
           globalBadges.some((badge) => badge.id === e),
-        ) as Twitch.GlobalBadgeSetId[];
+        ) as Twitch.tags[];
 
         const versions = badges.reduce(
           (acc, data) => {
-            var [badge, variation = '1'] = data.split('/') as [Twitch.GlobalBadgeSetId, string];
+            var [badge, variation = '1'] = data.split('/') as [Twitch.tags, string];
 
             let value: string | number = variation;
 
@@ -381,7 +381,7 @@ export class MessageHelper {
 
             return acc;
           },
-          {} as { [K in Twitch.GlobalBadgeSetId]?: string | number },
+          {} as { [K in Twitch.tags]?: string | number },
         );
 
         result = {
@@ -389,7 +389,7 @@ export class MessageHelper {
           versions,
           amount: badges.reduce(
             (acc, data) => {
-              var [badge, variation = '1'] = data.split('/') as [Twitch.GlobalBadgeSetId, string];
+              var [badge, variation = '1'] = data.split('/') as [Twitch.tags, string];
 
               let value: string | number = variation;
 
@@ -400,7 +400,7 @@ export class MessageHelper {
 
               return acc;
             },
-            {} as { [K in Twitch.GlobalBadgeSetId]?: string | number },
+            {} as { [K in Twitch.tags]?: string | number },
           ),
           badges: Array.from(clearedBadges)
             .slice(0, 3)
