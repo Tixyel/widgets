@@ -1031,7 +1031,7 @@ export namespace Local {
                       time: time,
                       tags: {
                         'badge-info': `${badges.keys.map((key) => `${key}/${badges.amount[key] ?? Helper.random.number(1, 5)}`).join(',')}`,
-                        badges: badges.keys.map((key) => `${key}/1`).join(','),
+                        'badges': badges.keys.map((key) => `${key}/1`).join(','),
 
                         ...roles,
 
