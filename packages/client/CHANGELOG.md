@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.0.5
+
+### Patch Changes
+
+- 5361299: Update user identification logic for Twitch and YouTube providers
+
 ## 7.0.4
 
 ### Patch Changes
