@@ -46,6 +46,16 @@ export class UtilsHelper {
    * Selects an item based on weighted probabilities.
    * @param items - An object where keys are items and values are their weights.
    * @returns A randomly selected item based on the given probabilities.
+   * @example
+   * ```ts
+   * const utils = new UtilsHelper();
+   * const result = utils.probability({
+   *   apple: 0.5,
+   *   banana: 0.3,
+   *   cherry: 0.2,
+   * });
+   * console.log(result); // 'apple', 'banana', or 'cherry' based on the defined probabilities
+   * ```
    */
   probability<K extends string, V extends number>(items: Record<K, V>): K | undefined {
     const total = (Object.values(items) as number[]).reduce((acc, val) => acc + val, 0);
