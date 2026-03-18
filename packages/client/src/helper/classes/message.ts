@@ -363,6 +363,35 @@ export class MessageHelper {
     return result;
   }
 
+  badgePriority: Twitch.tags[] = [
+    'broadcaster',
+    'lead_moderator',
+    'moderator',
+    'vip',
+    'artist-badge',
+    'subscriber',
+    'sub-gift-leader',
+    'founder',
+    'sub-gifter',
+    'bits-leader',
+    'bits',
+    'admin',
+    'global_mod',
+    'staff',
+    'partner',
+    'ambassador',
+    'predictions',
+    'twitchbot',
+    'extension',
+    'game-developer',
+    'hype-train',
+    'bot-badge',
+    'turbo',
+    'premium',
+    'no_video',
+    'no_audio',
+  ];
+
   /**
    * Generates badge data based on the provided badges and platform.
    * @param badges - The badges to generate. Can be an array or a comma-separated string.
@@ -404,6 +433,16 @@ export class MessageHelper {
         }
       }
     }
+
+    clearedBadges = clearedBadges.sort((a, b) => {
+      const aIndex = this.badgePriority.indexOf(a);
+      const bIndex = this.badgePriority.indexOf(b);
+
+      return (
+        (aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex) -
+        (bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex)
+      );
+    });
 
     var result;
 

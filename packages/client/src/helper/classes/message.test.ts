@@ -212,6 +212,15 @@ describe('message functions', () => {
     expect(Array.isArray(result.badges)).toBe(true);
   });
 
+  it('generateBadges should keep unknown badges after prioritized badges', async () => {
+    const result = await message.generateBadges(
+      ['subscriber/10', 'custom-badge/1', 'moderator/2'] as any,
+      'twitch',
+    );
+
+    expect(result.keys).toEqual(['moderator', 'subscriber']);
+  });
+
   it('generateBadges should return youtube result shape', async () => {
     const result = await message.generateBadges(['moderator', 'partner'], 'youtube');
 
