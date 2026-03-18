@@ -1,5 +1,13 @@
 # @tixyel/cli
 
+## 3.5.3
+
+### Patch Changes
+
+- 9f434c9: Fix: Resolve build crash and scaffold type mismatch on fresh workspaces
+
+  Thanks wielorzeczownik for catching that and fixing it
+
 ## 3.5.2
 
 ### Patch Changes
