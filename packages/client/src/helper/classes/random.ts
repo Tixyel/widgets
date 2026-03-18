@@ -114,14 +114,32 @@ export class RandomHelper {
    * @returns - Random string
    * @example
    * ```javascript
-   * const randString = random.string(10);
-   * console.log(randString); // e.g. "aZ3bT9xYqP"
+   * const randString = random.string(10); // e.g. "aZ3bT9qP1x"
+   * const randHex = random.string(8, 'hex'); // e.g. "4f3c2a1b"
+   * const randNumStr = random.string(6, 'numbers'); // e.g. "839201"
+   * const randLetterStr = random.string(6, 'letters'); // e.g. "aZbTqP"
+   * const randHexUpper = random.string(6, 'hex-upper'); // e.g. "4F3C2A1B"
+   * const randHexLower = random.string(6, 'hex-lower'); // e.g. "4f3c2a1b"
    * ```
    */
   string(
     length: number,
-    chars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+    chars:
+      | 'numeric'
+      | 'numbers'
+      | 'letters'
+      | 'hex'
+      | 'hex-upper'
+      | 'hex-lower'
+      | string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
   ): string {
+    if (chars === 'numbers' || chars === 'numeric') chars = '0123456789';
+    else if (chars === 'letters' || chars === 'letter')
+      chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    else if (chars === 'hex' || chars === 'hexadecimal') chars = '0123456789abcdef';
+    else if (chars === 'hex-upper' || chars === 'hexadecimal-upper') chars = '0123456789ABCDEF';
+    else if (chars === 'hex-lower' || chars === 'hexadecimal-lower') chars = '0123456789abcdef';
+
     let result = '';
 
     for (let i = 0; i < length; i++) {
