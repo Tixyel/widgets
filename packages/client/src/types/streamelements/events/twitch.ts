@@ -40,17 +40,10 @@ export namespace TwitchEvents {
         isAction: boolean;
         userId: string;
         msgId: string;
-        badges: Array<Badge>;
+        badges: Array<Twitch.badge>;
         emotes: Array<Emote>;
       };
       renderedText: string;
-    };
-
-    type Badge = {
-      type: string;
-      version: string;
-      description: string;
-      url: string;
     };
   }
 

@@ -375,7 +375,7 @@ export class UtilsHelper {
               color: data.displayColor,
               role: data.tags.badges.split(',')[0].split('/')[0] as Twitch.tags,
               tags: data.tags.badges.split(',').map((b) => b.split('/')[0] as Twitch.tags),
-              badges: data.tags.badges,
+              badges: data.badges,
               tier: data.tags.badges.includes('subscriber') ? tier : undefined,
               top: getTops(data.displayName),
             } satisfies IdentifyTwitchResult;
@@ -446,7 +446,7 @@ type IdentifyTwitchResult = {
   color: string;
   role: Twitch.tags;
   tags: Twitch.tags[];
-  badges: string;
+  badges: Twitch.badge[];
   tier?: 1 | 2 | 3;
   top: TopType;
 };
