@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'bun:test';
 
-import { Helper } from '../index.js';
+import { MessageHelper } from './message';
 
-const { message } = Helper;
+const message = new MessageHelper();
 
 describe('message functions', () => {
   it('findEmotesInText should find non-emoji emotes with whitespace boundaries', () => {
@@ -38,6 +38,8 @@ describe('message functions', () => {
       (emote: any) => typeof emote.start === 'number' && typeof emote.end === 'number',
     ) as Array<{ start: number; end: number }>;
 
+    console.log(result);
+
     expect(positioned.length).toBe(2);
     expect(positioned[0].start).toBe(0);
     expect(positioned[0].end).toBe(5);
@@ -62,6 +64,8 @@ describe('message functions', () => {
 
     const result = message.replaceEmotesWithHTML(text, emotes);
 
+    console.log(result);
+
     expect(result).toBe('I hear a cutie 😊');
   });
 
@@ -85,6 +89,8 @@ describe('message functions', () => {
     ] as any;
 
     const result = message.replaceEmotesWithHTML(text, emotes);
+
+    console.log(result);
 
     expect(result).toBe(
       'hello <img src="https://example.com/kappa-4x.png" alt="Kappa" class="emote" style="width: auto; height: 1em; vertical-align: middle;" /> world',
@@ -125,6 +131,8 @@ describe('message functions', () => {
 
     const result = message.hasOnlyEmotes(text, emotes);
 
+    console.log(result);
+
     expect(result).toBe(true);
   });
 
@@ -149,6 +157,8 @@ describe('message functions', () => {
 
     const result = message.hasOnlyEmotes(text, emotes);
 
+    console.log(result);
+
     expect(result).toBe(false);
   });
 
@@ -172,6 +182,8 @@ describe('message functions', () => {
 
     const result = message.replaceYoutubeEmotesWithHTML(text, youtubeEmotes);
 
+    console.log(result);
+
     expect(result).toBe(
       'Hi <img src="https://example.com/smile-1.png" alt="Smile" class="emote" style="width: auto; height: 1em; vertical-align: middle;" /> friend',
     );
@@ -181,25 +193,91 @@ describe('message functions', () => {
     const text = 'Hi :unknown: friend';
     const result = message.replaceYoutubeEmotesWithHTML(text, [] as any);
 
+    console.log(result);
+
     expect(result).toBe('Hi :unknown: friend');
   });
 
   it('generateBadges should build twitch badges and amounts from badge list', async () => {
     const result = await message.generateBadges(['moderator/2', 'subscriber/10'], 'twitch');
 
+    console.log(result);
+
     expect(result.keys.includes('moderator')).toBe(true);
     expect(result.keys.includes('subscriber')).toBe(true);
+    expect(result.versions.moderator).toBe('0');
     expect(result.amount.moderator).toBe(2);
+    expect(result.versions.subscriber).toBe('5'); // 9 months
     expect(result.amount.subscriber).toBe(10);
     expect(Array.isArray(result.badges)).toBe(true);
   });
 
   it('generateBadges should return youtube result shape', async () => {
-    const result = await message.generateBadges(['moderator', 'verified'], 'youtube');
+    const result = await message.generateBadges(['moderator', 'partner'], 'youtube');
 
-    expect(typeof result.isVerified).toBe('boolean');
-    expect(typeof result.isChatOwner).toBe('boolean');
-    expect(typeof result.isChatSponsor).toBe('boolean');
-    expect(typeof result.isChatModerator).toBe('boolean');
+    console.log(result);
+
+    expect(result.isVerified).toBe(true);
+    expect(result.isChatOwner).toBe(false);
+    expect(result.isChatSponsor).toBe(false);
+    expect(result.isChatModerator).toBe(true);
+  });
+
+  it('generateBadges should return the right bits badge', async () => {
+    const result = await message.generateBadges(['bits/5000'], 'twitch');
+
+    console.log(result);
+
+    expect(result.keys.includes('bits')).toBe(true);
+    expect(result.versions.bits).toBe('5000');
+    expect(result.amount.bits).toBe(5000);
+    expect(result.badges[0].description).toBe('cheer 5000');
+  });
+
+  it('generateBadges should return the right bits leader badge', async () => {
+    const result = await message.generateBadges(['bits-leader/2'], 'twitch');
+
+    console.log(result);
+
+    expect(result.keys.includes('bits-leader')).toBe(true);
+    expect(result.versions['bits-leader']).toBe('2');
+    expect(result.amount['bits-leader']).toBe(2);
+    expect(result.badges[0].description).toBe('Bits Leader 2');
+  });
+
+  it('generateBadges should return the right subscriber badge', async () => {
+    const result = await message.generateBadges(['subscriber/12'], 'twitch');
+
+    console.log(result);
+
+    expect(result.keys.includes('subscriber')).toBe(true);
+    expect(result.versions.subscriber).toBe('6');
+    expect(result.amount.subscriber).toBe(12);
+    // For some reason Twitch's API returns the 6 months description for the 12 months badge, but that's what we should return
+    expect(result.badges[0].description).toBe('6-Month Subscriber');
+  });
+
+  it('generateBadges should return the right badge variation', async () => {
+    const result = await message.generateBadges(['predictions/blue 10'], 'twitch');
+
+    console.log(result);
+
+    expect(result.keys.includes('predictions')).toBe(true);
+    expect(result.versions.predictions).toBe('blue-10');
+    expect(result.badges[0].description).toBe('Predicted Blue (10)');
+  });
+
+  it('mapGlobalBadgeVersionAmount should return the correct key', async () => {
+    expect(message.mapGlobalBadgeVersionAmount('warcraft', 'Horde')).toBe('horde');
+    expect(message.mapGlobalBadgeVersionAmount('twitchbot', 'auto mod')).toBe('1');
+    expect(message.mapGlobalBadgeVersionAmount('clips-leader', '5')).toBe('3');
+    expect(message.mapGlobalBadgeVersionAmount('bits', 18000)).toBe('10000');
+    expect(message.mapGlobalBadgeVersionAmount('subscriber', 60)).toBe('6');
+    expect(message.mapGlobalBadgeVersionAmount('moments', 'tier 18')).toBe('18');
+    expect(message.mapGlobalBadgeVersionAmount('moments', 16)).toBe('16');
+    expect(message.mapGlobalBadgeVersionAmount('predictions', 'blue 10')).toBe('blue-10');
+    expect(message.mapGlobalBadgeVersionAmount('social-sharing', '100 views')).toBe('1');
+    expect(message.mapGlobalBadgeVersionAmount('social-sharing', 150)).toBe('1');
+    expect(message.mapGlobalBadgeVersionAmount('social-sharing', 15000)).toBe('2');
   });
 });
