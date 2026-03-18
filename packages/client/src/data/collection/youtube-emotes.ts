@@ -1,4 +1,4 @@
-export const youtube_emotes = [
+export const YoutubeEmotes = [
   {
     emojiId: 'UCkszU2WH9gy1mb0dV-11UJg/flower-rainbow-heart-red',
     shortcuts: [':pride-flower-rainbow-heart:'],
@@ -3172,5 +3172,3 @@ export const youtube_emotes = [
     index: 121,
   },
 ];
-
-export default youtube_emotes;

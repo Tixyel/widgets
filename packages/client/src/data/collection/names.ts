@@ -14,5 +14,3 @@ export const names = [
   'SpookySony',
   'nanagadesign',
 ];
-
-export default names;

@@ -361,5 +361,3 @@ export const normal_messages = [
 ];
 
 export const messages = [...twitch_messages, ...youtube_messages, ...normal_messages];
-
-export default messages;

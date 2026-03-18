@@ -87,5 +87,3 @@ export const tts = [
   'Hoda',
   'Naayf',
 ];
-
-export default tts;

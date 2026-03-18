@@ -149,5 +149,3 @@ export const css_color_names = [
   'yellowgreen',
   'transparent',
 ];
-
-export default css_color_names;
