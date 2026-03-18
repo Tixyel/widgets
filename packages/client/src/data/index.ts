@@ -5,16 +5,20 @@ export namespace Data {
   export const badges = Collection.globalBadges;
 
   export const css_color_names = Collection.css_color_names;
-  export const emotes = Collection.emotes;
   export const items = Collection.items;
   export const names = Collection.names;
   export const tiers = Collection.tiers;
   export const tts = Collection.tts;
 
+  export const messages = Collection.messages;
+  export const normal_messages = Collection.normal_messages;
   export const twitch_messages = Collection.twitch_messages;
   export const youtube_messages = Collection.youtube_messages;
-  export const normal_messages = Collection.normal_messages;
-  export const messages = Collection.messages;
 
-  export const youtube_emotes = Collection.youtube_emotes;
+  export const emotes = Collection.emotes;
+  export const ffz_emotes = Collection.FfzEmotes;
+  export const bttv_emotes = Collection.BttvEmotes;
+  export const seventv_emotes = Collection.SeventvEmotes;
+  export const twitch_emotes = Collection.TwitchEmotes;
+  export const youtube_emotes = Collection.YoutubeEmotes;
 }
