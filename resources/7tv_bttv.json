@@ -1,40 +1,4 @@
 {
-  "channel": [
-    {
-      "id": "720585",
-      "name": "ANIMATEDEMOTETEST",
-      "platform": "ffz",
-      "animated": false,
-      "urls": {
-        "1": "https://cdn.frankerfacez.com/emote/720585/1",
-        "2": "https://cdn.frankerfacez.com/emote/720585/2",
-        "4": "https://cdn.frankerfacez.com/emote/720585/4"
-      }
-    },
-    {
-      "id": "5f1b0186cf6d2144653d2970",
-      "name": "catJAM",
-      "platform": "bttv",
-      "animated": true,
-      "urls": {
-        "1": "https://cdn.betterttv.net/emote/5f1b0186cf6d2144653d2970/1x",
-        "2": "https://cdn.betterttv.net/emote/5f1b0186cf6d2144653d2970/2x",
-        "4": "https://cdn.betterttv.net/emote/5f1b0186cf6d2144653d2970/3x"
-      }
-    },
-    {
-      "id": "01F00Z3A9G0007E4VV006YKSK9",
-      "name": "OMEGALUL",
-      "platform": "7tv",
-      "animated": false,
-      "urls": {
-        "1": "https://cdn.7tv.app/emote/01F00Z3A9G0007E4VV006YKSK9/1x.webp",
-        "2": "https://cdn.7tv.app/emote/01F00Z3A9G0007E4VV006YKSK9/2x.webp",
-        "3": "https://cdn.7tv.app/emote/01F00Z3A9G0007E4VV006YKSK9/3x.webp",
-        "4": "https://cdn.7tv.app/emote/01F00Z3A9G0007E4VV006YKSK9/4x.webp"
-      }
-    }
-  ],
   "global": [
     {
       "id": "54fa8f1401e468494b85b537",
