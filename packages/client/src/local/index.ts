@@ -36,7 +36,7 @@ export namespace Local {
       types: {
         name: { type: 'string', options: Data.names.filter((e) => e.length) },
         tier: { type: 'string', options: Data.tiers.filter((e) => e.length) },
-        message: { type: 'string', options: Data.messages.filter((e) => e.length) },
+        message: { type: 'string', options: Data.normal_messages.filter((e) => e.length) },
         item: { type: 'array', options: Data.items },
         avatar: { type: 'string', options: Data.avatars.filter((e) => e.length) },
       } as Record<string, StreamElements.Session.Config.Any>,
@@ -981,7 +981,10 @@ export namespace Local {
 
                 var name = data?.name ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
                 var message =
-                  data?.message ?? Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                  data?.message ??
+                  Helper.random.array(
+                    [...Data.twitch_messages, ...Data.normal_messages].filter((e) => e.length),
+                  )[0];
 
                 var badges = await Helper.message.generateBadges(data?.badges ?? [], provider);
 
@@ -1078,7 +1081,7 @@ export namespace Local {
                   Helper.random.array(Data.names.filter((e) => e.length))[0];
                 var message =
                   (options?.message as string) ??
-                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                  Helper.random.array(Data.normal_messages.filter((e) => e.length))[0];
 
                 const event: StreamElements.Event.Provider.Twitch.Cheer & {
                   event: { provider: Provider };
@@ -1176,7 +1179,7 @@ export namespace Local {
                   Helper.random.array(Data.names.filter((e) => e.length && e !== name))[0];
                 var message =
                   (options?.message as string) ??
-                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                  Helper.random.array(Data.normal_messages.filter((e) => e.length))[0];
 
                 var addons = {
                   default: {
@@ -1409,7 +1412,9 @@ export namespace Local {
                   Helper.random.array(Data.names.filter((e) => e.length))[0];
                 var message =
                   (options?.message as string) ??
-                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                  Helper.random.array(
+                    [...Data.youtube_messages, ...Data.normal_messages].filter((e) => e.length),
+                  )[0];
 
                 const badges = await Helper.message.generateBadges(
                   (options?.badges as BadgeOptions) ?? [],
@@ -1553,7 +1558,7 @@ export namespace Local {
                   Helper.random.array(Data.names.filter((e) => e.length && e !== name))[0];
                 var message =
                   (options?.message as string) ??
-                  Helper.random.array(Data.messages.filter((e) => e.length))[0];
+                  Helper.random.array(Data.normal_messages.filter((e) => e.length))[0];
 
                 var addons = {
                   default: {
