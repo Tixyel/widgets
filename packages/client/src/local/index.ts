@@ -1021,7 +1021,7 @@ export namespace Local {
                   subscriber: badges.keys.includes('subscriber') ? '1' : '0',
                   mod: badges.keys.includes('moderator') ? '1' : '0',
                   turbo: badges.keys.includes('turbo') ? '1' : '0',
-                } satisfies Partial<MapNumberValuesToString<Twitch.IRC>>;
+                } as const;
 
                 const event: StreamElements.Event.Provider.Twitch.Message = {
                   listener: 'message',
@@ -1036,6 +1036,7 @@ export namespace Local {
                         ...roles,
 
                         'tmi-sent-ts': time.toString(),
+                        'room-id': Helper.random.string(9, 'numbers'),
 
                         'user-id': userId,
                         'user-type': '',
