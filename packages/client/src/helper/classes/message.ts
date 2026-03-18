@@ -4,17 +4,16 @@ import { NumberHelper } from './number.js';
 import { RandomHelper } from './random.js';
 
 export type BadgeOptions =
-  | Twitch.roles[]
-  | Twitch.roles
-  | `${Twitch.roles}/${number}`
-  | `${Twitch.roles}/${number}`[];
+  | Twitch.GlobalBadgeSetId[]
+  | Twitch.GlobalBadgeSetId
+  | `${Twitch.GlobalBadgeSetId}/${string}`
+  | `${Twitch.GlobalBadgeSetId}/${string}`[];
 
 export type TwitchResult = {
-  keys: Twitch.roles[];
+  keys: Twitch.GlobalBadgeSetId[];
   badges: Twitch.badge[];
-  amount: {
-    [K in Twitch.roles]?: number;
-  };
+  versions: { [K in Twitch.GlobalBadgeSetId]?: string | number };
+  amount: { [K in Twitch.GlobalBadgeSetId]?: string | number };
 };
 
 export type YouTubeResult = {
@@ -143,6 +142,182 @@ export class MessageHelper {
     return text;
   }
 
+  mapGlobalBadgeVersions(globalBadges: Twitch.GlobalBadge[] = Data.badges): Array<{
+    id: Twitch.GlobalBadgeSetId;
+    versions: Twitch.badge[];
+  }> {
+    return globalBadges.map((badge) => ({
+      id: badge.set_id,
+      versions: badge.versions.map((version) => ({
+        type: badge.set_id,
+        version: version.id,
+        url: version.image_url_4x,
+        description: version.title,
+      })),
+    }));
+  }
+
+  mapGlobalBadgeVersionAmount(type: Twitch.GlobalBadgeSetId, variation: string | number): string {
+    const IdToId = (key: Twitch.GlobalBadgeSetId) =>
+      Data.badges
+        .find((b) => b.set_id === key)!
+        .versions.map((v) => [v.id, parseInt(v.id)] as [string, number]);
+
+    let result = '0';
+
+    switch (type) {
+      case 'subscriber': {
+        if (isNaN(parseInt(variation as string))) return result;
+
+        const map = Object.entries({
+          '0': 0,
+          '1': 1,
+          '2': 2,
+          '3': 3,
+          '4': 6,
+          '5': 9,
+          '6': 12,
+        });
+
+        for (const [key, minAmount] of map) {
+          if (parseInt(variation as string) >= minAmount) result = key;
+        }
+
+        break;
+      }
+      case 'bits':
+      case 'sub-gifter':
+      case 'bits-leader':
+      case 'clips-leader':
+      case 'sub-gift-leader': {
+        if (isNaN(parseInt(variation as string))) return result;
+
+        const map = IdToId(type);
+
+        for (const [key, minAmount] of map) {
+          if (parseInt(variation as string) >= minAmount) result = key;
+        }
+
+        break;
+      }
+      case 'warcraft': {
+        const map = {
+          horde: 'horde',
+          alliance: 'alliance',
+        };
+
+        result =
+          Object.entries(map).find(
+            ([_, label]) => label.toLowerCase() === String(variation).toLowerCase(),
+          )?.[0] || '0';
+
+        break;
+      }
+      case 'twitchbot': {
+        const map = {
+          1: 'auto mod',
+          2: 'automated moderation system',
+        };
+
+        result =
+          Object.entries(map).find(
+            ([_, label]) => label.toLowerCase() === String(variation).toLowerCase(),
+          )?.[0] || '0';
+        break;
+      }
+      case 'moments': {
+        if (isNaN(parseInt(variation as string))) {
+          const map = Object.fromEntries(
+            Array.from({ length: 20 }, (_, i) => i + 1).map((num) => [num, `tier ${num}`]),
+          );
+
+          result =
+            Object.entries(map).find(
+              ([_, label]) => label.toLowerCase() === String(variation).toLowerCase(),
+            )?.[0] || '0';
+        } else {
+          const map = IdToId('moments');
+
+          for (const [key, minAmount] of map) {
+            if (parseInt(variation as string) >= minAmount) result = key;
+          }
+        }
+
+        break;
+      }
+      case 'power-rangers': {
+        if (isNaN(parseInt(variation as string))) {
+          const map = {
+            0: ['black ranger', 'black', 'blackranger'],
+            1: ['blue ranger', 'blue', 'blueranger'],
+            2: ['green ranger', 'green', 'greenranger'],
+            3: ['pink ranger', 'pink', 'pinkranger'],
+            4: ['red ranger', 'red', 'redranger'],
+            5: ['white ranger', 'white', 'whiteranger'],
+            6: ['yellow ranger', 'yellow', 'yellowranger'],
+          };
+
+          result =
+            Object.entries(map).find(([_, labels]) =>
+              labels.some((label) => label.toLowerCase() === String(variation).toLowerCase()),
+            )?.[0] || '0';
+        } else {
+          const map = IdToId('power-rangers');
+
+          for (const [key, minAmount] of map) {
+            if (parseInt(variation as string) >= minAmount) result = key;
+          }
+        }
+
+        break;
+      }
+      case 'predictions': {
+        const map = Object.fromEntries(
+          IdToId('predictions').map(([key, _]) => [
+            key,
+            [key, key.replace('-', ' '), key.replace('-', '')],
+          ]),
+        );
+
+        result =
+          Object.entries(map).find(([_, labels]) =>
+            labels.some((label) => label.toLowerCase() === String(variation).toLowerCase()),
+          )?.[0] || '0';
+
+        break;
+      }
+      case 'social-sharing': {
+        if (isNaN(parseInt(variation as string))) {
+          const map = Object.fromEntries(
+            IdToId('social-sharing').map(([key, _]) => [
+              key,
+              [key + ' views', key.replace('-', '') + ' views'],
+            ]),
+          );
+
+          result =
+            Object.entries(map).find(([_, labels]) =>
+              labels.some((label) => label.toLowerCase() === String(variation).toLowerCase()),
+            )?.[0] || '0';
+        } else {
+          const map = {
+            1: 100,
+            2: 10000,
+            3: 100000,
+          };
+
+          for (const [key, minAmount] of Object.entries(map)) {
+            if (parseInt(variation as string) >= minAmount) result = key;
+          }
+        }
+
+        break;
+      }
+    }
+
+    return result;
+  }
+
   /**
    * Generates badge data based on the provided badges and platform.
    * @param badges - The badges to generate. Can be an array or a comma-separated string.
@@ -160,11 +335,13 @@ export class MessageHelper {
     badges: BadgeOptions = [],
     provider: T,
   ): Promise<T extends 'twitch' ? TwitchResult : YouTubeResult> {
+    const globalBadges = this.mapGlobalBadgeVersions();
+
     if (!Array.isArray(badges) && typeof badges === 'string') {
-      badges = badges.split(',').map((e) => e.trim()) as Twitch.roles[];
+      badges = badges.split(',').map((e) => e.trim()) as Twitch.GlobalBadgeSetId[];
     }
 
-    var clearedBadges = badges.map((badge) => badge.split('/')[0] as Twitch.roles);
+    var clearedBadges = badges.map((badge) => badge.split('/')[0] as Twitch.GlobalBadgeSetId);
 
     if (!clearedBadges || !clearedBadges.length) {
       const number = new NumberHelper();
@@ -172,12 +349,13 @@ export class MessageHelper {
       var max = number.random(1, 3);
 
       for await (const _ of Array.from({ length: max }, () => '')) {
-        var current = random.array(Object.keys(Data.badges))[0] as Twitch.roles;
+        // var current = random.array(Object.keys(Data.badges))[0] as Twitch.roles;
+        const item = random.array(globalBadges)[0];
 
-        if (!clearedBadges.includes(current) && Array.isArray(clearedBadges)) {
-          clearedBadges.push(current);
+        if (!clearedBadges.includes(item.id) && Array.isArray(clearedBadges)) {
+          clearedBadges.push(item.id);
         } else {
-          clearedBadges = [current];
+          clearedBadges = [item.id];
         }
       }
     }
@@ -186,24 +364,62 @@ export class MessageHelper {
 
     switch (provider) {
       case 'twitch': {
+        const keys = Array.from(clearedBadges).filter((e) =>
+          globalBadges.some((badge) => badge.id === e),
+        ) as Twitch.GlobalBadgeSetId[];
+
+        const versions = badges.reduce(
+          (acc, data) => {
+            var [badge, variation = '1'] = data.split('/') as [Twitch.GlobalBadgeSetId, string];
+
+            let value: string | number = variation;
+
+            if (!isNaN(parseInt(value))) value = parseInt(value);
+            else if (!value) value = 0;
+
+            acc[badge] = this.mapGlobalBadgeVersionAmount(badge, value);
+
+            return acc;
+          },
+          {} as { [K in Twitch.GlobalBadgeSetId]?: string | number },
+        );
+
         result = {
-          keys: Array.from(clearedBadges).filter((e) => e in Data.badges) as Twitch.roles[],
-          badges: Array.from(clearedBadges)
-            .slice(0, 3)
-            .map((badge) => Data.badges[badge])
-            .filter(Boolean) as Twitch.badge[],
+          keys,
+          versions,
           amount: badges.reduce(
             (acc, data) => {
-              var [badge, amount = '1'] = data.split('/') as [Twitch.roles, string];
+              var [badge, variation = '1'] = data.split('/') as [Twitch.GlobalBadgeSetId, string];
 
-              if (isNaN(parseInt(amount)) || !amount.length) amount = '1';
+              let value: string | number = variation;
 
-              acc[badge] = parseInt(amount) || 1;
+              if (!isNaN(parseInt(value))) value = parseInt(value);
+              else if (!value) value = 0;
+
+              acc[badge] = value;
 
               return acc;
             },
-            {} as { [K in Twitch.roles]?: number },
+            {} as { [K in Twitch.GlobalBadgeSetId]?: string | number },
           ),
+          badges: Array.from(clearedBadges)
+            .slice(0, 3)
+            .map((badge) => {
+              const data = globalBadges.find((b) => b.id === badge);
+
+              if (data?.versions && data.versions.length) {
+                const quantity = versions[badge];
+
+                const version = data.versions.find((v) => v.version === String(quantity));
+
+                if (version) return version;
+
+                return data.versions[0];
+              }
+
+              return;
+            })
+            .filter(Boolean) as Twitch.badge[],
         };
 
         break;
@@ -211,16 +427,17 @@ export class MessageHelper {
 
       case 'youtube': {
         var details = {
-          verified: { isVerified: true },
-          broadcaster: { isChatOwner: true },
-          host: { isChatOwner: true },
-          sponsor: { isChatSponsor: true },
-          subscriber: { isChatSponsor: true },
-          moderator: { isChatModerator: true },
+          'verified': { isVerified: true },
+          'partner': { isVerified: true },
+          'broadcaster': { isChatOwner: true },
+          'host': { isChatOwner: true },
+          'sponsor': { isChatSponsor: true },
+          'subscriber': { isChatSponsor: true },
+          'moderator': { isChatModerator: true },
         };
 
-        result = Object.entries(clearedBadges).reduce(
-          (acc, [key]) => {
+        result = Object.values(clearedBadges).reduce(
+          (acc, key) => {
             if (key in details) {
               Object.assign(acc, details[key as keyof typeof details]);
             }
