@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.0.3
+
+### Patch Changes
+
+- d49c823: Add unit tests for FakeUserPool badge assignment and compatibility
+
 ## 7.0.2
 
 ### Patch Changes
