@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.0.2
+
+### Patch Changes
+
+- 3698292: Update badge type to use Twitch.badge
+
 ## 7.0.1
 
 ### Patch Changes
