@@ -10,14 +10,14 @@ export class FakeUser {
   public readonly name!: string;
   public readonly login!: string;
 
-  public badges: Twitch.roles[] = [];
+  public badges: Twitch.GlobalBadgeSetId[] = [];
   public isSubscriber: boolean = false;
   public tier?: StreamElements.Event.Provider.Twitch.SubscriberTier;
 
   constructor(
     id: string,
     name: string,
-    badges: Twitch.roles[] = [],
+    badges: Twitch.GlobalBadgeSetId[] = [],
     isSubscriber: boolean = false,
     tier?: StreamElements.Event.Provider.Twitch.SubscriberTier,
   ) {
@@ -31,12 +31,12 @@ export class FakeUser {
 }
 
 export interface FakeUserPoolOptions {
-  badges?: Twitch.roles[];
+  badges?: Twitch.GlobalBadgeSetId[];
   limits?: {
-    [key in Twitch.roles]?: number;
+    [key in Twitch.GlobalBadgeSetId]?: number;
   };
   fixed?: {
-    [key in Twitch.roles]?: string[];
+    [key in Twitch.GlobalBadgeSetId]?: string[];
   };
 }
 
@@ -51,7 +51,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
 
   private readonly byId: Map<string, FakeUser> = new Map();
   private readonly byName: Map<string, FakeUser> = new Map();
-  private readonly byBadge: Map<Twitch.roles, FakeUser[]> = new Map();
+  private readonly byBadge: Map<Twitch.GlobalBadgeSetId, FakeUser[]> = new Map();
 
   private static fixUser(user: string | FakeUser): string {
     if (typeof user === 'string') return user.trim().replace(/^@+/, '').toLocaleLowerCase();
@@ -87,7 +87,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
           acc.set(badge, [...existing, user]);
         }
         return acc;
-      }, new Map<Twitch.roles, FakeUser[]>()),
+      }, new Map<Twitch.GlobalBadgeSetId, FakeUser[]>()),
     );
 
     fakeUserPools.push(this);
@@ -95,7 +95,9 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
 
   private start(
     names: string[],
-    badges: Twitch.roles[] = Object.keys(Data.badges) as Twitch.roles[],
+    badges: Twitch.GlobalBadgeSetId[] = Data.badges.map(
+      (e) => e.set_id,
+    ) as Twitch.GlobalBadgeSetId[],
     options?: Omit<FakeUserPoolOptions, 'badges'>,
   ): FakeUser[] {
     const normalizedNames = names
@@ -113,24 +115,24 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
     const users: FakeUser[] = [];
     const limits = options?.limits ?? {};
     const fixed = options?.fixed ?? {};
-    const usage = new Map<Twitch.roles, number>();
-    const fixedNameToBadge = new Map<string, Twitch.roles>();
+    const usage = new Map<Twitch.GlobalBadgeSetId, number>();
+    const fixedNameToBadge = new Map<string, Twitch.GlobalBadgeSetId>();
     let badgeCursor = 0;
 
-    const getLimit = (badge: Twitch.roles): number => {
+    const getLimit = (badge: Twitch.GlobalBadgeSetId): number => {
       const value = limits[badge];
 
       return typeof value === 'number' && value > 0 ? value : Number.POSITIVE_INFINITY;
     };
 
-    const canUseBadge = (badge: Twitch.roles): boolean => {
+    const canUseBadge = (badge: Twitch.GlobalBadgeSetId): boolean => {
       const max = getLimit(badge);
       const current = usage.get(badge) ?? 0;
 
       return current < max;
     };
 
-    const registerBadgeUsage = (badge: Twitch.roles): void => {
+    const registerBadgeUsage = (badge: Twitch.GlobalBadgeSetId): void => {
       const current = usage.get(badge) ?? 0;
       usage.set(badge, current + 1);
     };
@@ -149,7 +151,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
       return [];
     };
 
-    const nextAvailableBadge = (): Twitch.roles | null => {
+    const nextAvailableBadge = (): Twitch.GlobalBadgeSetId | null => {
       for (let step = 0; step < badgePool.length; step++) {
         const badge = badgePool[(badgeCursor + step) % badgePool.length];
 
@@ -175,7 +177,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
     }
 
     for (const name of normalizedNames) {
-      let selectedBadge: Twitch.roles | null = null;
+      let selectedBadge: Twitch.GlobalBadgeSetId | null = null;
       const fixedBadge = fixedNameToBadge.get(FakeUserPool.fixUser(name));
 
       if (fixedBadge && canUseBadge(fixedBadge)) {
@@ -236,7 +238,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
     return this.byId.get(id) ?? null;
   }
 
-  public getByBadge(badge: Twitch.roles): FakeUser[] {
+  public getByBadge(badge: Twitch.GlobalBadgeSetId): FakeUser[] {
     return this.byBadge.get(badge) ?? [];
   }
 
