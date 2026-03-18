@@ -34,17 +34,31 @@ export interface FakeUserPoolOptions {
   id?: string;
   names?: string[];
   badges?: Twitch.tags[];
+  minimumBadgesPerUser?: number;
   limits?: {
     [key in Twitch.tags]?: number;
   };
   fixed?: {
-    [key in Twitch.tags]?: string[];
+    [key in Twitch.tags]?: string | string[];
+  };
+  incompatible?: {
+    [key in Twitch.tags]?: Twitch.tags | Twitch.tags[];
   };
 }
 
 type FakeUserPoolEvents = {
   'warn': [warning: Error];
 };
+
+export const defaultIncompatibleBadges: FakeUserPoolOptions['incompatible'] = {
+  'broadcaster': ['moderator', 'vip', 'artist-badge'],
+  'moderator': ['lead_moderator'],
+  'no_video': ['no_audio'],
+  '60-seconds_1': ['60-seconds_2', '60-seconds_3'],
+  'duelyst_1': ['duelyst_2', 'duelyst_3', 'duelyst_4', 'duelyst_5', 'duelyst_6', 'duelyst_7'],
+};
+
+export const MAX_BADGES_PER_USER = 3;
 
 export const fakeUserPools: FakeUserPool[] = [];
 
@@ -116,10 +130,18 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
     }
 
     const users: FakeUser[] = [];
+    const minimumBadgesPerUser =
+      typeof options?.minimumBadgesPerUser === 'number' && options.minimumBadgesPerUser >= 0
+        ? Math.floor(options.minimumBadgesPerUser)
+        : 1;
+    const targetBadgesPerUser = Math.min(minimumBadgesPerUser, MAX_BADGES_PER_USER);
     const limits = options?.limits ?? {};
     const fixed = options?.fixed ?? {};
+    const badgeSet = new Set(badgePool);
     const usage = new Map<Twitch.tags, number>();
-    const fixedNameToBadge = new Map<string, Twitch.tags>();
+    const fixedNameToBadges = new Map<string, Twitch.tags[]>();
+    const remainingFixedDemand = new Map<Twitch.tags, number>();
+    const incompatibleBadges = new Map<Twitch.tags, Set<Twitch.tags>>();
     let badgeCursor = 0;
 
     const getLimit = (badge: Twitch.tags): number => {
@@ -128,37 +150,125 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
       return typeof value === 'number' && value > 0 ? value : Number.POSITIVE_INFINITY;
     };
 
-    const canUseBadge = (badge: Twitch.tags): boolean => {
-      const max = getLimit(badge);
-      const current = usage.get(badge) ?? 0;
-
-      return current < max;
-    };
-
     const registerBadgeUsage = (badge: Twitch.tags): void => {
       const current = usage.get(badge) ?? 0;
       usage.set(badge, current + 1);
+    };
+
+    const decrementFixedDemand = (badge: Twitch.tags): void => {
+      const current = remainingFixedDemand.get(badge) ?? 0;
+
+      if (current <= 1) {
+        remainingFixedDemand.delete(badge);
+        return;
+      }
+
+      remainingFixedDemand.set(badge, current - 1);
     };
 
     const normalizeUserNames = (value: string | string[] | undefined): string[] => {
       if (!value) return [];
 
       if (typeof value === 'string') {
-        return [FakeUserPool.fixUser(value)].filter(Boolean);
+        return [FakeUserPool.fixUser(value)].filter((name): name is string => Boolean(name));
       }
 
       if (Array.isArray(value)) {
-        return value.map(FakeUserPool.fixUser).filter(Boolean);
+        return value.map(FakeUserPool.fixUser).filter((name): name is string => Boolean(name));
       }
 
       return [];
     };
 
-    const nextAvailableBadge = (): Twitch.tags | null => {
+    const normalizeBadges = (value: Twitch.tags | Twitch.tags[] | undefined): Twitch.tags[] => {
+      if (!value) {
+        return [];
+      }
+
+      if (Array.isArray(value)) {
+        return value;
+      }
+
+      return [value];
+    };
+
+    const mergeIncompatibleBadges = (
+      base: FakeUserPoolOptions['incompatible'],
+      extra: FakeUserPoolOptions['incompatible'],
+    ): Map<Twitch.tags, Twitch.tags[]> => {
+      const merged = new Map<Twitch.tags, Twitch.tags[]>();
+
+      for (const source of [base, extra]) {
+        for (const [badge, value] of Object.entries(source ?? {}) as Array<
+          [Twitch.tags, Twitch.tags | Twitch.tags[] | undefined]
+        >) {
+          const existing = merged.get(badge) ?? [];
+          const nextValues = normalizeBadges(value);
+
+          merged.set(badge, [...new Set([...existing, ...nextValues])]);
+        }
+      }
+
+      return merged;
+    };
+
+    const registerIncompatiblePair = (left: Twitch.tags, right: Twitch.tags): void => {
+      if (left === right) {
+        return;
+      }
+
+      const leftSet = incompatibleBadges.get(left) ?? new Set<Twitch.tags>();
+      leftSet.add(right);
+      incompatibleBadges.set(left, leftSet);
+
+      const rightSet = incompatibleBadges.get(right) ?? new Set<Twitch.tags>();
+      rightSet.add(left);
+      incompatibleBadges.set(right, rightSet);
+    };
+
+    const isCompatibleWithAssignedBadges = (
+      badge: Twitch.tags,
+      assignedBadges: Twitch.tags[],
+    ): boolean => {
+      if (assignedBadges.includes(badge)) {
+        return false;
+      }
+
+      return assignedBadges.every((assignedBadge) => {
+        const conflicts = incompatibleBadges.get(assignedBadge);
+
+        return !conflicts?.has(badge);
+      });
+    };
+
+    const canUseBadgeForExtras = (badge: Twitch.tags, assignedBadges: Twitch.tags[]): boolean => {
+      if (!isCompatibleWithAssignedBadges(badge, assignedBadges)) {
+        return false;
+      }
+
+      const max = getLimit(badge);
+      const current = usage.get(badge) ?? 0;
+      const reserved = remainingFixedDemand.get(badge) ?? 0;
+
+      return current < max && current + reserved < max;
+    };
+
+    const canUseBadgeForFixed = (badge: Twitch.tags, assignedBadges: Twitch.tags[]): boolean => {
+      if (!isCompatibleWithAssignedBadges(badge, assignedBadges)) {
+        return false;
+      }
+
+      const max = getLimit(badge);
+      const current = usage.get(badge) ?? 0;
+
+      return current < max;
+    };
+
+    const nextAvailableBadge = (assignedBadges: Twitch.tags[]): Twitch.tags | null => {
       for (let step = 0; step < badgePool.length; step++) {
         const badge = badgePool[(badgeCursor + step) % badgePool.length];
 
-        if (canUseBadge(badge)) {
+        if (canUseBadgeForExtras(badge, assignedBadges)) {
           badgeCursor = (badgeCursor + step + 1) % badgePool.length;
           return badge;
         }
@@ -167,49 +277,158 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
       return null;
     };
 
+    for (const [badge, value] of mergeIncompatibleBadges(
+      defaultIncompatibleBadges,
+      options?.incompatible,
+    )) {
+      if (!badgeSet.has(badge)) {
+        continue;
+      }
+
+      for (const conflictingBadge of normalizeBadges(value)) {
+        if (!badgeSet.has(conflictingBadge)) {
+          continue;
+        }
+
+        registerIncompatiblePair(badge, conflictingBadge);
+      }
+    }
+
     for (const badge of badgePool) {
       const namesForBadge = normalizeUserNames(fixed[badge]);
 
       for (const fixedName of namesForBadge) {
-        const key = FakeUserPool.fixUser(fixedName);
+        const existingBadges = fixedNameToBadges.get(fixedName) ?? [];
 
-        if (!fixedNameToBadge.has(key)) {
-          fixedNameToBadge.set(key, badge);
+        if (!existingBadges.includes(badge)) {
+          fixedNameToBadges.set(fixedName, [...existingBadges, badge]);
         }
       }
     }
 
-    for (const name of normalizedNames) {
-      let selectedBadge: Twitch.tags | null = null;
-      const fixedBadge = fixedNameToBadge.get(FakeUserPool.fixUser(name));
-
-      if (fixedBadge && canUseBadge(fixedBadge)) {
-        selectedBadge = fixedBadge;
-      } else {
-        selectedBadge = nextAvailableBadge();
+    for (const [badge, value] of Object.entries(fixed) as Array<
+      [Twitch.tags, string | string[] | undefined]
+    >) {
+      if (badgeSet.has(badge)) {
+        continue;
       }
 
-      if (!selectedBadge) {
+      const namesForBadge = normalizeUserNames(value);
+
+      if (namesForBadge.length) {
+        this.emit(
+          'warn',
+          new Error(`Fixed badge "${badge}" is not available in the current badge pool`),
+        );
+      }
+    }
+
+    const resolvedFixedBadges = new Map<string, Twitch.tags[]>();
+
+    if (minimumBadgesPerUser > MAX_BADGES_PER_USER) {
+      this.emit(
+        'warn',
+        new Error(
+          `minimumBadgesPerUser exceeds the maximum of ${MAX_BADGES_PER_USER} and was clamped`,
+        ),
+      );
+    }
+
+    for (const name of normalizedNames) {
+      const badgesForName = fixedNameToBadges.get(name) ?? [];
+      const selectedFixedBadges: Twitch.tags[] = [];
+
+      for (const badge of badgesForName) {
+        if (selectedFixedBadges.length >= MAX_BADGES_PER_USER) {
+          this.emit(
+            'warn',
+            new Error(
+              `User "${name}" has more than ${MAX_BADGES_PER_USER} fixed badges; extra badges were ignored`,
+            ),
+          );
+          break;
+        }
+
+        if (!isCompatibleWithAssignedBadges(badge, selectedFixedBadges)) {
+          this.emit(
+            'warn',
+            new Error(
+              `Fixed badge "${badge}" for user "${name}" conflicts with another fixed badge and was ignored`,
+            ),
+          );
+          continue;
+        }
+
+        selectedFixedBadges.push(badge);
+      }
+
+      resolvedFixedBadges.set(name, selectedFixedBadges);
+
+      for (const badge of selectedFixedBadges) {
+        remainingFixedDemand.set(badge, (remainingFixedDemand.get(badge) ?? 0) + 1);
+      }
+    }
+
+    for (const name of normalizedNames) {
+      const selectedBadges: Twitch.tags[] = [];
+      const fixedBadgesForUser = resolvedFixedBadges.get(name) ?? [];
+
+      for (const fixedBadge of fixedBadgesForUser) {
+        decrementFixedDemand(fixedBadge);
+
+        if (!canUseBadgeForFixed(fixedBadge, selectedBadges)) {
+          this.emit(
+            'warn',
+            new Error(
+              `Fixed badge "${fixedBadge}" for user "${name}" could not be assigned because its limit was reached`,
+            ),
+          );
+          continue;
+        }
+
+        selectedBadges.push(fixedBadge);
+        registerBadgeUsage(fixedBadge);
+      }
+
+      while (selectedBadges.length < targetBadgesPerUser) {
+        const nextBadge = nextAvailableBadge(selectedBadges);
+
+        if (!nextBadge) {
+          break;
+        }
+
+        selectedBadges.push(nextBadge);
+        registerBadgeUsage(nextBadge);
+      }
+
+      if (!selectedBadges.length) {
         this.emit('warn', new Error('Not enough badges to assign to users'));
         continue;
       }
 
+      if (selectedBadges.length < targetBadgesPerUser) {
+        this.emit(
+          'warn',
+          new Error(
+            `User "${name}" could only receive ${selectedBadges.length} badge(s), below the configured minimum of ${targetBadgesPerUser}`,
+          ),
+        );
+      }
+
       const userIndex = users.length + 1;
-      const isSubscriber = ['subscriber', 'prime', 'founder'].includes(
-        String(selectedBadge).toLocaleLowerCase(),
+      const isSubscriber = selectedBadges.some((badge) =>
+        ['subscriber', 'prime', 'founder'].includes(String(badge).toLocaleLowerCase()),
       );
 
       const user = new FakeUser(
         `fake_user_${userIndex.toString().padStart(2, '0')}_${Math.random().toString(36).slice(2, 8)}+${this.id}`,
         name,
-        selectedBadge ? [selectedBadge] : [],
+        selectedBadges,
         isSubscriber,
         isSubscriber ? FakeUserPool.getRandomSubTier() : undefined,
       );
 
       users.push(user);
-
-      registerBadgeUsage(selectedBadge);
     }
 
     if (users.length < normalizedNames.length) {
