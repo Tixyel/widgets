@@ -32,6 +32,7 @@ export class FakeUser {
 
 export interface FakeUserPoolOptions {
   id?: string;
+  names?: string[];
   badges?: Twitch.tags[];
   limits?: {
     [key in Twitch.tags]?: number;
@@ -76,11 +77,12 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
     );
   }
 
-  constructor(names: string[] = Data.names, options?: FakeUserPoolOptions) {
+  constructor(options?: FakeUserPoolOptions) {
     super();
 
-    this.users = this.start(names, options?.badges, options);
-    this.id = options?.id ?? `fake_user_pool_${Math.random().toString(36).slice(2, 10)}`;
+    this.id = options?.id || `fake_user_pool_${Math.random().toString(36).slice(2, 10)}`;
+
+    this.users = this.start(options?.names || Data.names, options?.badges, options);
     this.byId = new Map(this.users.map((user) => [user.id, user]));
     this.byName = new Map(this.users.map((user) => [user.login, user]));
     this.byBadge = new Map(
