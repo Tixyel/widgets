@@ -148,6 +148,19 @@ export namespace Twitch {
     vip: undefined | '';
   };
 
+  export type Reply = {
+    msgId: string;
+    userId: string;
+    userLogin: string;
+    displayName: string;
+    msgBody: string;
+  };
+
+  export type Thread = {
+    parentMsgId: string;
+    parentUserLogin: string;
+  };
+
   export type badge = {
     type: string;
     version: string;
@@ -168,8 +181,10 @@ export namespace Twitch {
     | 'prime'
     | 'turbo'
     | 'subscriber'
+    | 'founder'
     | 'broadcaster'
     | 'verified'
     | 'moderator'
-    | 'vip';
+    | 'vip'
+    | 'ambassador';
 }

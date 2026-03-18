@@ -6,6 +6,7 @@ import { Data } from './data/index.js';
 import { Helper } from './helper/index.js';
 import { Local } from './local/index.js';
 import { EventProvider } from './modules/EventProvider.js';
+import { FakeUserPool, fakeUserPools } from './modules/fakeUser.js';
 import { useComms, usedComms } from './modules/useComms.js';
 import { useLogger } from './modules/useLogger.js';
 import { useQueue } from './modules/useQueue.js';
@@ -34,6 +35,7 @@ export const main = {
     useQueue,
     useLogger,
     useComms,
+    FakeUserPool,
   },
   actions: {
     Button,
@@ -47,6 +49,7 @@ export const main = {
     usedComms,
     usedCommands,
     usedButtons,
+    fakeUserPools,
   },
   pronouns: {
     Alejo,
