@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.0.1
+
+### Patch Changes
+
+- 19d7585: Fix id
+
 ## 7.0.0
 
 ### Major Changes
