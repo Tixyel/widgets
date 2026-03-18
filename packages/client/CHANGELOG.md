@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.0.4
+
+### Patch Changes
+
+- 7868031: Add badge priority handling and new badge generation test
+
 ## 7.0.3
 
 ### Patch Changes
