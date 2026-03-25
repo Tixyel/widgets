@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.1.0
+
+### Minor Changes
+
+- 27c1a82: Enhance splitTextToChars function with options for whitespace handling and indexing
+
 ## 7.0.5
 
 ### Patch Changes
