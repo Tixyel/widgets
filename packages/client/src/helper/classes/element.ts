@@ -257,19 +257,34 @@ export class ElementHelper {
    * Adds 'container' class and data-index to all parent elements, and wraps each character in a span with class 'char' and data-index.
    * @param htmlString - The input HTML string containing formatted text elements (span, strong, em, etc).
    * @param startIndex - The starting index for the data-index attribute (default is 0).
+   * @param preserveInterElementWhitespace - Whether to preserve whitespace between elements (default is false).
+   * @param options - Optional settings for splitting text, including skipWhitespaceIndex to control index incrementing for whitespace characters.
    * @returns - A new HTML string with containers and character-level indexing.
    * @example
    * ```javascript
    * const result = splitTextToChars('<span>TesTe</span> <strong>bold</strong>', 0);
    * console.log(result);
    * // Output: '<span class="container" data-index="0"><span class="char" data-index="0">T</span><span class="char" data-index="1">e</span>...'
+   *
+   * // Example with skipWhitespaceIndex
+   * const resultSkipWhitespace = splitTextToChars('<span>Hello World</span>', 0, false, { skipWhitespaceIndex: true });
+   * // The space character will have data-index but won't increment index for subsequent characters
    * ```
    */
   splitTextToChars(
     htmlString: string,
     startIndex: number = 0,
     preserveInterElementWhitespace: boolean = false,
+    options: {
+      /**
+       * If true, skips incrementing the index for whitespace characters (space, newline, tab).
+       * These characters will still have a data-index, but it won't be incremented for subsequent characters.
+       * Default is true.
+       */
+      skipWhitespaceIndex?: boolean;
+    } = {},
   ): string {
+    const { skipWhitespaceIndex = true } = options;
     const parser = new DOMParser();
     const processed = document.createElement('div');
 
@@ -278,20 +293,32 @@ export class ElementHelper {
     function processNode(node: Node): Node | DocumentFragment {
       if (node.nodeType === Node.TEXT_NODE) {
         const text = node.textContent || '';
+        let exclusivityIndex = 0;
 
-        const chars = text.split('').map((char, index) => {
+        const chars = text.split('').map((char) => {
           const span = document.createElement('span');
 
           span.classList.add('char');
           span.dataset.index = String(charIndex);
-          span.dataset.exclusivityIndex = String(index);
+          span.dataset.exclusivityIndex = String(exclusivityIndex);
+          span.dataset.type = 'char';
           span.style.setProperty('--char-index', String(charIndex));
-          span.style.setProperty('--exclusivity-index', String(index));
+          span.style.setProperty('--exclusivity-index', String(exclusivityIndex));
 
-          if (char === ' ' || char === '\n' || char === '\t') {
+          const isWhitespace = char === ' ' || char === '\n' || char === '\t';
+
+          if (isWhitespace) {
             span.style.whiteSpace = 'pre-wrap';
-          } else {
+
+            span.classList.remove('char');
+            span.classList.add('whitespace');
+
+            span.dataset.type = 'whitespace';
+          }
+
+          if (!isWhitespace || !skipWhitespaceIndex) {
             charIndex++;
+            exclusivityIndex++;
           }
 
           span.textContent = char;
@@ -308,6 +335,7 @@ export class ElementHelper {
 
         clone.classList.add('container');
         clone.dataset.index = String(charIndex);
+        clone.dataset.type = 'container';
         clone.style.setProperty('--char-index', String(charIndex));
         clone.style.setProperty('--exclusivity-index', String(charIndex));
 
