@@ -9,3 +9,4 @@ export * from './color.js';
 export * from './sound.js';
 export * from './function.js';
 export * from './utils.js';
+export * from './animate.js';
