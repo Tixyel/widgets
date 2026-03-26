@@ -10,4 +10,26 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.oxc": "always",
   },
+
+  "js/ts.tsserver.watchOptions": {
+    "excludeDirectories": ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.agents/**"],
+  },
+
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.hg/**",
+    "**/.svn/**",
+    "**/.agents/**",
+  ],
+
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/.turbo": true,
+    "**/.changeset": true,
+  },
 }

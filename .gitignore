@@ -36,3 +36,7 @@ pnpm-debug.log*
 
 # ignore
 old/
+playground/
+.agents
+.agent
+skills-lock.json
