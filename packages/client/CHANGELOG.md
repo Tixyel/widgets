@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.2.1
+
+### Patch Changes
+
+- d65d575: Enhance emote handling by sorting and normalizing end positions
+
 ## 7.2.0
 
 ### Minor Changes
