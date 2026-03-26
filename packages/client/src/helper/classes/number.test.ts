@@ -30,7 +30,7 @@ test('Convert numbers to sufixed ordinal words correctly', () => {
 });
 
 test('Balance number correctly', async () => {
-  expect(number.balance(0.1, 0.2)).toBe(0.2);
+  expect(number.balance(0.1, 0.2, undefined, 1)).toBe(0.2);
   expect(number.balance(999, 0, 500)).toBe(500);
   expect(number.balance(-100, 50, 0)).toBe(0);
   expect(number.balance(75, 0, 100)).toBe(75);
