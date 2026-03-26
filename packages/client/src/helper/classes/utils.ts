@@ -130,7 +130,7 @@ export class UtilsHelper {
    */
   probability<K extends string, V extends number>(items: Record<K, V>): K | undefined {
     const total = (Object.values(items) as number[]).reduce((acc, val) => acc + val, 0);
-    const sorted = this.typedEntries(items).sort((a, b) => b[1] - a[1]);
+    const sorted = new UtilsHelper().typedEntries(items).sort((a, b) => b[1] - a[1]);
     const rand = Math.random() * total;
 
     let cumulative = 0;
