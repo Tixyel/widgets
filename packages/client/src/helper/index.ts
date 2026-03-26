@@ -1,4 +1,5 @@
 import {
+  AnimateHelper,
   ColorHelper,
   ElementHelper,
   EventHelper,
@@ -13,6 +14,8 @@ import {
 } from './classes/index.js';
 
 export namespace Helper {
+  export const animate = new AnimateHelper();
+
   export const number = new NumberHelper();
 
   export const element = new ElementHelper();
