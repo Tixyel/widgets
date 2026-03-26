@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.2.0
+
+### Minor Changes
+
+- 577ab49: feat: Implement animation helper class with various animation methods and types
+
 ## 7.1.0
 
 ### Minor Changes
