@@ -74,6 +74,7 @@ export class MessageHelper {
 
     emotes
       .filter((emote) => emote.type !== 'emoji')
+      .sort((a, b) => a.start - b.start)
       .forEach((emote) => {
         if (emote.start < index) return;
 
@@ -88,7 +89,9 @@ export class MessageHelper {
 
         result += `<img src="${imgUrl}" alt="${emote.name}" class="emote" style="width: auto; height: 1em; vertical-align: middle;" />`;
 
-        index = emote.end;
+        const expectedExclusiveEnd = emote.start + emote.name.length;
+        const normalizedEnd = emote.end === expectedExclusiveEnd - 1 ? emote.end + 1 : emote.end;
+        index = normalizedEnd;
       });
 
     result += text.substring(index);

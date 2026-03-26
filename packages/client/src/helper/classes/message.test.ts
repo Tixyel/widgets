@@ -47,6 +47,113 @@ describe('message functions', () => {
     expect(positioned[1].end).toBe(25);
   });
 
+  it('should not bug lol', () => {
+    const emotes = [
+      {
+        'type': 'twitch',
+        'name': 'mimi20Hipswing',
+        'id': 'emotesv2_447975666ff14fcaa9942f317758f5c2',
+        'gif': false,
+        'urls': {
+          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/1.0',
+          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/2.0',
+          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/3.0',
+        },
+        'start': 0,
+        'end': 13,
+      },
+      {
+        'type': 'twitch',
+        'name': 'mimi20Hipswing',
+        'id': 'emotesv2_447975666ff14fcaa9942f317758f5c2',
+        'gif': false,
+        'urls': {
+          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/1.0',
+          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/2.0',
+          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/3.0',
+        },
+        'start': 15,
+        'end': 28,
+      },
+      {
+        'type': 'twitch',
+        'name': 'mimi20Hipswing',
+        'id': 'emotesv2_447975666ff14fcaa9942f317758f5c2',
+        'gif': false,
+        'urls': {
+          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/1.0',
+          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/2.0',
+          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/3.0',
+        },
+        'start': 30,
+        'end': 43,
+      },
+      {
+        'type': 'twitch',
+        'name': 'mimi20Hipswing',
+        'id': 'emotesv2_447975666ff14fcaa9942f317758f5c2',
+        'gif': false,
+        'urls': {
+          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/1.0',
+          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/2.0',
+          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/3.0',
+        },
+        'start': 45,
+        'end': 58,
+      },
+      {
+        'type': 'twitch',
+        'name': 'mimi20Hipswing',
+        'id': 'emotesv2_447975666ff14fcaa9942f317758f5c2',
+        'gif': false,
+        'urls': {
+          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/1.0',
+          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/2.0',
+          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_447975666ff14fcaa9942f317758f5c2/default/dark/3.0',
+        },
+        'start': 60,
+        'end': 73,
+      },
+      {
+        'type': 'twitch',
+        'name': 'mimi20Helepop',
+        'id': 'emotesv2_fc38a0748fd14876863f5763ae5d2be4',
+        'gif': false,
+        'urls': {
+          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_fc38a0748fd14876863f5763ae5d2be4/default/dark/1.0',
+          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_fc38a0748fd14876863f5763ae5d2be4/default/dark/2.0',
+          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_fc38a0748fd14876863f5763ae5d2be4/default/dark/3.0',
+        },
+        'start': 75,
+        'end': 87,
+      },
+      {
+        'type': 'twitch',
+        'name': 'mimi20Helepop',
+        'id': 'emotesv2_fc38a0748fd14876863f5763ae5d2be4',
+        'gif': false,
+        'urls': {
+          '1': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_fc38a0748fd14876863f5763ae5d2be4/default/dark/1.0',
+          '2': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_fc38a0748fd14876863f5763ae5d2be4/default/dark/2.0',
+          '4': 'https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_fc38a0748fd14876863f5763ae5d2be4/default/dark/3.0',
+        },
+        'start': 89,
+        'end': 101,
+      },
+    ];
+
+    const text =
+      'mimi20Hipswing mimi20Hipswing mimi20Hipswing mimi20Hipswing mimi20Hipswing mimi20Helepop mimi20Helepop';
+
+    const result = message.replaceEmotesWithHTML(text, emotes as any);
+
+    console.log(result);
+
+    expect((result.match(/<img /g) || []).length).toBe(7);
+    expect(result.includes('/>g')).toBe(false);
+    expect(result.includes('/>p')).toBe(false);
+  });
+
   it('replaceEmotesWithHTML should keep unicode emoji unchanged', () => {
     const text = 'I hear a cutie 😊';
 
