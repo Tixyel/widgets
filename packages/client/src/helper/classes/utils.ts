@@ -1,6 +1,7 @@
 import { fakeUserPools } from '../../modules/fakeUser.js';
-import { RequireAtLeastOne, StreamElements, Twitch } from '../../types.js';
+import { Emote, RequireAtLeastOne, StreamElements, Twitch } from '../../types.js';
 import { EventHelper } from './event.js';
+import { MessageHelper } from './message.js';
 
 export class UtilsHelper {
   /**
@@ -290,19 +291,19 @@ export class UtilsHelper {
     provider: 'twitch',
     receivedEvent: StreamElements.Event.Provider.Twitch.Message,
     session: StreamElements.Session.Data,
-  ): Promise<IdentifyTwitchResult | undefined>;
+  ): Promise<IdentifyTwitchResult>;
   async identifyUser(
     provider: 'youtube',
     receivedEvent: StreamElements.Event.Provider.YouTube.Message,
     session: StreamElements.Session.Data,
-  ): Promise<IdentifyYouTubeResult | undefined>;
+  ): Promise<IdentifyYouTubeResult>;
   async identifyUser(
     provider: 'twitch' | 'youtube',
     receivedEvent:
       | StreamElements.Event.Provider.Twitch.Message
       | StreamElements.Event.Provider.YouTube.Message,
     session: StreamElements.Session.Data,
-  ): Promise<IdentifyYouTubeResult | IdentifyTwitchResult | undefined> {
+  ): Promise<IdentifyYouTubeResult | IdentifyTwitchResult> {
     const getTops = (name: string): TopType => ({
       gifter: session['subscriber-alltime-gifter'].name === name,
       tip: {
@@ -367,15 +368,18 @@ export class UtilsHelper {
         const event = twitchEvent.event;
         const data = event.data;
 
-        const tier = await this.findSubscriptionTier(
-          {
-            userId: data.userId,
-            name: data.displayName,
-            broadcasterId: data.tags['room-id'],
-          },
-          session ?? ({} as StreamElements.Session.Data),
-          false,
-        );
+        let tier: false | 1 | 2 | 3 = false;
+        if (data.tags['badge-info']?.includes('subscriber')) {
+          tier = await this.findSubscriptionTier(
+            {
+              userId: data.userId,
+              name: data.displayName,
+              broadcasterId: data.tags['room-id'],
+            },
+            session ?? ({} as StreamElements.Session.Data),
+            false,
+          );
+        }
 
         return {
           id: data.userId,
@@ -384,7 +388,7 @@ export class UtilsHelper {
           role: data.tags.badges.split(',')[0].split('/')[0] as Twitch.tags,
           tags: data.tags.badges.split(',').map((b: string) => b.split('/')[0] as Twitch.tags),
           badges: data.badges,
-          tier: data.tags.badges.includes('subscriber') ? tier : undefined,
+          tier: !!tier ? tier : undefined,
           top: getTops(data.displayName),
         } satisfies IdentifyTwitchResult;
 
@@ -414,8 +418,69 @@ export class UtilsHelper {
         } satisfies IdentifyYouTubeResult;
       }
     }
+  }
 
-    return undefined;
+  identifyMessage(
+    provider: 'twitch',
+    receivedEvent: StreamElements.Event.Provider.Twitch.Message,
+    options?: {
+      mapEmote?: (emote: { src: string; alt: string }) => string;
+      allowedRoles: RequireAtLeastOne<Twitch.tags>[];
+    },
+  ) {
+    const emoteRegex = /<img[^>]*class="emote"[^>]*>/gi;
+
+    switch (provider) {
+      case 'twitch': {
+        const event = receivedEvent.event;
+
+        let text = new MessageHelper().replaceEmotesWithHTML(
+          receivedEvent.event.data.text,
+          receivedEvent.event.data.emotes,
+        );
+
+        const onlyEmote = text.replaceAll(emoteRegex, '').trim() === '' ? true : false;
+        const emoteLength = (text.match(emoteRegex) || []).length;
+
+        text = text.replace(emoteRegex, (match) => {
+          const srcMatch = match.match(/src="([^"]*)"/);
+          const altMatch = match.match(/alt="([^"]*)"/);
+          const src = srcMatch ? srcMatch[1] : '';
+          const alt = altMatch ? altMatch[1] : '';
+
+          if (options?.mapEmote) {
+            return options.mapEmote({ src, alt });
+          }
+
+          return `<img src="${src}" alt="${alt}" class="emote" style="display: inline-block; width: auto; height: 1em; vertical-align: middle;">`;
+        });
+
+        let reply = receivedEvent.event.data.tags['reply-parent-msg-id']
+          ? {
+              login: receivedEvent.event.data.tags['reply-parent-user-login']!,
+              name: receivedEvent.event.data.tags['reply-parent-display-name']!,
+              userId: receivedEvent.event.data.tags['reply-parent-user-id']!,
+              msgId: receivedEvent.event.data.tags['reply-parent-msg-id']!,
+              text: receivedEvent.event.data.tags['reply-parent-msg-body']!,
+            }
+          : undefined;
+
+        const data = {
+          username: receivedEvent.event.data.displayName,
+          text: text,
+          reply: reply,
+          msgId: event.data.msgId,
+          userId: event.data.userId,
+          emote: {
+            only: onlyEmote,
+            amount: emoteLength,
+          },
+        };
+
+        return data;
+      }
+      // case 'youtube': {}
+    }
   }
 }
 
