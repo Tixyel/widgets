@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.3.0
+
+### Minor Changes
+
+- 43bd4bb: Add identifyMessage method for Twitch message handling and improve type definitions
+
 ## 7.2.1
 
 ### Patch Changes
