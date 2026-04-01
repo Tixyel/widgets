@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.3.1
+
+### Patch Changes
+
+- a0b2c4c: Update parseProvider method to use overrideProvider parameter for better clarity
+
 ## 7.3.0
 
 ### Minor Changes
