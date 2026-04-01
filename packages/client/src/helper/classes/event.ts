@@ -6,16 +6,21 @@ export class EventHelper {
    * @param detail - The event detail object received from the StreamElements event.
    * @returns An object containing the provider and the original event data.
    */
-  parseProvider(detail: StreamElements.Event.onEventReceived, _provider?: Provider): ClientEvents {
+  parseProvider(
+    detail: StreamElements.Event.onEventReceived,
+    overrideProvider?: Provider,
+  ): ClientEvents {
     var provider: Provider =
       // @ts-ignore
-      _provider ||
+      detail?.provider ||
       // @ts-ignore
       detail.event?.provider ||
       // @ts-ignore
       detail.event?.service ||
       // @ts-ignore
       detail.event?.data?.provider ||
+      // @ts-ignore
+      overrideProvider ||
       // @ts-ignore
       window?.client?.details?.provider ||
       'twitch';
