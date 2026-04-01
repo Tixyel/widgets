@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.4.0
+
+### Minor Changes
+
+- cc66900: Reorganize local functions and implement event tests
+
 ## 7.3.1
 
 ### Patch Changes
