@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.0
+
+### Minor Changes
+
+- 2aab559: Refact internal client management
+
 ## 7.5.2
 
 ### Patch Changes
