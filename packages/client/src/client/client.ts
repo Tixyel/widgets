@@ -2,20 +2,15 @@ import { Button } from '../actions/button.js';
 import { Command } from '../actions/command.js';
 import { EventProvider } from '../modules/EventProvider.js';
 import { useStorage } from '../modules/useStorage.js';
-import { Provider } from '../types/client.js';
+import { ClientEventTuple, Provider } from '../types/client.js';
 import { StreamElements } from '../types/streamelements/main.js';
 import { Alejo } from '../utils/alejo.js';
 
-type ClientEvents = {
+type ClientMapEvents<CustomEvents = {}> = {
   load: [event: StreamElements.Event.onWidgetLoad];
   action: [action: Button | Command, type: 'created' | 'executed' | 'removed'];
   session: [session: StreamElements.Session.Data];
-  event:
-    | [provider: 'streamelements', event: StreamElements.Event.Provider.StreamElements.Events]
-    | [provider: 'twitch', event: StreamElements.Event.Provider.Twitch.Events]
-    | [provider: 'youtube', event: StreamElements.Event.Provider.YouTube.Events]
-    | [provider: 'kick', event: StreamElements.Event.Provider.Kick.Events]
-    | [provider: 'facebook', event: StreamElements.Event.Provider.Facebook.Events];
+  event: ClientEventTuple<CustomEvents>;
 };
 
 export type ClientStorageOptions<T> = {
@@ -36,7 +31,7 @@ export type ClientOptions = {
   debug?: boolean | (() => boolean);
 };
 
-export class Client extends EventProvider<ClientEvents> {
+export class Client<CustomEvents = {}> extends EventProvider<ClientMapEvents<CustomEvents>> {
   public id: string = 'default';
   public debug: boolean = false;
 
@@ -67,7 +62,7 @@ export class Client extends EventProvider<ClientEvents> {
       this.debug = Boolean(typeof options.debug === 'function' ? options.debug() : options.debug);
     });
 
-    window.client = this;
+    (window as any).client = this;
   }
 
   public actions: {
@@ -104,9 +99,9 @@ export class Client extends EventProvider<ClientEvents> {
     emote: 120,
   };
 
-  override on<K extends keyof ClientEvents>(
+  override on<K extends keyof ClientMapEvents<CustomEvents>>(
     eventName: K,
-    callback: (this: Client, ...args: ClientEvents[K]) => void,
+    callback: (this: Client<CustomEvents>, ...args: ClientMapEvents<CustomEvents>[K]) => void,
   ): this {
     if (eventName === 'load' && this.loaded) {
       callback.apply(this, [
@@ -126,7 +121,7 @@ export class Client extends EventProvider<ClientEvents> {
           overlay: this.details.overlay,
           emulated: false,
         } as StreamElements.Event.onWidgetLoad,
-      ] as unknown as ClientEvents[K]);
+      ] as unknown as ClientMapEvents<CustomEvents>[K]);
 
       return this;
     }

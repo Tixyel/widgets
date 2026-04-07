@@ -40,3 +40,5 @@ playground/
 .agents
 .agent
 skills-lock.json
+
+*.ignore.ts
