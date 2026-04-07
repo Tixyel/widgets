@@ -19,7 +19,7 @@ Tixyel's streamelements widget client is a TypeScript/JavaScript helper library 
 <script>
   const { Client, Simulation, logger, modules, utils, Alejo } = window.Tixyel;
 
-  new Client({
+  const client = new Client({
     id: "my-custom-widget", // ID of your widget for storage purposes
     debug: true, // Enable event debug logs
   });

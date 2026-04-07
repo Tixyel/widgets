@@ -19,9 +19,11 @@ Add the following to your HTML:
 <script>
   const { Client, Simulation, logger } = window.Tixyel;
 
-  new Client({ id: 'my-widget' }).on('load', (event) => {
-    logger.received('Widget loaded!', event);
-  });
+  const client = new Client({ id: 'my-widget' })
+
+  client.on('load', (event) => {})
+  client.on('event', (provider, event) => {})
+  client.on('session', (session) => {})
 </script>
 ```
 
