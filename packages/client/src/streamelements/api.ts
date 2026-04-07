@@ -1,3 +1,5 @@
+import { localQueue } from '../local/queue.js';
+import { useQueue } from '../types.js';
 import { StreamElements } from '../types/streamelements/main.js';
 
 const LOCAL_SE_API: StreamElements.SE_API & { store: { list: Record<string, any> } } = {
@@ -37,7 +39,15 @@ const LOCAL_SE_API: StreamElements.SE_API & { store: { list: Record<string, any>
   },
 
   resumeQueue: () => {
-    return null;
+    try {
+      if (localQueue instanceof useQueue) {
+        localQueue?.resume();
+      }
+    } catch (error) {
+      return { ok: false, error };
+    }
+
+    return { ok: true };
   },
 
   sanitize(message: string): string {
