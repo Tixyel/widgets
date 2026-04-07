@@ -14,13 +14,14 @@ export default defineConfig({
   dirs: {
     entry: 'development',
     output: 'finished',
+    shared: 'shared',
     extension: 'widgetIO',
   },
 
   scaffold: {
     single: [
       {
-        name: 'development',
+        name: 'development', 
         type: 'folder',
         content: [
           {
@@ -59,6 +60,68 @@ export default defineConfig({
         type: 'folder',
       },
     ],
+    multiple: [
+      {
+        name: "development",
+        type: "folder",
+        content: [
+          {
+            name: "index.html",
+            type: "file",
+            content: htmlTemplate,
+          },
+          {
+            name: "style.css",
+            type: "file",
+            content: cssTemplate,
+          },
+          {
+            name: "script.ts",
+            type: "file",
+            content: scriptTemplate,
+          },
+          {
+            name: "fields.json",
+            type: "file",
+            content: "{}",
+          },
+          {
+            name: "data.json",
+            type: "file",
+            content: "{}",
+          },
+        ],
+      },
+      {
+        name: "shared",
+        type: "folder",
+        content: [
+          {
+            name: "style.css",
+            type: "file",
+            content: sharedStyleTemplate ?? "",
+          },
+          {
+            name: "script.ts",
+            type: "file",
+            content: sharedScriptTemplate ?? "",
+          },
+        ],
+      },
+      {
+        name: "finished",
+        type: "folder",
+      },
+      {
+        name: "widgetIO",
+        type: "folder",
+      },
+      {
+        name: "tsconfig.json",
+        type: "file",
+        content: typescript.multiple,
+      },
+    ],
   },
 
   build: {
@@ -67,22 +130,26 @@ export default defineConfig({
 
     find: {
       html: ['index.html'],
-      script: ['script.js'],
+      script: ['script.js',],
       css: ['style.css'],
       fields: ['fields.json', 'fields.jsonc'],
     },
-    shared: {},
+    shared: {
+      'shared script': ['script.js'],
+      'shared style': ['style.css'],
+      'shared fields': ['fields.json'],
+    },
     result: {
-      'HTML.html': 'html',
-      'SCRIPT.js': 'script',
-      'CSS.css': 'css',
-      'FIELDS.json': 'fields',
+      'HTML.html': ['html'],
+      'SCRIPT.js': ['shared script', 'script'],
+      'CSS.css': ['shared style', 'css'],
+      'FIELDS.json': ['fields', 'shared fields'],
     },
     widgetIO: {
-      'html.txt': 'html',
-      'js.txt': 'script',
-      'css.txt': 'css',
-      'fields.txt': 'fields',
+      'html.txt': ['html'],
+      'SCRIPT.js': ['shared script', 'script'],
+      'CSS.css': ['shared style', 'css'],
+      'FIELDS.json': ['fields', 'shared fields'],
     },
 
     htmlRegex: /<body[^>]*>([\\s\\S]*?)<\\/body>/i,
@@ -102,7 +169,7 @@ export default defineConfig({
       css: {
         removeNesting: true,
         autoprefixer: {
-          overrideBrowserslist: ['Chrome 127'],
+          overrideBrowserslist: ['Chrome 93'],
         },
         cssnano: {
           preset: 'default',
