@@ -5,11 +5,7 @@ import { StreamElements } from '../types/streamelements/main.js';
 
 const LOCAL_SE_API: StreamElements.SE_API & {
   store: { list: Record<string, any> };
-  events: {
-    history: Array<
-      CustomEvent<{ listener: string; event: any; result: undefined }> & { origin?: string }
-    >;
-  };
+  events: { history: Array<{ detail: any; timestamp: number; origin?: string }> };
 } = {
   responses: {} as Record<string, any>,
 
@@ -91,7 +87,11 @@ const LOCAL_SE_API: StreamElements.SE_API & {
 
       const customEvent = new CustomEvent('onEventReceived', { detail: eventObj });
 
-      this.history.push({ ...customEvent, origin: usedClients?.[0]?.id });
+      this.history.push({
+        detail: eventObj,
+        timestamp: customEvent.timeStamp,
+        origin: usedClients?.[0]?.id,
+      });
 
       localStorage.setItem('SE_API-EVENTS', JSON.stringify(this.history));
 
@@ -112,7 +112,11 @@ const LOCAL_SE_API: StreamElements.SE_API & {
 
       const customEvent = new CustomEvent('onEventReceived', { detail: eventObj });
 
-      this.history.push({ ...customEvent, origin: usedClients?.[0]?.id });
+      this.history.push({
+        detail: eventObj,
+        timestamp: customEvent.timeStamp,
+        origin: usedClients?.[0]?.id,
+      });
 
       localStorage.setItem('SE_API-EVENTS', JSON.stringify(this.history));
 
