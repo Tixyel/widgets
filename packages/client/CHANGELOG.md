@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.3
+
+### Patch Changes
+
+- b29ae46: Update event timestamp to use current time
+
 ## 7.6.2
 
 ### Patch Changes
