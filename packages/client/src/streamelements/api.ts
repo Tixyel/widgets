@@ -114,7 +114,7 @@ const LOCAL_SE_API: StreamElements.SE_API & {
 
       this.history.push({
         detail: eventObj,
-        timestamp: customEvent.timeStamp,
+        timestamp: Date.now(),
         origin: usedClients?.[0]?.id,
       });
 
