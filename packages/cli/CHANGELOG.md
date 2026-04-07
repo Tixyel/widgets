@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.5.4
+
+### Patch Changes
+
+- 6b73ba7: Enhance default workspace config template
+
 ## 3.5.3
 
 ### Patch Changes
