@@ -1,4 +1,4 @@
-import { fakeUserPools } from '../../modules/fakeUser.js';
+import { fakeUserPools } from '../../internal.js';
 import { Emote, RequireAtLeastOne, StreamElements, Twitch } from '../../types.js';
 import { EventHelper } from './event.js';
 import { MessageHelper } from './message.js';

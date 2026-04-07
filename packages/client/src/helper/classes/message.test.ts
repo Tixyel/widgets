@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test';
 
-import { MessageHelper } from './message';
+import { MessageHelper } from './message.js';
 
 const message = new MessageHelper();
 
