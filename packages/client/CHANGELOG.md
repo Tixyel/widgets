@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.5.2
+
+### Patch Changes
+
+- 2533ecd: enhance client event handling with custom events
+
 ## 7.5.1
 
 ### Patch Changes
