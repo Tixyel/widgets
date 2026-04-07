@@ -48,6 +48,33 @@ export namespace StreamElements {
     cheerFilter: (message: string) => string;
     setField: (key: string, value: string | number | boolean | undefined, reload: boolean) => void;
     getOverlayStatus: () => { isEditorMode: boolean; muted: boolean };
+    events: {
+      emit<L extends Event.Listener>(
+        event: L,
+        data: Event.EventData<L>['event'],
+      ): {
+        ok: boolean;
+      };
+      emit<T extends Record<string, any>, E extends string>(
+        event: E extends Event.Listener ? never : E,
+        data: T,
+      ): {
+        ok: boolean;
+      };
+
+      broadcast<L extends Event.Listener>(
+        event: L,
+        data: Event.EventData<L>['event'],
+      ): {
+        ok: boolean;
+      };
+      broadcast<T extends Record<string, any>, E extends string>(
+        event: E extends Event.Listener ? never : E,
+        data: T,
+      ): {
+        ok: boolean;
+      };
+    };
   };
 
   export namespace Event {
@@ -173,7 +200,21 @@ export namespace StreamElements {
       | Provider.Twitch.Events
       | Provider.YouTube.Events
       | Provider.StreamElements.Events
-    ) & { emulated?: boolean };
+    ) & {
+      emulated?: boolean;
+    };
+
+    export type Listener = onEventReceived['listener'];
+
+    export type EventByListener = {
+      [L in Listener]: Extract<onEventReceived, { listener: L }>['event'];
+    };
+
+    export type EventData<L extends Listener = Listener> = {
+      listener: L;
+      event: EventByListener[L];
+      emulated?: boolean;
+    };
   }
 
   export namespace Session {

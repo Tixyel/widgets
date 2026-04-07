@@ -1,27 +1,26 @@
 import { StreamElements } from '../types/streamelements/main.js';
 
 const LOCAL_SE_API: StreamElements.SE_API & { store: { list: Record<string, any> } } = {
-  getOverlayStatus: () => {
-    return {
-      isEditorMode: false,
-      muted: false,
-    };
-  },
-  resumeQueue: () => {},
   responses: {} as Record<string, any>,
-  sendMessage(message: string, data: object) {},
+
+  sendMessage(message: string, data: Record<string, any> = {}) {
+    return new Promise((resolve, reject) => {
+      const response = 'resp_' + Math.random().toString(36).substring(2, 15);
+
+      data.response = response;
+      data.request = message;
+
+      SE_API.responses[response] = { resolve, reject };
+
+      parent?.postMessage(data, '*');
+    });
+  },
+
   counters: {
     get(key: string): number | null {
       return null;
     },
   },
-  sanitize(message: string): string {
-    return message;
-  },
-  cheerFilter(message: string): string {
-    return message;
-  },
-  setField(key: string, value: string | number | boolean | undefined, reload: boolean) {},
 
   store: {
     set: function (name: string, obj: any) {
@@ -33,12 +32,71 @@ const LOCAL_SE_API: StreamElements.SE_API & { store: { list: Record<string, any>
       if (this.list[name]) return this.list[name];
       else return null;
     },
+    /** @private */
     list: {} as Record<string, any>,
+  },
+
+  resumeQueue: () => {
+    return null;
+  },
+
+  sanitize(message: string): string {
+    return message;
+  },
+
+  cheerFilter(message: string): string {
+    return message;
+  },
+
+  setField(key: string, value: string | number | boolean | undefined, reload: boolean) {},
+
+  getOverlayStatus: () => {
+    return {
+      isEditorMode: false,
+      muted: false,
+    };
+  },
+
+  events: {
+    /**
+     * Emit a event for all widgets inside the same overlay. This is useful for communicating between widgets.
+     * @param event - The name of the event to emit. This can be any string, but it's recommended to use a unique prefix to avoid conflicts with other widgets.
+     * @param data - The data to send with the event. This can be any object.
+     * @returns An object with an `ok` property indicating whether the event was emitted successfully.
+     */
+    emit<T extends Record<string, any>>(event: string, data: T) {
+      const eventObj = {
+        listener: event,
+        event: data,
+        result: undefined,
+      };
+
+      return window.dispatchEvent(new CustomEvent('onEventReceived', { detail: eventObj }))
+        ? { ok: true }
+        : { ok: false };
+    },
+    /**
+     * Broadcast a event to all widgets in all overlays. This is useful for communicating between different overlays.
+     * @param event - The name of the event to broadcast. This can be any string, but it's recommended to use a unique prefix to avoid conflicts with other widgets.
+     * @param data - The data to send with the event. This can be any object.
+     * @returns An object with an `ok` property indicating whether the event was successfully broadcasted.
+     */
+    broadcast<T extends Record<string, any>>(event: string, data: T): { ok: boolean } {
+      const eventObj = {
+        listener: event,
+        event: data,
+        result: undefined,
+      };
+
+      return window.dispatchEvent(new CustomEvent('onEventReceived', { detail: eventObj }))
+        ? { ok: true }
+        : { ok: false };
+    },
   },
 };
 
 export async function initializeLocalSEAPI() {
-  let lastStore = localStorage.getItem('SE_API-STORE') ?? '';
+  let lastStore = localStorage.getItem('SE_API-STORE') ?? '{}';
 
   let result = lastStore ? JSON.parse(lastStore) : {};
 
