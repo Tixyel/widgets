@@ -1,3 +1,4 @@
+import { usedComms } from '../internal.js';
 import { USE_SE_API } from '../main.js';
 import { StreamElements } from '../types/index.js';
 import { EventProvider } from './EventProvider.js';
@@ -23,8 +24,6 @@ type UseCommItem<T extends MessageMap> = {
   value: T[keyof T];
   timestamp: string;
 };
-
-export const usedComms: Array<useComms<any>> = [];
 
 /**
  * A module for handling communications between different widgets inside streamelements.

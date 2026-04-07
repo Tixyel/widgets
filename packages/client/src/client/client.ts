@@ -1,5 +1,6 @@
 import { Button } from '../actions/button.js';
 import { Command } from '../actions/command.js';
+import { usedClients } from '../internal.js';
 import { EventProvider } from '../modules/EventProvider.js';
 import { useStorage } from '../modules/useStorage.js';
 import { ClientEventTuple, Provider } from '../types/client.js';
@@ -62,7 +63,7 @@ export class Client<CustomEvents = {}> extends EventProvider<ClientMapEvents<Cus
       this.debug = Boolean(typeof options.debug === 'function' ? options.debug() : options.debug);
     });
 
-    (window as any).client = this;
+    usedClients.push(this as Client);
   }
 
   public actions: {

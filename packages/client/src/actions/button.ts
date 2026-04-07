@@ -1,5 +1,6 @@
 import { Client } from '../client/client.js';
 import { Helper } from '../helper/index.js';
+import { usedButtons, usedClients } from '../internal.js';
 import { logger } from '../main.js';
 import { StreamElements } from '../types/index.js';
 
@@ -10,8 +11,6 @@ interface ButtonOptions {
   value?: string;
   run: (this: Client | undefined, field: string, value: string | boolean | number) => void;
 }
-
-const buttons: Button[] = [];
 
 /**
  * Represents a button action that can be triggered by custom fields in StreamElements.
@@ -52,13 +51,15 @@ export class Button {
     this.value = options.value ?? this.value;
     this.run = options.run;
 
-    buttons.push(this);
+    usedButtons.push(this);
 
-    if (!(window?.client instanceof Client)) return;
+    if (!usedClients.length) return;
 
     // Register the button in the client actions
-    window?.client?.actions.buttons.push(this);
-    window?.client?.emit('action', this, 'created');
+    usedClients.forEach((client) => {
+      client.actions.buttons.push(this);
+      client.emit('action', this, 'created');
+    });
   }
 
   generate(values: Array<Record<string, string | number>>) {
@@ -116,7 +117,7 @@ export class Button {
       .trim();
 
     try {
-      this.run.apply(window?.client || undefined, [f.length ? f : (field ?? field), value]);
+      this.run.apply(usedClients[0] || undefined, [f.length ? f : (field ?? field), value]);
     } catch (error) {
       throw new Error(
         `Error running button "${this.field}": ${error instanceof Error ? error.message : error}`,
@@ -127,26 +128,26 @@ export class Button {
   }
 
   remove(): void {
-    const _index = buttons.indexOf(this);
+    const _index = usedButtons.indexOf(this);
 
     if (_index > -1) {
-      buttons.splice(_index, 1);
+      usedButtons.splice(_index, 1);
     }
 
-    if (!(window?.client instanceof Client)) return;
+    if (!usedClients.length) return;
 
-    const index = window?.client.actions.buttons.indexOf(this);
+    const index = usedClients[0]?.actions.buttons.indexOf(this);
 
     if (index > -1) {
-      window?.client?.actions.buttons.splice(index, 1);
-      window?.client?.emit('action', this, 'removed');
+      usedClients[0]?.actions.buttons.splice(index, 1);
+      usedClients[0]?.emit('action', this, 'removed');
     }
   }
 
   static execute(field: string, value: string | boolean | number): boolean {
     try {
-      if (buttons.length) {
-        const found = buttons.filter((b) => {
+      if (usedButtons.length) {
+        const found = usedButtons.filter((b) => {
           /**
            * Check if the button's field matches the provided field.
            */
@@ -164,7 +165,9 @@ export class Button {
             try {
               button.parse(field, value);
 
-              window?.client?.emit('action', button, 'executed');
+              usedClients.forEach((client) => {
+                client.emit('action', button, 'executed');
+              });
 
               logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ''}`);
             } catch (error) {
@@ -184,5 +187,3 @@ export class Button {
     }
   }
 }
-
-export { buttons as usedButtons };

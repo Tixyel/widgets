@@ -1,3 +1,4 @@
+import { usedClients } from '../internal.js';
 import { localQueue } from '../local/queue.js';
 import { useQueue } from '../types.js';
 import { StreamElements } from '../types/streamelements/main.js';
@@ -90,7 +91,7 @@ const LOCAL_SE_API: StreamElements.SE_API & {
 
       const customEvent = new CustomEvent('onEventReceived', { detail: eventObj });
 
-      this.history.push({ ...customEvent, origin: client?.id });
+      this.history.push({ ...customEvent, origin: usedClients?.[0]?.id });
 
       return window.dispatchEvent(customEvent) ? { ok: true } : { ok: false };
     },
@@ -109,7 +110,7 @@ const LOCAL_SE_API: StreamElements.SE_API & {
 
       const customEvent = new CustomEvent('onEventReceived', { detail: eventObj });
 
-      this.history.push({ ...customEvent, origin: client?.id });
+      this.history.push({ ...customEvent, origin: usedClients?.[0]?.id });
 
       return window.dispatchEvent(customEvent) ? { ok: true } : { ok: false };
     },

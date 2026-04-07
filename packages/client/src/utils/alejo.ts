@@ -1,3 +1,5 @@
+import { usedClients } from '../internal.js';
+
 export namespace Alejo {
   export namespace Pronouns {
     export type name =
@@ -82,7 +84,7 @@ export namespace Alejo {
 
     username = username.toLowerCase();
 
-    if (!window?.client) {
+    if (!usedClients.length) {
       try {
         const data = await fetch(`https://pronouns.alejo.io/api/users/${username}`)
           .then((res) => res.json())
@@ -100,11 +102,13 @@ export namespace Alejo {
       return;
     }
 
+    const client = usedClients?.[0];
+
     if (
-      username in window?.client?.storage.data.pronoun &&
-      window?.client?.storage.data.pronoun[username].expire > Date.now()
+      username in client.storage.data.pronoun &&
+      client.storage.data.pronoun[username].expire > Date.now()
     ) {
-      return window?.client?.storage.data.pronoun[username].value;
+      return client.storage.data.pronoun[username].value;
     } else {
       try {
         const data = await fetch(`https://pronouns.alejo.io/api/users/${username}`)
@@ -112,13 +116,13 @@ export namespace Alejo {
           .then(([data]) => data as Alejo.user | undefined);
 
         if (data) {
-          window?.client?.storage.add(`pronoun.${username}`, {
+          client.storage.add(`pronoun.${username}`, {
             value: data.pronoun_id,
             timestamp: Date.now(),
-            expire: Date.now() + window?.client?.cache.pronoun * 60 * 1000,
+            expire: Date.now() + client.cache.pronoun * 60 * 1000,
           });
 
-          return window?.client?.storage.data.pronoun[username].value ?? data.pronoun_id;
+          return client.storage.data.pronoun[username].value ?? data.pronoun_id;
         }
       } catch (error) {
         throw new Error(

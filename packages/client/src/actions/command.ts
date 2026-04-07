@@ -1,4 +1,5 @@
 import { Client } from '../client/client.js';
+import { usedClients, usedCommands } from '../internal.js';
 import { logger } from '../main.js';
 import { StreamElements } from '../types/streamelements/main.js';
 
@@ -18,8 +19,6 @@ type CommandEvent =
   | { provider: 'twitch'; data: StreamElements.Event.Provider.Twitch.Message }
   | { provider: 'youtube'; data: StreamElements.Event.Provider.YouTube.Message }
   | { provider: 'kick'; data: any };
-
-const commands: Command[] = [];
 
 export class Command {
   prefix: string = '!';
@@ -48,14 +47,15 @@ export class Command {
     this.permissions = options.permissions ?? this.permissions;
     this.admins = options.admins ?? this.admins;
 
-    commands.push(this);
+    usedCommands.push(this);
 
-    if (!(window?.client instanceof Client)) return;
+    if (!usedClients.length) return;
 
     // Register the command in the client actions
-    window?.client?.actions.commands.push(this);
-
-    window?.client?.emit('action', this, 'created');
+    usedClients.forEach((client) => {
+      client.actions.commands.push(this);
+      client.emit('action', this, 'created');
+    });
   }
 
   run(this: Client | undefined, args: string[], event: CommandEvent): void {}
@@ -156,26 +156,26 @@ export class Command {
     const verify = this.verify(nickname, roles, args);
 
     if (verify === true) {
-      this.run.apply(window?.client || undefined, [args, event]);
+      this.run.apply(usedClients[0] || undefined, [args, event]);
     }
 
     return verify;
   }
 
   remove(): void {
-    const _index = commands.indexOf(this);
+    const _index = usedCommands.indexOf(this);
 
     if (_index > -1) {
-      commands.splice(_index, 1);
+      usedCommands.splice(_index, 1);
     }
 
-    if (!(window?.client instanceof Client)) return;
+    if (!usedClients.length) return;
 
-    const index = window?.client?.actions.commands.indexOf(this);
+    const index = usedClients[0]?.actions.commands.indexOf(this);
 
     if (index > -1) {
-      window?.client?.actions.commands.splice(index, 1);
-      window?.client?.emit('action', this, 'removed');
+      usedClients[0]?.actions.commands.splice(index, 1);
+      usedClients[0]?.emit('action', this, 'removed');
     }
   }
 
@@ -183,8 +183,11 @@ export class Command {
     const data = received.data;
 
     try {
-      if (commands.length && commands.some((c) => data.event.data.text.startsWith(c.prefix))) {
-        const found = commands.filter((c) => {
+      if (
+        usedCommands.length &&
+        usedCommands.some((c) => data.event.data.text.startsWith(c.prefix))
+      ) {
+        const found = usedCommands.filter((c) => {
           var nameAndAliases = [c.name, ...(c.aliases ?? [])];
           var commandMatch = data.event.data.text.replace(c.prefix, '').split(' ')[0];
 
@@ -195,7 +198,9 @@ export class Command {
           found.forEach((command) => {
             command.parse(data.event.data.text, received);
 
-            window?.client?.emit('action', command, 'executed');
+            usedClients.forEach((client) => {
+              client.emit('action', command, 'executed');
+            });
 
             logger.received(
               `Command executed: ${data.event.data.text} by ${data.event.data.nick || data.event.data.displayName}`,
@@ -213,5 +218,3 @@ export class Command {
     }
   }
 }
-
-export { commands as usedCommands };

@@ -1,3 +1,4 @@
+import { usedStorages } from '../internal.js';
 import { USE_SE_API } from '../main.js';
 import type { JSONObject } from '../types/json.js';
 import { PathValue } from '../types/path.js';
@@ -13,8 +14,6 @@ type UseStorageOptions<T> = {
   id?: string;
   data: T;
 };
-
-export const usedStorages: Array<useStorage<any>> = [];
 
 export class useStorage<T extends JSONObject> extends EventProvider<UseStorageEvents<T>> {
   private SE_API: StreamElements.SE_API | null = null;

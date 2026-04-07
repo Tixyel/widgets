@@ -13,6 +13,7 @@
         "@napi-rs/canvas": "^0.1.97",
         "@types/bun": "^1.3.11",
         "@types/node": "^25.5.0",
+        "bun-types": "^1.3.11",
         "concurrently": "^9.2.1",
         "oxfmt": "^0.43.0",
         "prettier": "^3.8.1",
@@ -62,8 +63,9 @@
     },
     "packages/client": {
       "name": "@tixyel/streamelements",
-      "version": "7.3.1",
+      "version": "7.5.2",
       "devDependencies": {
+        "@types/bun": "^1.3.11",
         "@types/tmi.js": "^1.8.6",
         "comfy.js": "^1.1.29",
         "rollup": "catalog:build",

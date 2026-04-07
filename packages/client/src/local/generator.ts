@@ -1,6 +1,7 @@
 import { Data } from '../data/index.js';
-import { BadgeOptions } from '../helper/classes/message.js';
-import { Helper } from '../helper/index.js';
+import { BadgeOptions, MessageHelper } from '../helper/classes/message.js';
+import { RandomHelper } from '../helper/classes/random.js';
+import { usedClients } from '../internal.js';
 import { ClientEvents, Provider, StreamElements, Twitch } from '../types.js';
 
 /**
@@ -232,7 +233,7 @@ async function onSessionUpdate(
               name: name.toLowerCase(),
               displayName: name,
               amount,
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'superchat',
               originalEventName: 'superchat-latest',
@@ -285,7 +286,7 @@ async function onSessionUpdate(
               name: name.toLowerCase(),
               displayName: name,
               amount: amount,
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'superchat',
               originalEventName: 'superchat-latest',
@@ -412,10 +413,10 @@ async function onEventReceived(
   switch (provider) {
     default:
     case 'random': {
-      var randomProvider = Helper.random.array(
+      var randomProvider = new RandomHelper().array(
         Object.keys(available).filter((e) => available[e as Provider].length),
       )[0] as Provider;
-      var randomEvent = Helper.random.array(
+      var randomEvent = new RandomHelper().array(
         available[randomProvider],
       )[0] as StreamElements.Event.onEventReceived['listener'];
 
@@ -434,7 +435,7 @@ async function onEventReceived(
       ) {
         default:
         case 'random': {
-          var randomEvent = Helper.random.array(
+          var randomEvent = new RandomHelper().array(
             available[provider],
           )[0] as StreamElements.Event.onEventReceived['listener'];
 
@@ -465,25 +466,25 @@ async function onEventReceived(
             };
           }>;
 
-          var name = data?.name ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+          var name = data?.name ?? new RandomHelper().array(Data.names.filter((e) => e.length))[0];
           var message =
             data?.message ??
-            Helper.random.array(
+            new RandomHelper().array(
               [...Data.twitch_messages, ...Data.normal_messages].filter((e) => e.length),
             )[0];
 
-          var badges = await Helper.message.generateBadges(data?.badges ?? [], provider);
+          var badges = await new MessageHelper().generateBadges(data?.badges ?? [], provider);
 
-          var emotes = Helper.message.findEmotesInText(message);
-          var renderedText = Helper.message.replaceEmotesWithHTML(message, emotes);
+          var emotes = new MessageHelper().findEmotesInText(message);
+          var renderedText = new MessageHelper().replaceEmotesWithHTML(message, emotes);
 
-          var color = (data?.color as string) ?? Helper.random.color('hex');
-          var userId = (data?.userId as string) ?? Helper.random.string(16);
-          var msgId = (data?.msgId as string) ?? Helper.random.string(16);
+          var color = (data?.color as string) ?? new RandomHelper().color('hex');
+          var userId = (data?.userId as string) ?? new RandomHelper().string(16);
+          var msgId = (data?.msgId as string) ?? new RandomHelper().string(16);
           var time = (data?.time as number) ?? Date.now();
 
           var channel =
-            (data?.channel as string) ?? window?.client?.details?.user?.username ?? 'local';
+            (data?.channel as string) ?? usedClients?.[0]?.details?.user?.username ?? 'local';
 
           var reply = data?.reply
             ? ({
@@ -516,13 +517,13 @@ async function onEventReceived(
               data: {
                 time: time,
                 tags: {
-                  'badge-info': `${badges.keys.map((key) => `${key}/${badges.amount[key] ?? Helper.random.number(1, 5)}`).join(',')}`,
+                  'badge-info': `${badges.keys.map((key) => `${key}/${badges.amount[key] ?? new RandomHelper().number(1, 5)}`).join(',')}`,
                   'badges': badges.keys.map((key) => `${key}/1`).join(','),
 
                   ...roles,
 
                   'tmi-sent-ts': time.toString(),
-                  'room-id': Helper.random.string(9, 'numbers'),
+                  'room-id': new RandomHelper().string(9, 'numbers'),
 
                   'user-id': userId,
                   'user-type': '',
@@ -531,7 +532,7 @@ async function onEventReceived(
                   'display-name': name,
                   emotes: '',
 
-                  'client-nonce': Helper.random.string(16),
+                  'client-nonce': new RandomHelper().string(16),
                   flags: '',
                   id: msgId,
                   'first-msg': data?.firstMsg ? '1' : '0',
@@ -561,13 +562,14 @@ async function onEventReceived(
         }
         case 'cheer':
         case 'cheer-latest': {
-          var amount = (options?.amount as number) ?? Helper.random.number(100, 10000);
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+          var amount = (options?.amount as number) ?? new RandomHelper().number(100, 10000);
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
           var message =
             (options?.message as string) ??
-            Helper.random.array(Data.normal_messages.filter((e) => e.length))[0];
+            new RandomHelper().array(Data.normal_messages.filter((e) => e.length))[0];
 
           const event: StreamElements.Event.Provider.Twitch.Cheer & {
             event: { provider: Provider };
@@ -580,7 +582,7 @@ async function onEventReceived(
               displayName: name,
               message: message,
               providerId: '',
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'cheer',
               originalEventName: 'cheer-latest',
@@ -594,9 +596,10 @@ async function onEventReceived(
         }
         case 'follower':
         case 'follower-latest': {
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
 
           const event: StreamElements.Event.Provider.Twitch.Follower & {
             event: { provider: Provider };
@@ -607,7 +610,7 @@ async function onEventReceived(
               name: name.toLowerCase(),
               displayName: name,
               providerId: '',
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'follower',
               originalEventName: 'follower-latest',
@@ -621,10 +624,11 @@ async function onEventReceived(
         }
         case 'raid':
         case 'raid-latest': {
-          var amount = (options?.amount as number) ?? Helper.random.number(1, 100);
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+          var amount = (options?.amount as number) ?? new RandomHelper().number(1, 100);
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
 
           const event: StreamElements.Event.Provider.Twitch.Raid & {
             event: { provider: Provider };
@@ -636,7 +640,7 @@ async function onEventReceived(
               name: name.toLowerCase(),
               displayName: name,
               providerId: '',
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'raid',
               originalEventName: 'raid-latest',
@@ -651,17 +655,19 @@ async function onEventReceived(
         case 'subscriber':
         case 'subscriber-latest': {
           var tier =
-            (options?.tier as string) ?? Helper.random.array(['1000', '2000', '3000', 'prime'])[0];
-          var amount = (options?.amount as number) ?? Helper.random.number(1, 24);
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+            (options?.tier as string) ??
+            new RandomHelper().array(['1000', '2000', '3000', 'prime'])[0];
+          var amount = (options?.amount as number) ?? new RandomHelper().number(1, 24);
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
           var sender =
             (options?.sender as string) ??
-            Helper.random.array(Data.names.filter((e) => e.length && e !== name))[0];
+            new RandomHelper().array(Data.names.filter((e) => e.length && e !== name))[0];
           var message =
             (options?.message as string) ??
-            Helper.random.array(Data.normal_messages.filter((e) => e.length))[0];
+            new RandomHelper().array(Data.normal_messages.filter((e) => e.length))[0];
 
           var addons = {
             default: {
@@ -685,7 +691,7 @@ async function onEventReceived(
           };
 
           var subTypes = ['default', 'gift', 'community', 'spam'];
-          var subType = (options?.subType as string) ?? Helper.random.array(subTypes)[0];
+          var subType = (options?.subType as string) ?? new RandomHelper().array(subTypes)[0];
 
           subType = subTypes.includes(subType) ? subType : 'default';
 
@@ -703,7 +709,7 @@ async function onEventReceived(
               ...addons.default,
               ...addons[subType as keyof typeof addons],
 
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'subscriber',
               originalEventName: 'subscriber-latest',
@@ -721,7 +727,7 @@ async function onEventReceived(
           } = {
             listener: 'delete-message',
             event: {
-              msgId: (options?.id as string) ?? Helper.random.uuid(),
+              msgId: (options?.id as string) ?? new RandomHelper().uuid(),
               provider,
             },
             // @ts-ignore
@@ -737,7 +743,7 @@ async function onEventReceived(
             listener: 'delete-messages',
             event: {
               userId:
-                (options?.id as string) ?? Helper.random.number(10000000, 99999999).toString(),
+                (options?.id as string) ?? new RandomHelper().number(10000000, 99999999).toString(),
               provider,
             },
             // @ts-ignore
@@ -751,27 +757,31 @@ async function onEventReceived(
 
           switch (type) {
             case 'channelPointsRedemption': {
-              var amount = (options?.amount as number) ?? Helper.random.number(1, 100);
-              var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+              var amount = (options?.amount as number) ?? new RandomHelper().number(1, 100);
+              var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
               var name =
                 (options?.name as string) ??
-                Helper.random.array(Data.names.filter((e) => e.length))[0];
+                new RandomHelper().array(Data.names.filter((e) => e.length))[0];
               var message =
                 (options?.message as string) ??
-                Helper.random.array(Data.normal_messages.filter((e) => e.length))[0];
+                new RandomHelper().array(Data.normal_messages.filter((e) => e.length))[0];
               var redemption =
                 (options?.redemption as string) ??
-                Helper.random.array(['Highlight Message', 'Send a Shoutout', 'Drink Water'])[0];
+                new RandomHelper().array([
+                  'Highlight Message',
+                  'Send a Shoutout',
+                  'Drink Water',
+                ])[0];
               var quantity = (options?.quantity as number) ?? 1;
-              var providerId = (options?.providerId as string) ?? Helper.random.uuid();
-              var id = (options?.id as string) ?? Helper.random.uuid();
+              var providerId = (options?.providerId as string) ?? new RandomHelper().uuid();
+              var id = (options?.id as string) ?? new RandomHelper().uuid();
               var channel =
                 (options?.channel as string) ??
                 (options?.broadcaster as string) ??
                 (options?.streamer as string) ??
-                window?.client?.details?.user?.username ??
+                usedClients?.[0]?.details?.user?.username ??
                 'local';
-              var activityId = (options?.activityId as string) ?? Helper.random.uuid();
+              var activityId = (options?.activityId as string) ?? new RandomHelper().uuid();
               var time = (options?.time as number) ?? Date.now();
 
               const event: StreamElements.Event.Provider.Twitch.Event = {
@@ -833,7 +843,7 @@ async function onEventReceived(
       ) {
         default:
         case 'random': {
-          var randomEvent = Helper.random.array(
+          var randomEvent = new RandomHelper().array(
             available[provider],
           )[0] as StreamElements.Event.onEventReceived['listener'];
 
@@ -841,10 +851,11 @@ async function onEventReceived(
         }
         case 'tip':
         case 'tip-latest': {
-          var amount = (options?.amount as number) ?? Helper.random.number(100, 4000);
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+          var amount = (options?.amount as number) ?? new RandomHelper().number(100, 4000);
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
 
           const event: StreamElements.Event.Provider.StreamElements.Tip & {
             event: { provider: Provider };
@@ -856,7 +867,7 @@ async function onEventReceived(
               name: name.toLowerCase(),
               displayName: name,
               providerId: '',
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'tip',
               originalEventName: 'tip-latest',
@@ -893,7 +904,7 @@ async function onEventReceived(
             listener: 'bot:counter',
             event: {
               counter: (options?.counter as string) ?? 'sampleCounter',
-              value: (options?.value as number) ?? Helper.random.number(0, 100),
+              value: (options?.value as number) ?? new RandomHelper().number(0, 100),
               provider,
             },
             // @ts-ignore
@@ -906,7 +917,7 @@ async function onEventReceived(
         case 'unmute':
         case 'alertService:toggleSound': {
           var muted =
-            (options?.muted as boolean) ?? window?.client?.details?.overlay?.muted ?? false;
+            (options?.muted as boolean) ?? usedClients?.[0]?.details?.overlay?.muted ?? false;
 
           const event: StreamElements.Event.Provider.StreamElements.AlertService & {
             event: { provider: Provider };
@@ -952,7 +963,7 @@ async function onEventReceived(
       ) {
         default:
         case 'random': {
-          var randomEvent = Helper.random.array(
+          var randomEvent = new RandomHelper().array(
             available[provider],
           )[0] as StreamElements.Event.onEventReceived['listener'];
 
@@ -960,31 +971,32 @@ async function onEventReceived(
         }
         case 'message': {
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
           var message =
             (options?.message as string) ??
-            Helper.random.array(
+            new RandomHelper().array(
               [...Data.youtube_messages, ...Data.normal_messages].filter((e) => e.length),
             )[0];
 
-          const badges = await Helper.message.generateBadges(
+          const badges = await new MessageHelper().generateBadges(
             (options?.badges as BadgeOptions) ?? [],
             provider,
           );
 
-          var emotes = Helper.message.findEmotesInText(message);
-          var renderedText = Helper.message.replaceEmotesWithHTML(message, emotes);
+          var emotes = new MessageHelper().findEmotesInText(message);
+          var renderedText = new MessageHelper().replaceEmotesWithHTML(message, emotes);
 
-          var color = (options?.color as string) ?? Helper.random.color('hex');
+          var color = (options?.color as string) ?? new RandomHelper().color('hex');
           var userId =
-            (options?.userId as string) ?? Helper.random.number(10000000, 99999999).toString();
-          var msgId = (options?.msgId as string) ?? Helper.random.uuid();
+            (options?.userId as string) ?? new RandomHelper().number(10000000, 99999999).toString();
+          var msgId = (options?.msgId as string) ?? new RandomHelper().uuid();
           var time = (options?.time as number) ?? Date.now();
 
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
 
           var channel =
-            (options?.channel as string) ?? window?.client?.details?.user?.username ?? 'local';
+            (options?.channel as string) ?? usedClients?.[0]?.details?.user?.username ?? 'local';
 
           const event: StreamElements.Event.Provider.YouTube.Message = {
             listener: 'message',
@@ -1036,9 +1048,10 @@ async function onEventReceived(
         }
         case 'subscriber':
         case 'subscriber-latest': {
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
 
           const event: StreamElements.Event.Provider.YouTube.Subscriber & {
             event: { provider: Provider };
@@ -1049,7 +1062,7 @@ async function onEventReceived(
               displayName: name,
               name: name.toLowerCase(),
               providerId: '',
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'subscriber',
               originalEventName: 'subscriber-latest',
@@ -1063,10 +1076,11 @@ async function onEventReceived(
         }
         case 'superchat':
         case 'superchat-latest': {
-          var amount = (options?.amount as number) ?? Helper.random.number(100, 4000);
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+          var amount = (options?.amount as number) ?? new RandomHelper().number(100, 4000);
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
 
           const event: StreamElements.Event.Provider.YouTube.Superchat & {
             event: { provider: Provider };
@@ -1078,7 +1092,7 @@ async function onEventReceived(
               name: name.toLowerCase(),
               displayName: name,
               providerId: '',
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'superchat',
               originalEventName: 'superchat-latest',
@@ -1092,17 +1106,19 @@ async function onEventReceived(
         }
         case 'sponsor':
         case 'sponsor-latest': {
-          var tier = (options?.tier as string) ?? Helper.random.array(['1000', '2000', '3000'])[0];
-          var amount = (options?.amount as number) ?? Helper.random.number(1, 24);
-          var avatar = (options?.avatar as string) ?? Helper.random.array(Data.avatars)[0];
+          var tier =
+            (options?.tier as string) ?? new RandomHelper().array(['1000', '2000', '3000'])[0];
+          var amount = (options?.amount as number) ?? new RandomHelper().number(1, 24);
+          var avatar = (options?.avatar as string) ?? new RandomHelper().array(Data.avatars)[0];
           var name =
-            (options?.name as string) ?? Helper.random.array(Data.names.filter((e) => e.length))[0];
+            (options?.name as string) ??
+            new RandomHelper().array(Data.names.filter((e) => e.length))[0];
           var sender =
             (options?.sender as string) ??
-            Helper.random.array(Data.names.filter((e) => e.length && e !== name))[0];
+            new RandomHelper().array(Data.names.filter((e) => e.length && e !== name))[0];
           var message =
             (options?.message as string) ??
-            Helper.random.array(Data.normal_messages.filter((e) => e.length))[0];
+            new RandomHelper().array(Data.normal_messages.filter((e) => e.length))[0];
 
           var addons = {
             default: {
@@ -1126,7 +1142,7 @@ async function onEventReceived(
           };
 
           var subTypes = ['default', 'gift', 'community', 'spam'];
-          var subType = (options?.subType as string) ?? Helper.random.array(subTypes)[0];
+          var subType = (options?.subType as string) ?? new RandomHelper().array(subTypes)[0];
 
           subType = subTypes.includes(subType) ? subType : 'default';
 
@@ -1143,7 +1159,7 @@ async function onEventReceived(
               ...addons.default,
               ...addons[subType as keyof typeof addons],
 
-              _id: Helper.random.uuid(),
+              _id: new RandomHelper().uuid(),
               sessionTop: false,
               type: 'sponsor',
               originalEventName: 'sponsor-latest',
@@ -1580,13 +1596,13 @@ export class Generator {
 
           switch (config.type) {
             case 'int':
-              return Helper.random.number(config.min, config.max);
+              return new RandomHelper().number(config.min, config.max);
             case 'string':
-              return Helper.random.array(config.options)[0];
+              return new RandomHelper().array(config.options)[0];
             case 'date':
-              return Helper.random.daysOffset(config.range);
+              return new RandomHelper().daysOffset(config.range);
             case 'array':
-              return Helper.random.array(config.options)[0];
+              return new RandomHelper().array(config.options)[0];
             case 'recent':
               return generateRecentData(config);
             default:

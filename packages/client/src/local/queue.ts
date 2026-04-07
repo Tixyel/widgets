@@ -1,5 +1,5 @@
-import { Client } from '../client/client.js';
 import { Helper } from '../helper/index.js';
+import { usedClients } from '../internal.js';
 import { useQueue } from '../modules/useQueue.js';
 import { StreamElements } from '../types.js';
 import { generate } from './generator.js';
@@ -21,7 +21,7 @@ export const localQueue = new useQueue<localQueueItem>({
 
     if (received.listener === 'onEventReceived' && received.session) {
       const sessionEvent = await generate.event.onSessionUpdate(
-        window?.client && window?.client instanceof Client ? window.client.session : undefined,
+        usedClients?.[0] ? usedClients[0].session : undefined,
         Helper.event.parseProvider(received.data),
       );
 

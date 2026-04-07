@@ -1,10 +1,7 @@
 import { test, expect } from 'bun:test';
 
 import { generate } from '../../local/generator.js';
-import { StreamElements, TwitchEvents } from '../../types.js';
 import { EventHelper } from './event.js';
-
-const parseProvider = new EventHelper().parseProvider;
 
 test('Verify if the provider is correctly parsed', async () => {
   const event = await generate.event.onEventReceived('twitch', 'event', {
@@ -15,7 +12,7 @@ test('Verify if the provider is correctly parsed', async () => {
     throw new Error('Failed to generate event');
   }
 
-  const result = parseProvider(event);
+  const result = new EventHelper().parseProvider(event);
 
   expect(result.provider).toBe('twitch');
 });

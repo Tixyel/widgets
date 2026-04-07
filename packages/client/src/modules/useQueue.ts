@@ -1,6 +1,15 @@
 import { Client } from '../client/client.js';
+import { usedClients } from '../internal.js';
 import { logger } from '../main.js';
 import { EventProvider } from './EventProvider.js';
+
+const getUsedClients = (): Client[] => {
+  try {
+    return usedClients;
+  } catch {
+    return [];
+  }
+};
 
 type QueueEvents<T> = {
   load: [];
@@ -90,7 +99,9 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
     duration: QueueDuration | 'client' = this.duration,
     callback?: () => void,
   ) {
-    if (!(window?.client instanceof Client)) {
+    const clients = getUsedClients();
+
+    if (!clients.length) {
       setTimeout(
         () => this.waitForClientAndBindLoad(duration, callback),
         this.clientWaitRetryDelay,
@@ -99,9 +110,10 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
       return;
     }
 
-    window.client.on('load', () => {
-      if (duration === 'client')
-        this.duration = (window?.client?.fields?.widgetDuration ?? 0) as number;
+    const client = clients[0];
+
+    client.on('load', () => {
+      if (duration === 'client') this.duration = (client.fields?.widgetDuration ?? 0) as number;
 
       this.emit('load');
 
@@ -247,7 +259,8 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
     this.history = save.history ?? this.history;
 
     if (this.hasItems() && this.running === false) {
-      window.client?.on('load', () => this.run());
+      const client = getUsedClients()[0];
+      client?.on('load', () => this.run());
     }
 
     return this;

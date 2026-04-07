@@ -16,10 +16,10 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "noEmit": false,
-    "types": [],
+    "types": ["@types/bun"],
     "lib": ["ES2022", "DOM"],
     "jsx": "react-jsx"
   },
   "include": ["src"],
-  "exclude": ["dist", "node_modules", "**/*.test.ts", "**/*.spec.ts", "public"]
+  "exclude": ["dist", "node_modules", "**/*.spec.ts", "public"]
 }

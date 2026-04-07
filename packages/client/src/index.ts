@@ -1,6 +1,5 @@
 import { ComfyJSInstance } from 'comfy.js';
 
-import type { Client } from './client/client.js';
 import { main } from './main.js';
 import { StreamElements } from './types.js';
 
@@ -9,7 +8,6 @@ export type * from './types.ts';
 declare global {
   interface Window {
     Tixyel: typeof main;
-    client: Client | undefined;
     ComfyJS?: ComfyJSInstance;
   }
 
@@ -20,8 +18,6 @@ declare global {
   }
 
   const Tixyel: typeof main;
-  let client: Client | undefined;
-
   const SE_API: StreamElements.SE_API;
 }
 

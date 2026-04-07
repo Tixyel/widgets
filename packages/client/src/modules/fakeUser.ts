@@ -1,6 +1,7 @@
 import { Data } from '../data/index.js';
 import { RandomHelper } from '../helper/classes/random.js';
 import { UtilsHelper } from '../helper/classes/utils.js';
+import { fakeUserPools } from '../internal.js';
 import { Local } from '../local/index.js';
 import { StreamElements, Twitch } from '../types.js';
 import { EventProvider } from './EventProvider.js';
@@ -59,8 +60,6 @@ export const defaultIncompatibleBadges: FakeUserPoolOptions['incompatible'] = {
 };
 
 export const MAX_BADGES_PER_USER = 3;
-
-export const fakeUserPools: FakeUserPool[] = [];
 
 export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
   public readonly users: FakeUser[] = [];
