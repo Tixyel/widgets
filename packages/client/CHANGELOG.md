@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.1
+
+### Patch Changes
+
+- 488c481: Persist event history to localStorage
+
 ## 7.6.0
 
 ### Minor Changes
