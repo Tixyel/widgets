@@ -93,6 +93,8 @@ const LOCAL_SE_API: StreamElements.SE_API & {
 
       this.history.push({ ...customEvent, origin: usedClients?.[0]?.id });
 
+      localStorage.setItem('SE_API-EVENTS', JSON.stringify(this.history));
+
       return window.dispatchEvent(customEvent) ? { ok: true } : { ok: false };
     },
     /**
@@ -111,6 +113,8 @@ const LOCAL_SE_API: StreamElements.SE_API & {
       const customEvent = new CustomEvent('onEventReceived', { detail: eventObj });
 
       this.history.push({ ...customEvent, origin: usedClients?.[0]?.id });
+
+      localStorage.setItem('SE_API-EVENTS', JSON.stringify(this.history));
 
       return window.dispatchEvent(customEvent) ? { ok: true } : { ok: false };
     },
