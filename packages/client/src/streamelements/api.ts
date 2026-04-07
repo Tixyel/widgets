@@ -2,7 +2,14 @@ import { localQueue } from '../local/queue.js';
 import { useQueue } from '../types.js';
 import { StreamElements } from '../types/streamelements/main.js';
 
-const LOCAL_SE_API: StreamElements.SE_API & { store: { list: Record<string, any> } } = {
+const LOCAL_SE_API: StreamElements.SE_API & {
+  store: { list: Record<string, any> };
+  events: {
+    history: Array<
+      CustomEvent<{ listener: string; event: any; result: undefined }> & { origin?: string }
+    >;
+  };
+} = {
   responses: {} as Record<string, any>,
 
   sendMessage(message: string, data: Record<string, any> = {}) {
@@ -81,9 +88,11 @@ const LOCAL_SE_API: StreamElements.SE_API & { store: { list: Record<string, any>
         result: undefined,
       };
 
-      return window.dispatchEvent(new CustomEvent('onEventReceived', { detail: eventObj }))
-        ? { ok: true }
-        : { ok: false };
+      const customEvent = new CustomEvent('onEventReceived', { detail: eventObj });
+
+      this.history.push({ ...customEvent, origin: client?.id });
+
+      return window.dispatchEvent(customEvent) ? { ok: true } : { ok: false };
     },
     /**
      * Broadcast a event to all widgets in all overlays. This is useful for communicating between different overlays.
@@ -98,19 +107,27 @@ const LOCAL_SE_API: StreamElements.SE_API & { store: { list: Record<string, any>
         result: undefined,
       };
 
-      return window.dispatchEvent(new CustomEvent('onEventReceived', { detail: eventObj }))
-        ? { ok: true }
-        : { ok: false };
+      const customEvent = new CustomEvent('onEventReceived', { detail: eventObj });
+
+      this.history.push({ ...customEvent, origin: client?.id });
+
+      return window.dispatchEvent(customEvent) ? { ok: true } : { ok: false };
     },
+
+    history: [],
   },
 };
 
 export async function initializeLocalSEAPI() {
   let lastStore = localStorage.getItem('SE_API-STORE') ?? '{}';
-
   let result = lastStore ? JSON.parse(lastStore) : {};
 
   LOCAL_SE_API.store.list = result;
+
+  let lastEvents = localStorage.getItem('SE_API-EVENTS') ?? '[]';
+  let eventsResult = lastEvents ? JSON.parse(lastEvents) : [];
+
+  LOCAL_SE_API.events.history = eventsResult;
 
   return LOCAL_SE_API;
 }
