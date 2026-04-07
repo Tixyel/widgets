@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.5.0
+
+### Minor Changes
+
+- b927a42: Enhance SE_API with event handling capabilities and improve sendMessage functionality
+
 ## 7.4.0
 
 ### Minor Changes
