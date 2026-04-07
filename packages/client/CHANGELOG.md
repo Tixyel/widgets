@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.5.1
+
+### Patch Changes
+
+- a6f65d9: Integrate localQueue handling in resumeQueue
+
 ## 7.5.0
 
 ### Minor Changes
