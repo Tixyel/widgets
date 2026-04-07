@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.2
+
+### Patch Changes
+
+- 07b4c4a: Update event history structure to include event details and the timestamp
+
 ## 7.6.1
 
 ### Patch Changes
