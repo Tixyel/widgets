@@ -8,6 +8,7 @@ import {
   NumberHelper,
   ObjectHelper,
   RandomHelper,
+  SEHelper,
   SoundHelper,
   StringHelper,
   UtilsHelper,
@@ -37,4 +38,6 @@ export namespace Helper {
   export const fn = new FunctionHelper();
 
   export const utils = new UtilsHelper();
+
+  export const streamelements = new SEHelper();
 }

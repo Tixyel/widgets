@@ -376,4 +376,102 @@ export class ElementHelper {
 
     return html;
   }
+
+  /**
+   * Retrieves CSS variables defined in the stylesheets of the document for a given selector, with optional filtering and helper variable exclusion.
+   * @param selector - The CSS selector to search for (default is ':root' to target global variables).
+   * @param filter - A function to filter the retrieved CSS variables. It receives each variable as a [key, value] pair, along with its index and the full array of variables. Should return true to include the variable in the results.
+   * @param options - Optional settings for retrieving CSS variables, including filterHelpers to exclude common helper variables (those ending with -min, -max, or -step).
+   * @returns - An array of [key, value] pairs representing the CSS variables that match the selector and filter criteria.
+   * @example
+   * ```javascript
+   * // Retrieve all CSS variables defined under :root
+   * const variables = getElementCSSVariables();
+   * console.log(variables);
+   * // Retrieve CSS variables defined under a specific selector, e.g., .my-class
+   * const classVariables = getElementCSSVariables('.my-class');
+   * console.log(classVariables);
+   * // Retrieve CSS variables with a custom filter, e.g., only variables that include 'color' in their name
+   * const colorVariables = getElementCSSVariables(':root', ([key]) => key.includes('color'));
+   * console.log(colorVariables);
+   */
+  getElementCSSVariables(
+    selector: string = ':root',
+    filter: ([k, v]: [string, string], i: number, array: [string, string][]) => boolean = () =>
+      true,
+    options?: { filterHelpers?: boolean },
+  ) {
+    const stylesheets = Array.from(document.styleSheets);
+    let orderedVars: [string, string][] = [];
+
+    for (const sheet of stylesheets) {
+      try {
+        for (const rule of Array.from(sheet.cssRules)) {
+          if ((rule as CSSStyleRule)?.selectorText === selector) {
+            const cssText = (rule as CSSStyleRule).cssText;
+            const matches = [...cssText.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)];
+
+            orderedVars = matches.map((m) => [m[1], m[2].trim()]);
+          }
+        }
+      } catch (error) {}
+      if (orderedVars.length) break;
+    }
+
+    return orderedVars
+      .filter(([k]) => {
+        if (!options?.filterHelpers) return true;
+
+        if (k.endsWith('-min')) return false;
+        else if (k.endsWith('-max')) return false;
+        else if (k.endsWith('-step')) return false;
+
+        return true;
+      })
+      .filter(filter);
+  }
+
+  /**
+   * Applies CSS styles to an HTML or SVG element, supporting both standard and custom properties, as well as '!important' values.
+   * @param element - The target HTML or SVG element to which the styles will be applied.
+   * @param styles - An object containing CSS property-value pairs. Property names can be in camelCase or kebab-case, and values can include '!important'.
+   * @example
+   * ```javascript
+   * CSS(document.getElementById('myElement'), {
+   *   backgroundColor: 'red',
+   *   '--custom-var': '10px',
+   *   color: 'blue !important',
+   * });
+   * ```
+   */
+  CSS(
+    element: HTMLElement | SVGElement,
+    styles: Partial<Record<keyof CSSStyleProperties | `--${string}`, CSSValue>>,
+  ): void {
+    const normalizePropertyName = (name: string): string => {
+      if (name.startsWith('--')) return name;
+      return name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+    };
+
+    for (const [rawName, rawValue] of Object.entries(styles)) {
+      const propertyName = normalizePropertyName(rawName);
+
+      if (rawValue === null || rawValue === undefined) {
+        element.style.setProperty(propertyName, '');
+        continue;
+      }
+
+      const value = String(rawValue).trim();
+
+      if (value.endsWith('!important')) {
+        const importantValue = value.replace(/\s*!important\s*$/, '').trim();
+        element.style.setProperty(propertyName, importantValue, 'important');
+        continue;
+      }
+
+      element.style.setProperty(propertyName, value);
+    }
+  }
 }
+
+type CSSValue = string | number | null | undefined;
