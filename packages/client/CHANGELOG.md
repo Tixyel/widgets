@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.4
+
+### Patch Changes
+
+- 447a717: Streamline event emission for unhandled providers
+
 ## 7.6.3
 
 ### Patch Changes
