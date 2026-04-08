@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.6
+
+### Patch Changes
+
+- fa521e1: Enhance event listener condition for debug logging
+
 ## 7.6.5
 
 ### Patch Changes
