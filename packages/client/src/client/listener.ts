@@ -351,19 +351,9 @@ if (typeof window !== undefined) {
 
             break;
           }
-          case 'kick': {
-            const data = received.data;
-
-            client.emit('event', 'kick', received.data);
-
-            break;
-          }
-          case 'facebook': {
-            const data = received.data;
-
-            client.emit('event', 'facebook', received.data);
-
-            break;
+          default: {
+            // @ts-ignore
+            client.emit('event', received.provider, received.data);
           }
         }
 
