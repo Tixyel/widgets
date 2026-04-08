@@ -10,17 +10,23 @@ export type ClientProviderEvents = {
   facebook: StreamElements.Event.Provider.Facebook.Events;
 };
 
-export type ClientCustomEventPayload = {
-  provider: 'custom';
+export type ClientCustomEventPayload<TProvider extends string = string> = {
+  provider: TProvider;
 };
 
 export type ClientCustomProviderEvents = Record<string, ClientCustomEventPayload>;
 
+type ClientCustomEventsWithoutInternalProviders<CustomEvents> = Omit<
+  CustomEvents,
+  keyof ClientProviderEvents
+>;
+
 type ValidateCustomProviderEvents<CustomEvents> =
   CustomEvents extends Record<string, unknown>
     ? {
-        [K in keyof CustomEvents]: CustomEvents[K] extends ClientCustomEventPayload
-          ? CustomEvents[K]
+        [K in keyof ClientCustomEventsWithoutInternalProviders<CustomEvents> &
+          string]: ClientCustomEventsWithoutInternalProviders<CustomEvents>[K] extends ClientCustomEventPayload<K>
+          ? ClientCustomEventsWithoutInternalProviders<CustomEvents>[K]
           : never;
       }
     : {};
