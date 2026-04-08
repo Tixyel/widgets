@@ -91,8 +91,8 @@ export class useStorage<T extends JSONObject> extends EventProvider<UseStorageEv
       this.save(newData);
 
       this.emit('update', newData, 'internal:update');
-    } else {
-      throw new Error('Storage not loaded yet or data is the same as current');
+    } else if (!this.loaded) {
+      throw new Error('Storage not loaded yet');
     }
   }
 
