@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.5
+
+### Patch Changes
+
+- 02969a4: enhance custom event payload type
+
 ## 7.6.4
 
 ### Patch Changes
