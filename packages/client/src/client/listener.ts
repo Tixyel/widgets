@@ -366,7 +366,11 @@ if (typeof window !== undefined) {
           'kvstore:update',
         ];
 
-        if (client.debug && !excludeListeners.some((e) => e === received.data.listener)) {
+        if (
+          client.debug &&
+          !excludeListeners.some((e) => e === received.data.listener) &&
+          ['streamelements', 'twitch', 'youtube'].some((p) => p === received.provider)
+        ) {
           logger.received(
             '[Client]',
             `Event ${received.data.listener} received from ${received.provider}`,
