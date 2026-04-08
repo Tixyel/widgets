@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.7.0
+
+### Minor Changes
+
+- 0c9b10c: Add SEHelper class for StreamElements custom field management
+
 ## 7.6.8
 
 ### Patch Changes
