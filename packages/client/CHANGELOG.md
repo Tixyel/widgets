@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.7
+
+### Patch Changes
+
+- 233d865: Improve useStorage methods for better data handling and event emission
+
 ## 7.6.6
 
 ### Patch Changes
