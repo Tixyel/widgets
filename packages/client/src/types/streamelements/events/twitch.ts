@@ -15,20 +15,20 @@ export namespace TwitchEvents {
         time: number;
         tags: Partial<MapNumberValuesToString<Twitch.IRC>> & {
           'badge-info': string;
-          'badges': string;
+          badges: string;
           'client-nonce': string;
-          'color': string;
+          color: string;
           'display-name': string;
-          'emotes': string;
+          emotes: string;
           'first-msg': '1' | '0';
-          'flags': string;
-          'id': string;
-          'mod': '1' | '0';
+          flags: string;
+          id: string;
+          mod: '1' | '0';
           'returning-chatter': '1' | '0';
           'room-id': string;
-          'subscriber': '1' | '0';
+          subscriber: '1' | '0';
           'tmi-sent-ts': string;
-          'turbo': '1' | '0';
+          turbo: '1' | '0';
           'user-id': string;
           'user-type': '' | 'mod' | 'admin' | 'global_mod' | 'staff';
         };

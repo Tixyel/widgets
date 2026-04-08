@@ -1,6 +1,7 @@
+import type { Twitch } from '../types.js';
+
 import { expect, test } from 'bun:test';
 
-import type { Twitch } from '../types.js';
 import { FakeUserPool } from './fakeUser.js';
 
 const badges: Twitch.tags[] = ['vip', 'moderator', 'subscriber', 'founder'];

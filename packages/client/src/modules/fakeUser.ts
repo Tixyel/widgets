@@ -48,15 +48,15 @@ export interface FakeUserPoolOptions {
 }
 
 type FakeUserPoolEvents = {
-  'warn': [warning: Error];
+  warn: [warning: Error];
 };
 
 export const defaultIncompatibleBadges: FakeUserPoolOptions['incompatible'] = {
-  'broadcaster': ['moderator', 'vip', 'artist-badge'],
-  'moderator': ['lead_moderator'],
-  'no_video': ['no_audio'],
+  broadcaster: ['moderator', 'vip', 'artist-badge'],
+  moderator: ['lead_moderator'],
+  no_video: ['no_audio'],
   '60-seconds_1': ['60-seconds_2', '60-seconds_3'],
-  'duelyst_1': ['duelyst_2', 'duelyst_3', 'duelyst_4', 'duelyst_5', 'duelyst_6', 'duelyst_7'],
+  duelyst_1: ['duelyst_2', 'duelyst_3', 'duelyst_4', 'duelyst_5', 'duelyst_6', 'duelyst_7'],
 };
 
 export const MAX_BADGES_PER_USER = 3;
@@ -80,7 +80,7 @@ export class FakeUserPool extends EventProvider<FakeUserPoolEvents> {
 
     return (
       utils.probability({
-        'prime': 0.4,
+        prime: 0.4,
         '1000': 0.3,
         '2000': 0.2,
         '3000': 0.1,

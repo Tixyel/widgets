@@ -1,9 +1,9 @@
 import { usedClients } from '../internal.js';
 import { localQueue } from '../local/queue.js';
-import { useQueue } from '../types.js';
+import { useQueue } from '../modules/useQueue.js';
 import { StreamElements } from '../types/streamelements/main.js';
 
-const LOCAL_SE_API: StreamElements.SE_API & {
+export const LOCAL_SE_API: StreamElements.SE_API & {
   store: { list: Record<string, any> };
   events: { history: Array<{ detail: any; timestamp: number; origin?: string }> };
 } = {
@@ -126,17 +126,3 @@ const LOCAL_SE_API: StreamElements.SE_API & {
     history: [],
   },
 };
-
-export async function initializeLocalSEAPI() {
-  let lastStore = localStorage.getItem('SE_API-STORE') ?? '{}';
-  let result = lastStore ? JSON.parse(lastStore) : {};
-
-  LOCAL_SE_API.store.list = result;
-
-  let lastEvents = localStorage.getItem('SE_API-EVENTS') ?? '[]';
-  let eventsResult = lastEvents ? JSON.parse(lastEvents) : [];
-
-  LOCAL_SE_API.events.history = eventsResult;
-
-  return LOCAL_SE_API;
-}

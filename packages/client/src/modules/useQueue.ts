@@ -1,6 +1,5 @@
 import { Client } from '../client/client.js';
 import { usedClients } from '../internal.js';
-import { logger } from '../main.js';
 import { EventProvider } from './EventProvider.js';
 
 const getUsedClients = (): Client[] => {
@@ -209,7 +208,7 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
 
       this.emit('process', nextItem, this);
     } catch (error) {
-      logger.error(
+      console.error(
         `Error during item processing: ${error instanceof Error ? error.message : String(error)}`,
       );
     }

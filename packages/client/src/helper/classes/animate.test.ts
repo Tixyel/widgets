@@ -273,4 +273,3 @@ describe('sequence', () => {
     expect(sequenced.x[2]).toBe(path1.x[0]);
   });
 });
-

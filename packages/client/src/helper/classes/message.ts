@@ -514,13 +514,13 @@ export class MessageHelper {
 
       case 'youtube': {
         var details = {
-          'verified': { isVerified: true },
-          'partner': { isVerified: true },
-          'broadcaster': { isChatOwner: true },
-          'host': { isChatOwner: true },
-          'sponsor': { isChatSponsor: true },
-          'subscriber': { isChatSponsor: true },
-          'moderator': { isChatModerator: true },
+          verified: { isVerified: true },
+          partner: { isVerified: true },
+          broadcaster: { isChatOwner: true },
+          host: { isChatOwner: true },
+          sponsor: { isChatSponsor: true },
+          subscriber: { isChatSponsor: true },
+          moderator: { isChatModerator: true },
         };
 
         result = Object.values(clearedBadges).reduce(

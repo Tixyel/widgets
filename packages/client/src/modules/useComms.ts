@@ -1,7 +1,7 @@
 import { usedComms } from '../internal.js';
-import { USE_SE_API } from '../main.js';
 import { StreamElements } from '../types/index.js';
 import { EventProvider } from './EventProvider.js';
+import { USE_SE_API } from './SE_API.js';
 
 type MessageMap = Record<string, any>;
 

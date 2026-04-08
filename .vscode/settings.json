@@ -2,17 +2,19 @@
   "js/ts.experimental.useTsgo": true,
 
   "oxc.enable": true,
-  "oxc.fmt.configPath": "oxfmt.config.ts",
+  "oxc.enable.oxfmt": true,
+  "oxc.fmt.configPath": "oxfmt.config.mts",
   "editor.defaultFormatter": "oxc.oxc-vscode",
+
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
 
   "editor.codeActionsOnSave": {
-    "source.fixAll.oxc": "always",
+    "source.fixAll.oxc": "always"
   },
 
   "js/ts.tsserver.watchOptions": {
-    "excludeDirectories": ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.agents/**"],
+    "excludeDirectories": ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.agents/**"]
   },
 
   "tailwindCSS.files.exclude": [
@@ -20,7 +22,7 @@
     "**/node_modules/**",
     "**/.hg/**",
     "**/.svn/**",
-    "**/.agents/**",
+    "**/.agents/**"
   ],
 
   "files.exclude": {
@@ -30,6 +32,6 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "**/.turbo": true,
-    "**/.changeset": true,
-  },
+    "**/.changeset": true
+  }
 }

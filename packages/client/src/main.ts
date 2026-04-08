@@ -8,17 +8,14 @@ import * as internals from './internal.js';
 import { Local } from './local/index.js';
 import { EventProvider } from './modules/EventProvider.js';
 import { FakeUserPool } from './modules/fakeUser.js';
+import { USE_SE_API } from './modules/SE_API.js';
 import { useComms } from './modules/useComms.js';
 import { useLogger } from './modules/useLogger.js';
 import { useQueue } from './modules/useQueue.js';
 import { useStorage } from './modules/useStorage.js';
 import { useComfyJs } from './multistream/comfyJs.js';
-import { initializeLocalSEAPI } from './streamelements/api.js';
-import { StreamElements } from './types/index.js';
 import { Alejo } from './utils/alejo.js';
 
-export const USE_SE_API: Promise<StreamElements.SE_API> =
-  typeof SE_API !== 'undefined' ? Promise.resolve(SE_API) : Promise.resolve(initializeLocalSEAPI());
 export const logger = new useLogger();
 
 export const main = {
@@ -46,9 +43,7 @@ export const main = {
     useComfyJs,
   },
   internal: internals,
-  pronouns: {
-    Alejo,
-  },
+  pronouns: { Alejo },
 };
 
 if (typeof window !== 'undefined') {

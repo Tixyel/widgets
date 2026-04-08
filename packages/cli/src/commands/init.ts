@@ -1,9 +1,9 @@
+import type { Command } from 'commander';
+
 import { exec } from 'child_process';
 import { existsSync, unlink } from 'fs';
 import { writeFile } from 'fs/promises';
 import { resolve } from 'path';
-
-import type { Command } from 'commander';
 
 import { program } from '../app';
 

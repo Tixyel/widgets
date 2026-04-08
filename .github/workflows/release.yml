@@ -6,11 +6,11 @@ on:
       - main
 
 defaults:
-  run: 
+  run:
     shell: bash
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 permissions:
   id-token: write
@@ -41,10 +41,10 @@ jobs:
         with:
           version: bun run version
           publish: bun run release
-          commit: 'Release packages'
-          title: 'Release'
+          commit: "Release packages"
+          title: "Release"
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN}}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN}}
-          NPM_CONFIG_PROVENANCE: 'false'
+          NPM_CONFIG_PROVENANCE: "false"

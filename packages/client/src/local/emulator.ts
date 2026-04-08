@@ -1,5 +1,4 @@
 import { BadgeOptions } from '../helper/classes/message.js';
-import { logger } from '../main.js';
 import { StreamElements } from '../types.js';
 import { generate } from './generator.js';
 import { localQueue as queue } from './queue.js';
@@ -261,7 +260,7 @@ export class Emulator {
         : StreamElements.Event.onWidgetLoad,
   ): void {
     if (!queue) {
-      logger.warn('Local  queue is not initialized.');
+      console.warn('Local queue is not initialized.');
 
       window.dispatchEvent(new CustomEvent(listener, { detail: event }));
 

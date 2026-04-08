@@ -63,7 +63,7 @@
     "rollup": "catalog:build",
     "rollup-plugin-dts": "catalog:build",
     "tmi.js": "^1.8.5",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "vite": "catalog:build"
   },
   "engines": {

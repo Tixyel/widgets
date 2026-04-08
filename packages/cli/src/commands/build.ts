@@ -1,7 +1,7 @@
+import type { Command } from 'commander';
+
 import { existsSync, readFileSync } from 'fs';
 import path, { relative } from 'path';
-
-import type { Command } from 'commander';
 
 import { program } from '../app';
 

@@ -22,7 +22,18 @@ export default defineConfig({
   trailingComma: 'all',
 
   sortPackageJson: true,
-  sortImports: { order: 'asc' },
+  sortImports: {
+    order: 'asc',
+    groups: [
+      'type',
+      'builtin',
+      'external',
+      ['internal', 'subpath'],
+      ['parent', 'sibling', 'index'],
+      'style',
+      'unknown',
+    ],
+  },
 
   overrides: [{ options: { trailingComma: 'none' }, files: ['*.tixyel'] }],
 

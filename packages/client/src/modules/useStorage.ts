@@ -1,9 +1,10 @@
-import { usedStorages } from '../internal.js';
-import { USE_SE_API } from '../main.js';
 import type { JSONObject } from '../types/json.js';
-import { PathValue } from '../types/path.js';
-import { StreamElements } from '../types/streamelements/main.js';
+import type { PathValue } from '../types/path.js';
+import type { StreamElements } from '../types/streamelements/main.js';
+
+import { usedStorages } from '../internal.js';
 import { EventProvider } from './EventProvider.js';
+import { USE_SE_API } from './SE_API.js';
 
 type UseStorageEvents<T> = {
   load: [T | null];
