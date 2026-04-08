@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.6.8
+
+### Patch Changes
+
+- bffd7c9: fix: improve error handling in update method for unloaded storage
+
 ## 7.6.7
 
 ### Patch Changes
