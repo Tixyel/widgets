@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.8.0
+
+### Minor Changes
+
+- 67bcee6: Add escapeHtml method to safely render HTML by escaping special characters
+
 ## 7.7.0
 
 ### Minor Changes
