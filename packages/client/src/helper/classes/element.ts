@@ -472,6 +472,29 @@ export class ElementHelper {
       element.style.setProperty(propertyName, value);
     }
   }
+
+  /**
+   * Escapes special HTML characters in a string to prevent XSS attacks and ensure safe rendering in HTML contexts.
+   * @param value - The input string that may contain special HTML characters such as &, <, >, ", and '.
+   * @returns A new string with special HTML characters replaced by their corresponding HTML entities.
+   * @example
+   * ```javascript
+   * const unsafeString = '<script>alert("XSS")</script>';
+   * const safeString = escapeHtml(unsafeString);
+   * console.log(safeString); // Output: '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;'
+   * ```
+   */
+  escapeHtml(value: string): string {
+    const map: Record<string, string> = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    };
+
+    return value.replace(/[&<>"']/g, (char) => map[char]);
+  }
 }
 
 type CSSValue = string | number | null | undefined;

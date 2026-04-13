@@ -121,3 +121,16 @@ it('splitTextToChars handles complex HTML with multiple nested elements and long
   // Verify nested structure is maintained (strong inside em or vice versa)
   expect(result).toMatch(/<strong[^>]*>.*<em[^>]*>.*<\/em>.*<\/strong>/);
 });
+
+it('should escape special characters correctly', () => {
+  const result_1 = element.escapeHtml('<span>5 > 3 & 2 < 4</span>');
+  expect(result_1).toBe('&lt;span&gt;5 &gt; 3 &amp; 2 &lt; 4&lt;/span&gt;');
+  const result_2 = element.escapeHtml('Use "quotes" and \'apostrophes\'');
+  expect(result_2).toBe('Use &quot;quotes&quot; and &#39;apostrophes&#39;');
+  const result_3 = element.escapeHtml('No special characters');
+  expect(result_3).toBe('No special characters');
+  const result_4 = element.escapeHtml('& < > " \'');
+  expect(result_4).toBe('&amp; &lt; &gt; &quot; &#39;');
+  const result_5 = element.escapeHtml('');
+  expect(result_5).toBe('');
+});
