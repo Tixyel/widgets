@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.9.0
+
+### Minor Changes
+
+- e7a118c: Update queue types and processor function for improved clarity and structure
+
 ## 7.8.0
 
 ### Minor Changes
