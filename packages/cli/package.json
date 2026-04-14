@@ -59,14 +59,14 @@
     "cli": "cross-env TIXYEL_VERSION=$npm_package_version bun run src/index.ts"
   },
   "dependencies": {
-    "autoprefixer": "^10.4.27",
+    "autoprefixer": "^10.5.0",
     "chalk": "^5.6.2",
     "chokidar": "^5.0.0",
     "cli-spinners": "^3.4.0",
     "commander": "^14.0.2",
     "cross-env": "^10.1.0",
-    "cssnano": "^7.1.4",
-    "esbuild": "^0.27.7",
+    "cssnano": "^7.1.5",
+    "esbuild": "^0.28.0",
     "fast-glob": "^3.3.3",
     "html-minifier-terser": "^7.2.0",
     "inquirer": "^13.4.1",
@@ -88,8 +88,8 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/ws": "^8.5.12",
-    "@typescript/native-preview": "^7.0.0-dev.20260408.1",
-    "tsdown": "^0.21.7",
+    "@typescript/native-preview": "^7.0.0-dev.20260414.1",
+    "tsdown": "^0.21.8",
     "typescript": "^6.0.2"
   }
 }
