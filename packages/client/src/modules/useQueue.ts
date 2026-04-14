@@ -10,7 +10,7 @@ const getUsedClients = (): Client[] => {
   }
 };
 
-type QueueEvents<T> = {
+export type QueueEvents<T> = {
   load: [];
   cancel: [];
   update: [
@@ -22,20 +22,24 @@ type QueueEvents<T> = {
   process: [item: QueueItem<T>, queue: useQueue<T>];
 };
 
-type QueueProps = {
+export type QueueProps = {
   isoDate: string;
   isLoop: boolean;
   isPriority: boolean;
   isImmediate: boolean;
 };
 
-type QueueItem<T> = { value: T } & QueueProps;
+export type QueueItem<T> = { value: T } & QueueProps;
 
-type QueueProcessor<T> = (this: useQueue<T>, item: T, queue: useQueue<T>) => Promise<any>;
+export type QueueProcessor<T> = (
+  this: useQueue<T>,
+  item: QueueItem<T>,
+  queue: useQueue<T>,
+) => Promise<any> | any;
 
-type QueueDuration = number | boolean | undefined;
+export type QueueDuration = number | boolean | undefined;
 
-interface QueueOptions<T> {
+export interface QueueOptions<T> {
   /**
    * Duration between processing each item in milliseconds. Set to `0` or `false` for immediate processing.
    */
@@ -69,14 +73,10 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
   history: QueueItem<T>[] = [];
 
   private timeouts: Array<ReturnType<typeof setTimeout>> = [];
-
-  public running: boolean = false;
-
   public duration: QueueDuration = undefined;
-
-  private loaded: boolean = false;
-
   public processor!: QueueProcessor<T>;
+  public running: boolean = false;
+  private loaded: boolean = false;
 
   private readonly clientWaitRetryDelay = 50;
 
@@ -204,7 +204,7 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
     }
 
     try {
-      await this.processor.apply(this, [nextItem.value, this]);
+      await this.processor.apply(this, [nextItem, this]);
 
       this.emit('process', nextItem, this);
     } catch (error) {
@@ -252,7 +252,13 @@ export class useQueue<T> extends EventProvider<QueueEvents<T>> {
    * });
    * ```
    */
-  public update(save: Partial<useQueue<T>>): this {
+  public update(
+    save: Partial<{
+      queue?: QueueItem<T>[];
+      priorityQueue?: QueueItem<T>[];
+      history?: QueueItem<T>[];
+    }>,
+  ): this {
     this.queue = save.queue ?? this.queue;
     this.priorityQueue = save.priorityQueue ?? this.priorityQueue;
     this.history = save.history ?? this.history;

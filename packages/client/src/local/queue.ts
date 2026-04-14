@@ -16,7 +16,7 @@ export type localQueueItem =
  */
 export const localQueue = new useQueue<localQueueItem>({
   duration: 'client',
-  processor: async function processor(received) {
+  processor: async function processor({ value: received }) {
     window.dispatchEvent(new CustomEvent(received.listener, { detail: received.data }));
 
     if (received.listener === 'onEventReceived' && received.session) {
