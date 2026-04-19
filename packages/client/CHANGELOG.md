@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.10.0
+
+### Minor Changes
+
+- a86b57d: update test property type in CommandOptions and enhance validation logic
+
 ## 7.9.0
 
 ### Minor Changes
