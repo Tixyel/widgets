@@ -9,7 +9,7 @@ interface CommandOptions {
   description?: string;
   arguments?: boolean;
   run: (this: Client, args: string[], event: CommandEvent) => void;
-  test?: string;
+  test?: RegExp | ((command: string) => boolean);
   aliases?: string[];
   permissions?: string[] | boolean;
   admins?: string[];
@@ -28,7 +28,7 @@ export class Command {
 
   arguments: boolean = false;
 
-  test: string | (() => string) = `${this.prefix}${this.name} arg1 arg2`;
+  test: RegExp | ((command: string) => boolean) = () => true;
 
   aliases: string[] = [];
   permissions?: string[] | boolean = undefined;
@@ -103,6 +103,12 @@ export class Command {
     var roles: string[] = [];
 
     const rAliases = { bits: 'cheer', premium: 'prime' };
+
+    if (this.test instanceof RegExp && !this.test.test(text)) {
+      return false;
+    } else if (typeof this.test === 'function' && !this.test(text)) {
+      return false;
+    }
 
     switch (event.provider) {
       case 'twitch': {
