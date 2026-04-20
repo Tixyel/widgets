@@ -1,4 +1,4 @@
-import { Widget } from '../lib/widget';
+import { Widget } from '../lib/widget.js';
 
 export var logo = `    ____    _     _                         _ 
    / __ \\  | |_  (_) __  __  _   _    ___  | |

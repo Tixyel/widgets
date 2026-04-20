@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { program } from './app';
-import './commands';
+import { program } from './app.js';
+import './commands/index.js';
 
 process
   .on('unhandledRejection', (reason, promise) => {

@@ -5,7 +5,7 @@ import { existsSync, unlink } from 'fs';
 import { writeFile } from 'fs/promises';
 import { resolve } from 'path';
 
-import { program } from '../app';
+import { program } from '../app.js';
 
 export const initCommand: Command = program
   .command('init')
@@ -25,13 +25,13 @@ export const initCommand: Command = program
       { default: inquirer },
       { detectPackageManager },
     ] = await Promise.all([
-      import('../lib/workspace'),
+      import('../lib/workspace.js'),
       import('ora'),
       import('cli-spinners'),
-      import('../lib/constants'),
-      import('../template/workspaceConfig'),
+      import('../lib/constants.js'),
+      import('../template/workspaceConfig.js'),
       import('inquirer'),
-      import('../utils/pm'),
+      import('../utils/pm.js'),
     ]);
 
     const spinner = ora({

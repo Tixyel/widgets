@@ -1,9 +1,9 @@
-import type { WidgetType } from '../types/widget';
+import type { WidgetType } from '../types/widget.js';
 import type { Command } from 'commander';
 
 import { basename, join, resolve } from 'path';
 
-import { program } from '../app';
+import { program } from '../app.js';
 
 export const generateCommand: Command = program
   .command('generate [path] [name] [description] [tags]')
@@ -27,10 +27,10 @@ export const generateCommand: Command = program
         { getNextWidgetNumber },
         { default: inquirer },
       ] = await Promise.all([
-        import('../lib/workspace'),
+        import('../lib/workspace.js'),
         import('ora'),
         import('cli-spinners'),
-        import('../utils/widget'),
+        import('../utils/widget.js'),
         import('inquirer'),
       ]);
 

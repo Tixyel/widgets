@@ -13,10 +13,10 @@ import { Ora } from 'ora';
 import postcss from 'postcss';
 import nested from 'postcss-nested';
 
-import { DotTixyel } from '../types/widget';
-import { watermark } from '../utils/watermark';
-import { DEFAULT_WORKSPACE_CONFIG } from './constants.workspace';
-import { Workspace } from './workspace';
+import { DotTixyel } from '../types/widget.js';
+import { watermark } from '../utils/watermark.js';
+import { DEFAULT_WORKSPACE_CONFIG } from './constants.workspace.js';
+import { Workspace } from './workspace.js';
 
 export namespace Widget {
   export type WidgetOptions = {

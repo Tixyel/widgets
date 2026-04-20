@@ -8,10 +8,10 @@ import { Ora } from 'ora';
 import { isValidElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { DotTixyel, WidgetType } from '../types/widget';
-import { WorkspaceConfig, WorkspaceScaffold } from '../types/workspace';
-import { DEFAULT_WORKSPACE_CONFIG, WORKSPACE_CONFIG_FILES } from './constants.workspace';
-import { Widget } from './widget';
+import { DotTixyel, WidgetType } from '../types/widget.js';
+import { WorkspaceConfig, WorkspaceScaffold } from '../types/workspace.js';
+import { DEFAULT_WORKSPACE_CONFIG, WORKSPACE_CONFIG_FILES } from './constants.workspace.js';
+import { Widget } from './widget.js';
 
 export namespace Workspace {
   /**

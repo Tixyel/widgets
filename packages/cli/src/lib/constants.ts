@@ -24,5 +24,5 @@ export const INSTALL_COMMANDS = {
     `bun add ${packages.join(' ')}${nocache ? ' --no-cache' : ''}`,
 } as const;
 
-export * from './constants.widget';
-export * from './constants.workspace';
+export * from './constants.widget.js';
+export * from './constants.workspace.js';

@@ -3,7 +3,7 @@ import type { Command } from 'commander';
 import { existsSync, readFileSync } from 'fs';
 import path, { relative } from 'path';
 
-import { program } from '../app';
+import { program } from '../app.js';
 
 export const buildCommand: Command = program
   .command('build')
@@ -35,11 +35,11 @@ export const buildCommand: Command = program
         { default: inquirer },
         { Widget },
       ] = await Promise.all([
-        import('../lib/workspace'),
+        import('../lib/workspace.js'),
         import('ora'),
         import('cli-spinners'),
         import('inquirer'),
-        import('../lib/widget'),
+        import('../lib/widget.js'),
       ]);
 
       const spinner = ora({
@@ -47,6 +47,8 @@ export const buildCommand: Command = program
         color: 'magenta',
         spinner: cliSpinners.dotsCircle,
       });
+
+      spinner.start();
 
       const workspace = new Workspace.Service({ spinner });
 

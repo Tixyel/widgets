@@ -1,4 +1,4 @@
-import { WorkspaceConfig, WorkspaceScaffold } from '../types/workspace';
+import { WorkspaceConfig, WorkspaceScaffold } from '../types/workspace.js';
 
 export const WORKSPACE_DEFAULT_MAX_DEPTH = 3;
 export const WORKSPACE_SEARCH_LIMIT = 50;

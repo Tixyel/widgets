@@ -1,4 +1,4 @@
-import { WorkspaceConfig } from './workspace';
+import { WorkspaceConfig } from './workspace.js';
 
 export interface DotTixyel {
   name: string;

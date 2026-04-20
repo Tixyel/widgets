@@ -68,17 +68,17 @@ export default defineConfig({
           {
             name: "index.html",
             type: "file",
-            content: htmlTemplate,
+            content: 'htmlTemplate',
           },
           {
             name: "style.css",
             type: "file",
-            content: cssTemplate,
+            content: 'cssTemplate',
           },
           {
             name: "script.ts",
             type: "file",
-            content: scriptTemplate,
+            content: 'scriptTemplate',
           },
           {
             name: "fields.json",
@@ -99,12 +99,12 @@ export default defineConfig({
           {
             name: "style.css",
             type: "file",
-            content: sharedStyleTemplate ?? "",
+            content: 'sharedStyleTemplate',
           },
           {
             name: "script.ts",
             type: "file",
-            content: sharedScriptTemplate ?? "",
+            content: 'sharedScriptTemplate',
           },
         ],
       },
@@ -115,11 +115,6 @@ export default defineConfig({
       {
         name: "widgetIO",
         type: "folder",
-      },
-      {
-        name: "tsconfig.json",
-        type: "file",
-        content: typescript.multiple,
       },
     ],
   },
