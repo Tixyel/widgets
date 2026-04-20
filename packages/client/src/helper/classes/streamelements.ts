@@ -298,6 +298,13 @@ export class SEHelper {
     );
   }
 
+  /**
+   * Split a long text into multiple StreamElements custom fields with a specified maximum label length, using a key prefix for the field keys
+   * @param keyPrefix - Prefix to use for the field keys (e.g., 'field' will create keys like 'field[0]', 'field[1]', etc.)
+   * @param text - The long text to split into multiple fields
+   * @param maxLabelLength - The maximum length for each field label (default is 31 characters, which is the maximum allowed by StreamElements)
+   * @returns An object containing the generated StreamElements custom field schemas with split labels
+   */
   splitFieldLabel(keyPrefix: string, text: string, maxLabelLength: number = 31) {
     const safeMaxLength = Math.max(1, Math.floor(maxLabelLength));
     const content = String(text).trim();
