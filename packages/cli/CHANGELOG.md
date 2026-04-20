@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.6.0
+
+### Minor Changes
+
+- db19481: Add list command for widget management
+
 ## 3.5.4
 
 ### Patch Changes
