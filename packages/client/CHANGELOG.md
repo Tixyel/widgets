@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.11.0
+
+### Minor Changes
+
+- 4232ae0: Move getTops method to top
+
 ## 7.10.0
 
 ### Minor Changes
