@@ -781,4 +781,22 @@ export class StringHelper {
 
     return result;
   }
+
+  /**
+   * Removes newline characters from a string and replaces them with spaces.
+   * @param string - The input string from which to remove newline characters.
+   * @returns The modified string with newline characters replaced by spaces.
+   * @example
+   * ```javascript
+   * const result = string.removeNewlines("Hello\nWorld\r\nThis is a test.");
+   * console.log(result); // Output: "Hello World This is a test."
+   * ```
+   */
+  removeNewlines(string: string): string {
+    return string.replace(/\r?\n|\r/g, ' ');
+  }
+
+  removeExtraSpaces(string: string): string {
+    return string.replace(/\s+/g, ' ').trim();
+  }
 }

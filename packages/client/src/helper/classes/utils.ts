@@ -304,7 +304,68 @@ export class UtilsHelper {
       | StreamElements.Event.Provider.YouTube.Message,
     session: StreamElements.Session.Data,
   ): Promise<IdentifyYouTubeResult | IdentifyTwitchResult> {
-    const getTops = (name: string): TopType => ({
+    const { getTops } = new UtilsHelper();
+
+    switch (provider) {
+      case 'twitch': {
+        const twitchEvent = receivedEvent as StreamElements.Event.Provider.Twitch.Message;
+        const event = twitchEvent.event;
+        const data = event.data;
+
+        let tier: false | 1 | 2 | 3 = false;
+        if (data.tags['badge-info']?.includes('subscriber')) {
+          tier = await this.findSubscriptionTier(
+            {
+              userId: data.userId,
+              name: data.displayName,
+              broadcasterId: data.tags['room-id'],
+            },
+            session ?? ({} as StreamElements.Session.Data),
+            false,
+          );
+        }
+
+        return {
+          id: data.userId,
+          name: data.displayName,
+          color: data.displayColor,
+          role: data.tags.badges.split(',')[0].split('/')[0] as Twitch.tags,
+          tags: data.tags.badges.split(',').map((b: string) => b.split('/')[0] as Twitch.tags),
+          badges: data.badges,
+          tier: !!tier ? tier : undefined,
+          top: getTops(data.displayName, session),
+        } satisfies IdentifyTwitchResult;
+
+        break;
+      }
+      case 'youtube': {
+        const youtubeEvent = receivedEvent as StreamElements.Event.Provider.YouTube.Message;
+        const event = youtubeEvent.event;
+        const data = event.data;
+
+        const role = data.authorDetails.isChatOwner
+          ? 'broadcaster'
+          : data.authorDetails.isChatModerator
+            ? 'moderator'
+            : data.authorDetails.isChatSponsor
+              ? 'sponsor'
+              : data.authorDetails.isVerified
+                ? 'verified'
+                : 'viewer';
+
+        return {
+          id: data.userId,
+          name: data.displayName,
+          role: role,
+          badges: data.badges,
+          top: getTops(data.displayName, session),
+        } satisfies IdentifyYouTubeResult;
+      }
+    }
+  }
+
+  public getTops(name: string, session: StreamElements.Session.Data) {
+    return {
       gifter: session['subscriber-alltime-gifter'].name === name,
       tip: {
         session: {
@@ -360,64 +421,7 @@ export class UtilsHelper {
           amount: session['superchat-alltime-top-donation'].name === name,
         },
       },
-    });
-
-    switch (provider) {
-      case 'twitch': {
-        const twitchEvent = receivedEvent as StreamElements.Event.Provider.Twitch.Message;
-        const event = twitchEvent.event;
-        const data = event.data;
-
-        let tier: false | 1 | 2 | 3 = false;
-        if (data.tags['badge-info']?.includes('subscriber')) {
-          tier = await this.findSubscriptionTier(
-            {
-              userId: data.userId,
-              name: data.displayName,
-              broadcasterId: data.tags['room-id'],
-            },
-            session ?? ({} as StreamElements.Session.Data),
-            false,
-          );
-        }
-
-        return {
-          id: data.userId,
-          name: data.displayName,
-          color: data.displayColor,
-          role: data.tags.badges.split(',')[0].split('/')[0] as Twitch.tags,
-          tags: data.tags.badges.split(',').map((b: string) => b.split('/')[0] as Twitch.tags),
-          badges: data.badges,
-          tier: !!tier ? tier : undefined,
-          top: getTops(data.displayName),
-        } satisfies IdentifyTwitchResult;
-
-        break;
-      }
-      case 'youtube': {
-        const youtubeEvent = receivedEvent as StreamElements.Event.Provider.YouTube.Message;
-        const event = youtubeEvent.event;
-        const data = event.data;
-
-        const role = data.authorDetails.isChatOwner
-          ? 'broadcaster'
-          : data.authorDetails.isChatModerator
-            ? 'moderator'
-            : data.authorDetails.isChatSponsor
-              ? 'sponsor'
-              : data.authorDetails.isVerified
-                ? 'verified'
-                : 'viewer';
-
-        return {
-          id: data.userId,
-          name: data.displayName,
-          role: role,
-          badges: data.badges,
-          top: getTops(data.displayName),
-        } satisfies IdentifyYouTubeResult;
-      }
-    }
+    };
   }
 
   identifyMessage(

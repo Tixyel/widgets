@@ -159,6 +159,16 @@ describe('string functions', () => {
     expect(result).toBe('VIP Live');
   });
 
+  it('Generate string template with IF logical AND correctly with falsy condition', async () => {
+    const template = '[IF=role && settings.message.enabled?\ntrue\n]';
+
+    const data = { role: 'broadcaster', settings: { message: { enabled: false } } };
+
+    const result = string.compose(template, data, { html: false }).trim();
+
+    expect(result).toBe('');
+  });
+
   it('Generate string template with IF logical OR correctly', async () => {
     const template = '[IF=vip || status === "live"?Highlighted|Normal]';
 
@@ -167,6 +177,30 @@ describe('string functions', () => {
     const result = string.compose(template, data, { html: false });
 
     expect(result).toBe('Highlighted');
+  });
+
+  it('Generate string template with IF logical AND correctly with multiline template', async () => {
+    const template = `
+    Line 1
+    [IF=role && settings.message.enabled?
+      true
+    |false]
+    [IF=false?true|false]
+    {role}
+    `;
+
+    const result = string.compose(
+      template,
+      { settings: { message: { enabled: false } }, role: 'broadcaster' },
+      { html: true },
+    );
+
+    expect(result).toBe(`
+    Line 1
+    false
+    false
+    broadcaster
+    `);
   });
 
   it('Generate string template with pluralization based on amount correctly', async () => {
