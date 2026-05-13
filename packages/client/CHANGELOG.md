@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.12.1
+
+### Patch Changes
+
+- Fixed helpers being added to the field results
+
 ## 7.12.0
 
 ### Minor Changes
