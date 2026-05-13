@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.12.3
+
+### Patch Changes
+
+- lol
+
 ## 7.12.2
 
 ### Patch Changes

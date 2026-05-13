@@ -232,7 +232,7 @@ export class SEHelper {
                 label: string.capitalize(name),
                 value: v.split(',')[0].trim().replaceAll("'", ''),
               };
-            } else if (!['step', 'min', 'max'].every((t) => k.endsWith(t))) {
+            } else if (['step', 'min', 'max'].every((t) => !k.endsWith(t))) {
               acc[k] = {
                 type: 'text',
                 label: string.capitalize(name),
@@ -307,7 +307,7 @@ export class SEHelper {
                 max,
                 step,
               };
-            } else if (!['step', 'min', 'max'].every((t) => k.endsWith(t))) {
+            } else if (['step', 'min', 'max'].every((t) => !k.endsWith(t))) {
               acc[k] = {
                 type: 'text',
                 label: string.capitalize(name),
