@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.12.0
+
+### Minor Changes
+
+- Add gradient type to the field builder
+
 ## 7.11.0
 
 ### Minor Changes

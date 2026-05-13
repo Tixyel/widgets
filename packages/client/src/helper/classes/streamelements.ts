@@ -175,6 +175,25 @@ export class SEHelper {
                 label: string.capitalize(name),
                 value: v,
               };
+            } else if (['gradient'].some((t) => k.endsWith(t))) {
+              //  separate each color from the gradient
+              const colors = v.match(colorRegex) as string[];
+
+              if (colors) {
+                acc[`${k}-gradient`] = {
+                  type: 'hidden',
+                  label: '• Gradient colors',
+                };
+
+                colors.forEach((color, index) => {
+                  acc[`${k}-gradient-${index}`] = {
+                    type: 'colorpicker',
+                    label:
+                      string.capitalize(name) + ` ${number.translate(index + 1, 'suffix')} color`,
+                    value: color,
+                  };
+                });
+              }
             } else if (
               ['size', 'width', 'height', 'spacing', 'gap', 'radius'].some((t) => k.endsWith(t))
             ) {
@@ -213,6 +232,12 @@ export class SEHelper {
                 label: string.capitalize(name),
                 value: v.split(',')[0].trim().replaceAll("'", ''),
               };
+            } else {
+              acc[k] = {
+                type: 'text',
+                label: string.capitalize(name),
+                value: String(v),
+              };
             }
 
             break;
@@ -229,11 +254,12 @@ export class SEHelper {
               const colors = v.match(colorRegex) as string[];
 
               if (colors) {
+                acc[`${k}-gradient`] = {
+                  type: 'hidden',
+                  label: '• Gradient colors',
+                };
+
                 colors.forEach((color, index) => {
-                  acc[`${k}-gradient`] = {
-                    type: 'hidden',
-                    label: '• Gradient colors',
-                  };
                   acc[`${k}-gradient-${index}`] = {
                     type: 'colorpicker',
                     label:
@@ -285,7 +311,7 @@ export class SEHelper {
               acc[k] = {
                 type: 'text',
                 label: string.capitalize(name),
-                value: v,
+                value: String(v),
               };
             }
             break;
@@ -304,6 +330,7 @@ export class SEHelper {
    * @param text - The long text to split into multiple fields
    * @param maxLabelLength - The maximum length for each field label (default is 31 characters, which is the maximum allowed by StreamElements)
    * @returns An object containing the generated StreamElements custom field schemas with split labels
+   * @example
    */
   splitFieldLabel(keyPrefix: string, text: string, maxLabelLength: number = 31) {
     const safeMaxLength = Math.max(1, Math.floor(maxLabelLength));
