@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.13.1
+
+### Patch Changes
+
+- Fix build
+
 ## 7.13.0
 
 ### Minor Changes

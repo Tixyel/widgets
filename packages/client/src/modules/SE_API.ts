@@ -19,4 +19,4 @@ export async function initializeLocalSEAPI() {
   return LOCAL_SE_API;
 }
 
-export const maxEventHistory = 100;
+export const maxEventHistory = 50;
