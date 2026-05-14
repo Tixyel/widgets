@@ -1,5 +1,6 @@
 import { usedClients } from '../internal.js';
 import { localQueue } from '../local/queue.js';
+import { maxEventHistory } from '../modules/SE_API.js';
 import { useQueue } from '../modules/useQueue.js';
 import { StreamElements } from '../types/streamelements/main.js';
 
@@ -93,7 +94,7 @@ export const LOCAL_SE_API: StreamElements.SE_API & {
         origin: usedClients?.[0]?.id,
       });
 
-      localStorage.setItem('SE_API-EVENTS', JSON.stringify(this.history));
+      localStorage.setItem('SE_API-EVENTS', JSON.stringify(this.history.slice(0, maxEventHistory)));
 
       return window.dispatchEvent(customEvent) ? { ok: true } : { ok: false };
     },
@@ -118,7 +119,7 @@ export const LOCAL_SE_API: StreamElements.SE_API & {
         origin: usedClients?.[0]?.id,
       });
 
-      localStorage.setItem('SE_API-EVENTS', JSON.stringify(this.history));
+      localStorage.setItem('SE_API-EVENTS', JSON.stringify(this.history.slice(0, maxEventHistory)));
 
       return window.dispatchEvent(customEvent) ? { ok: true } : { ok: false };
     },

@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.13.0
+
+### Minor Changes
+
+- Added max entries for event history
+
 ## 7.12.3
 
 ### Patch Changes

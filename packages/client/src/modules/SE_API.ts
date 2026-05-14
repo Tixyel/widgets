@@ -12,9 +12,11 @@ export async function initializeLocalSEAPI() {
   LOCAL_SE_API.store.list = result;
 
   let lastEvents = localStorage.getItem('SE_API-EVENTS') ?? '[]';
-  let eventsResult = lastEvents ? JSON.parse(lastEvents) : [];
+  let eventsResult: any[] = lastEvents ? JSON.parse(lastEvents) : [];
 
-  LOCAL_SE_API.events.history = eventsResult;
+  LOCAL_SE_API.events.history = eventsResult.slice(0, maxEventHistory);
 
   return LOCAL_SE_API;
 }
+
+export const maxEventHistory = 100;
