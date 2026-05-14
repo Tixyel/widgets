@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.14.0
+
+### Minor Changes
+
+- Add new element functions
+
 ## 7.13.1
 
 ### Patch Changes

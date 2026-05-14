@@ -495,6 +495,104 @@ export class ElementHelper {
 
     return value.replace(/[&<>"']/g, (char) => map[char]);
   }
+
+  /**
+   * Get the relative position of a square
+   * @param dimensions - The square dimensions and positions
+   * @returns All the relative positions
+   * @example
+   * ```js
+   * const positions = relativePositions({ width: 10, height: 10, left: 20, top: 20 });
+   * // positions.center = { x: 25, y: 25 }
+   * // positions.bottom = { x: 25, y: 30 }
+   * // ...
+   * ```
+   */
+  relativePositions({
+    width,
+    height,
+    left,
+    top,
+  }: {
+    width: number;
+    height: number;
+    left: number;
+    top: number;
+  }) {
+    const positions = {
+      'center': { x: left + width / 2, y: top + height / 2 },
+      'top': { x: left + width / 2, y: top },
+      'bottom': { x: left + width / 2, y: top + height },
+      'left': { x: left, y: top + height / 2 },
+      'right': { x: left + width, y: top + height / 2 },
+      'top-left': { x: left, y: top },
+      'top-right': { x: left + width, y: top },
+      'bottom-left': { x: left, y: top + height },
+      'bottom-right': { x: left + width, y: top + height },
+    };
+
+    return positions;
+  }
+
+  getRelativePositionToAncestor(
+    element: HTMLElement,
+    ancestor: HTMLElement,
+  ): { left: number; top: number; width: number; height: number } {
+    const elRect = element.getBoundingClientRect();
+    const ancRect = ancestor.getBoundingClientRect();
+
+    const ancIsBody = ancestor === document.body;
+    const ancIsRoot = ancestor === document.documentElement;
+
+    const bodyOrRootScrollLeft =
+      window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft;
+    const bodyOrRootScrollTop =
+      window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+
+    const ancScrollLeft = ancIsRoot || ancIsBody ? bodyOrRootScrollLeft : ancestor.scrollLeft;
+    const ancScrollTop = ancIsRoot || ancIsBody ? bodyOrRootScrollTop : ancestor.scrollTop;
+
+    const ancClientLeft = ancestor.clientLeft || 0;
+    const ancClientTop = ancestor.clientTop || 0;
+
+    const left = elRect.left - ancRect.left + ancScrollLeft - ancClientLeft;
+    const top = elRect.top - ancRect.top + ancScrollTop - ancClientTop;
+
+    return {
+      left: Math.round(left),
+      top: Math.round(top),
+      width: Math.round(elRect.width),
+      height: Math.round(elRect.height),
+    };
+  }
+
+  svg = {
+    getDimensionsFromViewBox(svgElement: SVGElement | string): { width: number; height: number } {
+      let viewBox: number[];
+
+      if (typeof svgElement === 'string') {
+        const svg = svgElement;
+        const viewBoxMatch = svg.match(/viewBox="([^"]+)"/);
+
+        if (!viewBoxMatch) {
+          throw new Error('Invalid SVG: viewBox not found');
+        }
+
+        viewBox = viewBoxMatch[1].split(' ').map(Number);
+      } else {
+        const viewBoxMatch = svgElement.getAttribute('viewBox');
+
+        if (!viewBoxMatch) throw new Error('Invalid SVG: viewBox not found');
+
+        viewBox = viewBoxMatch.split(' ').map(Number);
+      }
+
+      const width = viewBox[2];
+      const height = viewBox[3];
+
+      return { width, height };
+    },
+  };
 }
 
 type CSSValue = string | number | null | undefined;
