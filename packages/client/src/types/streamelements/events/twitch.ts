@@ -254,7 +254,12 @@ export namespace TwitchEvents {
 
     export interface Subscriber extends BaseEvent {
       type: 'subscriber';
-      data: FirstTimeSubscriber | Resubscribe | GiftedSubscriber | CommunityGiftedSubscriber;
+      data: FirstTimeSubscriber | Resubscribe | GiftedSubscriber;
+    }
+
+    export interface CommunityGift extends BaseEvent {
+      type: 'communityGiftPurchase';
+      data: CommunityGiftedSubscriber;
     }
 
     export type FirstTimeSubscriber = {
@@ -294,15 +299,10 @@ export namespace TwitchEvents {
 
     export type CommunityGiftedSubscriber = {
       amount: number;
-      username: string;
-      displayName: string;
-      providerId: string;
-      message: string;
-      tier: Subscriber.SubscriberTier;
-      sender: string;
-      gifted: true;
-      quantity: 0;
       avatar: string;
+      displayName: string;
+      username: string;
+      providerId: string;
     };
   }
 }
