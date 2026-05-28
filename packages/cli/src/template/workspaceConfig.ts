@@ -142,9 +142,9 @@ export default defineConfig({
     },
     widgetIO: {
       'html.txt': ['html'],
-      'SCRIPT.js': ['shared script', 'script'],
-      'CSS.css': ['shared style', 'css'],
-      'FIELDS.json': ['fields', 'shared fields'],
+      'js.txt': ['shared script', 'script'],
+      'css.txt': ['shared style', 'css'],
+      'fields.txt': ['fields', 'shared fields'],
     },
 
     htmlRegex: /<body[^>]*>([\\s\\S]*?)<\\/body>/i,
