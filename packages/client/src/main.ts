@@ -25,7 +25,6 @@ export const main = {
   Helper: Helper,
   Local: Local,
   Data: Data,
-  logger: logger,
 
   modules: {
     EventProvider,
@@ -45,6 +44,8 @@ export const main = {
   internal: internals,
   pronouns: { Alejo },
 };
+
+export { USE_SE_API as SeAPI, Client, Helper, Local, Data };
 
 if (typeof window !== 'undefined') {
   (window as any).Tixyel = main;

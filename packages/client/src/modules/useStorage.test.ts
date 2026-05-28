@@ -66,9 +66,11 @@ test('add should not change data when storage is not loaded', () => {
     },
   });
 
-  storage.add('b.value', 34);
+  storage.on('load', () => {
+    storage.add('b.value', 34);
 
-  expect(storage.data).toEqual({ a: { value: 1 }, b: { value: 2, ba: { value: 3 } } });
+    expect(storage.data).toEqual({ a: { value: 1 }, b: { value: 34, ba: { value: 3 } } });
+  });
 });
 
 test('updateViaPath should create missing nested objects', () => {

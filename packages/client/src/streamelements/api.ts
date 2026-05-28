@@ -1,8 +1,8 @@
 import { usedClients } from '../internal.js';
 import { localQueue } from '../local/queue.js';
-import { maxEventHistory } from '../modules/SE_API.js';
 import { useQueue } from '../modules/useQueue.js';
 import { StreamElements } from '../types/streamelements/main.js';
+import { maxEventHistory } from '../utils/events.js';
 
 export const LOCAL_SE_API: StreamElements.SE_API & {
   store: { list: Record<string, any> };

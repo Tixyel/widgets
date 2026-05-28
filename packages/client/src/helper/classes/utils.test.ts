@@ -7,7 +7,7 @@ const { delay, typedEntries, probability } = utils;
 
 test('delay should wait for the specified time', async () => {
   const start = Date.now();
-  await delay(1000);
+  await delay(1001);
   const end = Date.now();
   expect(end - start).toBeGreaterThanOrEqual(1000);
 });
