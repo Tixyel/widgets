@@ -285,4 +285,12 @@ describe('string functions', () => {
 
     expect(result).toBe('user');
   });
+
+  it('Apply custom class', async () => {
+    const template = '[TITLE=abc]';
+
+    const result = string.compose(template, {}, { html: true });
+
+    expect(result).toBe('<span class="title">abc</span>');
+  });
 });

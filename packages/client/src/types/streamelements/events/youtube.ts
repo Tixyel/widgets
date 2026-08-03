@@ -1,12 +1,12 @@
 export namespace YoutubeEvents {
   export namespace Message {
     export type Data = {
-      listener: 'message';
+      listener: "message";
       event: Event;
     };
 
     export type Event = {
-      service: 'youtube';
+      service: "youtube";
       data: {
         kind: string;
         etag: string;
@@ -54,7 +54,7 @@ export namespace YoutubeEvents {
 
   export namespace Superchat {
     export type Data = {
-      listener: 'superchat-latest';
+      listener: "superchat-latest";
       event: Event;
     };
 
@@ -66,14 +66,14 @@ export namespace YoutubeEvents {
       name: string;
       _id: string;
       sessionTop: boolean;
-      type: 'superchat';
-      originalEventName: 'superchat-latest';
+      type: "superchat";
+      originalEventName: "superchat-latest";
     };
   }
 
   export namespace Subscriber {
     export type Data = {
-      listener: 'subscriber-latest';
+      listener: "subscriber-latest";
       event: Event;
     };
 
@@ -84,14 +84,14 @@ export namespace YoutubeEvents {
       name: string;
       _id: string;
       sessionTop: boolean;
-      type: 'subscriber';
-      originalEventName: 'subscriber-latest';
+      type: "subscriber";
+      originalEventName: "subscriber-latest";
     };
   }
 
   export namespace Sponsor {
     export type Data = {
-      listener: 'sponsor-latest';
+      listener: "sponsor-latest";
       event: Event;
     };
 
@@ -115,8 +115,8 @@ export namespace YoutubeEvents {
       sessionTop?: boolean;
       playedAsCommunityGift?: boolean;
 
-      type: 'sponsor';
-      originalEventName: 'sponsor-latest';
+      type: "sponsor";
+      originalEventName: "sponsor-latest";
     };
 
     export type normal = {
@@ -154,7 +154,7 @@ export namespace YoutubeEvents {
   }
 
   export interface BaseEvent {
-    provider: 'youtube';
+    provider: "youtube";
     flagged: boolean;
     channel: string;
     createdAt: string;
@@ -168,14 +168,14 @@ export namespace YoutubeEvents {
 
   export namespace Event {
     export type Data = {
-      listener: 'event';
+      listener: "event";
       event: Event;
     };
 
     export type Event = Superchat | Subscriber | Sponsor | CommunityGiftedSponsor;
 
     export interface Superchat extends BaseEvent {
-      type: 'superchat';
+      type: "superchat";
       data: {
         amount: string;
         username: string;
@@ -186,7 +186,7 @@ export namespace YoutubeEvents {
     }
 
     export interface Subscriber extends BaseEvent {
-      type: 'subscriber';
+      type: "subscriber";
       data: {
         avatar: string;
         displayName: string;
@@ -196,7 +196,7 @@ export namespace YoutubeEvents {
     }
 
     export interface Sponsor extends BaseEvent {
-      type: 'sponsor';
+      type: "sponsor";
       data: FirstTimeSponsor | Resubscribe | GiftedSponsor;
     }
 
@@ -227,7 +227,7 @@ export namespace YoutubeEvents {
     };
 
     export interface CommunityGiftedSponsor extends BaseEvent {
-      type: 'communityGiftPurchase';
+      type: "communityGiftPurchase";
       data: {
         amount: number;
         username: string;

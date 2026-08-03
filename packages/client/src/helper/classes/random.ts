@@ -1,4 +1,4 @@
-import { Data } from '../../data/index.js';
+import { Data } from "../../data/index.js";
 
 export class RandomHelper {
   /**
@@ -14,33 +14,33 @@ export class RandomHelper {
    * console.log(rgbColor); // e.g. rgb(62, 146, 204)
    * ```
    */
-  color(type: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'css-color-name' = 'hex') {
+  color(type: "hex" | "hexa" | "rgb" | "rgba" | "hsl" | "hsla" | "css-color-name" = "hex") {
     switch (type) {
       default:
-      case 'hex': {
+      case "hex": {
         return `#${Math.floor(Math.random() * 0xffffff)
           .toString(16)
-          .padStart(6, '0')}`;
+          .padStart(6, "0")}`;
       }
-      case 'hexa': {
+      case "hexa": {
         const hex = `#${Math.floor(Math.random() * 0xffffff)
           .toString(16)
-          .padStart(6, '0')}`;
+          .padStart(6, "0")}`;
 
         const alpha = Math.floor(Math.random() * 256)
           .toString(16)
-          .padStart(2, '0');
+          .padStart(2, "0");
 
         return hex + alpha;
       }
-      case 'rgb': {
+      case "rgb": {
         const r = Math.floor(Math.random() * 256);
         const g = Math.floor(Math.random() * 256);
         const b = Math.floor(Math.random() * 256);
 
         return `rgb(${r}, ${g}, ${b})`;
       }
-      case 'rgba': {
+      case "rgba": {
         const r = Math.floor(Math.random() * 256);
         const g = Math.floor(Math.random() * 256);
         const b = Math.floor(Math.random() * 256);
@@ -48,14 +48,14 @@ export class RandomHelper {
 
         return `rgba(${r}, ${g}, ${b}, ${a})`;
       }
-      case 'hsl': {
+      case "hsl": {
         const h = Math.floor(Math.random() * 361);
         const s = Math.floor(Math.random() * 101);
         const l = Math.floor(Math.random() * 101);
 
         return `hsl(${h}, ${s}%, ${l}%)`;
       }
-      case 'hsla': {
+      case "hsla": {
         const h = Math.floor(Math.random() * 361);
         const s = Math.floor(Math.random() * 101);
         const l = Math.floor(Math.random() * 101);
@@ -63,7 +63,7 @@ export class RandomHelper {
 
         return `hsla(${h}, ${s}%, ${l}%, ${a})`;
       }
-      case 'css-color-name': {
+      case "css-color-name": {
         var names = Data.css_color_names;
 
         return this.array(names)[0];
@@ -125,22 +125,22 @@ export class RandomHelper {
   string(
     length: number,
     chars:
-      | 'numeric'
-      | 'numbers'
-      | 'letters'
-      | 'hex'
-      | 'hex-upper'
-      | 'hex-lower'
-      | string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+      | "numeric"
+      | "numbers"
+      | "letters"
+      | "hex"
+      | "hex-upper"
+      | "hex-lower"
+      | string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
   ): string {
-    if (chars === 'numbers' || chars === 'numeric') chars = '0123456789';
-    else if (chars === 'letters' || chars === 'letter')
-      chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    else if (chars === 'hex' || chars === 'hexadecimal') chars = '0123456789abcdef';
-    else if (chars === 'hex-upper' || chars === 'hexadecimal-upper') chars = '0123456789ABCDEF';
-    else if (chars === 'hex-lower' || chars === 'hexadecimal-lower') chars = '0123456789abcdef';
+    if (chars === "numbers" || chars === "numeric") chars = "0123456789";
+    else if (chars === "letters" || chars === "letter")
+      chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    else if (chars === "hex" || chars === "hexadecimal") chars = "0123456789abcdef";
+    else if (chars === "hex-upper" || chars === "hexadecimal-upper") chars = "0123456789ABCDEF";
+    else if (chars === "hex-lower" || chars === "hexadecimal-lower") chars = "0123456789abcdef";
 
-    let result = '';
+    let result = "";
 
     for (let i = 0; i < length; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));

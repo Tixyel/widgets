@@ -1,8 +1,8 @@
-import { Client } from '../client/client.js';
-import { Helper } from '../helper/index.js';
-import { usedButtons, usedClients } from '../internal.js';
-import { logger } from '../main.js';
-import { StreamElements } from '../types/index.js';
+import { Client } from "../client/client.js";
+import { Helper } from "../helper/index.js";
+import { usedButtons, usedClients } from "../internal.js";
+import { logger } from "../main.js";
+import { StreamElements } from "../types/index.js";
 
 interface ButtonOptions {
   field: string | ((field: string, value: string | boolean | number) => boolean);
@@ -36,17 +36,17 @@ interface ButtonOptions {
  * ```
  */
 export class Button {
-  field: ButtonOptions['field'] = 'button';
-  template: string = 'button';
-  name: string = 'Button';
-  value: string = '';
+  field: ButtonOptions["field"] = "button";
+  template: string = "button";
+  name: string = "Button";
+  value: string = "";
 
-  run!: ButtonOptions['run'];
+  run!: ButtonOptions["run"];
 
   constructor(options: ButtonOptions) {
     this.field = options.field ?? this.field;
     this.template =
-      options.template ?? (typeof this.field === 'string' ? this.field : this.template);
+      options.template ?? (typeof this.field === "string" ? this.field : this.template);
     this.name = options.name ?? this.name;
     this.value = options.value ?? this.value;
     this.run = options.run;
@@ -58,7 +58,7 @@ export class Button {
     // Register the button in the client actions
     usedClients.forEach((client) => {
       client.actions.buttons.push(this);
-      client.emit('action', this, 'created');
+      client.emit("action", this, "created");
     });
   }
 
@@ -69,7 +69,7 @@ export class Button {
         const name = Helper.string.compose(this.name, { index, ...values }, { html: false });
 
         acc[key] = {
-          type: 'button',
+          type: "button",
           label: name,
         };
 
@@ -80,13 +80,13 @@ export class Button {
         );
 
         if (!isNaN(Number(value))) value = Number(value);
-        else if (value.toLowerCase() === 'true') value = true;
-        else if (value.toLowerCase() === 'false') value = false;
+        else if (value.toLowerCase() === "true") value = true;
+        else if (value.toLowerCase() === "false") value = false;
 
         if (
-          typeof value !== 'undefined' &&
+          typeof value !== "undefined" &&
           !!value &&
-          (typeof value === 'string' ? value.length : true)
+          (typeof value === "string" ? value.length : true)
         ) {
           acc[key].value = value;
         }
@@ -109,10 +109,10 @@ export class Button {
      */
     var f = field
       .replace(
-        typeof this.field === 'string'
+        typeof this.field === "string"
           ? this.field
-          : (this.template.replace(/\{[^}]*\}/g, '') ?? ''),
-        '',
+          : (this.template.replace(/\{[^}]*\}/g, "") ?? ""),
+        "",
       )
       .trim();
 
@@ -140,7 +140,7 @@ export class Button {
 
     if (index > -1) {
       usedClients[0]?.actions.buttons.splice(index, 1);
-      usedClients[0]?.emit('action', this, 'removed');
+      usedClients[0]?.emit("action", this, "removed");
     }
   }
 
@@ -151,11 +151,11 @@ export class Button {
           /**
            * Check if the button's field matches the provided field.
            */
-          if (typeof b.field === 'string') return b.field === field;
+          if (typeof b.field === "string") return b.field === field;
           /**
            * If the button's field is a function, call it with the provided field and value to determine a match.
            */
-          if (typeof b.field === 'function') return b.field(field, value);
+          if (typeof b.field === "function") return b.field(field, value);
 
           return false;
         });
@@ -166,10 +166,10 @@ export class Button {
               button.parse(field, value);
 
               usedClients.forEach((client) => {
-                client.emit('action', button, 'executed');
+                client.emit("action", button, "executed");
               });
 
-              logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ''}`);
+              logger.received(`Button executed: ${field}${value ? ` with value: ${value}` : ""}`);
             } catch (error) {
               logger.error(
                 `Error executing button "${field}": ${error instanceof Error ? error.message : error}`,
