@@ -369,7 +369,8 @@ if (typeof window !== undefined) {
         if (
           client.debug &&
           !excludeListeners.some((e) => e === received.data.listener) &&
-          ['streamelements', 'twitch', 'youtube'].some((p) => p === received.provider)
+          ['streamelements', 'twitch', 'youtube'].some((p) => p === received.provider) &&
+          received.data.listener !== 'kvstore:update'
         ) {
           logger.received(
             '[Client]',
