@@ -1,5 +1,11 @@
 # @tixyel/cli
 
+## 3.7.0
+
+### Minor Changes
+
+- 5875f77: update dependencies
+
 ## 3.6.0
 
 ### Minor Changes
