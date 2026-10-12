@@ -1,5 +1,11 @@
 # @tixyel/streamelements
 
+## 7.15.0
+
+### Minor Changes
+
+- 5875f77: update dependencies
+
 ## 7.14.1
 
 ### Patch Changes
